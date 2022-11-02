@@ -1,7 +1,7 @@
 export default [
     {
         path: '/product/:key?',
-        component: () => import("@/views/product/ProductPage.vue"),
+        component: () => import("@/views/productpage/ProductPage.vue"),
         meta: {},
         name: 'Sản phẩm',
     }
