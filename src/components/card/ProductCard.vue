@@ -90,10 +90,10 @@ export default {
         const {formatVND} = useFormat();
         const cardClick = (e) => {
             proxy.$router.push({ path: '/product' });
-            proxy.$store.dispatch({
-                type : 'changeProductView',
-                productView : props.productId
-            })
+            proxy.$store.dispatch(
+                "moduleProductPage/updateProductId",
+                props.productId
+            );
         }
         const addProductCart = (e)=>{
             e.preventDefault();

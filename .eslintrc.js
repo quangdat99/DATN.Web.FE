@@ -44,5 +44,6 @@ module.exports = {
     'vue/require-default-prop': 'off',
     'vue/no-v-html': 'off',
     'vue/html-quotes': 'off',
+    'no-debugger': 'off',
   }
 }
