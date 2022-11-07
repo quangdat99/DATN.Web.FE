@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import "@/assets/scss/main.scss";
-import router from '@/routers';
+import router from '@/routers/router.js';
 import FloatingVue from 'floating-vue'
 import VueAgile from 'vue-agile'
 import VTooltip from 'v-tooltip'
@@ -10,6 +10,7 @@ import PrimeVue from 'primevue/config';
 import Dialog from 'primevue/dialog';
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
+import Toaster from '@meforma/vue-toaster';
 const app = createApp(App);
 
 /* Styles */
@@ -26,14 +27,15 @@ import 'primevue/resources/themes/saga-blue/theme.css';
 
 
 
+app.use(store);
 app.use(router);
 app.use(VueAgile);
 app.use(VTooltip);
 app.use(FloatingVue);
-app.use(store);
 app.use(PrimeVue);
 app.use(ToastService);
 app.use(ConfirmationService);
+app.use(Toaster, { position: 'top' });
 
 app.component('Dialog', Dialog);
 

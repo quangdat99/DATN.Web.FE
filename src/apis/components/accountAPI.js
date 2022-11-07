@@ -1,22 +1,22 @@
 import BaseAPI from '@/apis/base/baseapi.js'
-import BaseAPIConfig from '@/apis/base/baseapiconfig.js'
+import Http from '@/apis/base/httpConfig.js'
 class AccountAPI extends BaseAPI {
     constructor(){
         super();
-        this.BaseAPIConfig = BaseAPIConfig;
+        this.Http = Http;
         this.controller = 'Account';
     }
 
     signup(payload){
-        return this.BaseAPIConfig.post(`${this.controller}/signUp`,payload);
+        return this.Http.post(`${this.controller}/signUp`,payload);
     }
 
     completeProfile(payload){
-        return this.BaseAPIConfig.post(`${this.controller}/completeProfile`,payload);
+        return this.Http.post(`${this.controller}/completeProfile`,payload);
     }
 
     signIn(payload){
-        return this.BaseAPIConfig.post(`${this.controller}/signIn`,payload);
+        return this.Http.post(`${this.controller}/signIn`,payload);
     }
 }
 

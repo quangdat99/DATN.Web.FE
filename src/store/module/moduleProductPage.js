@@ -23,7 +23,7 @@ const actions = {
     context.commit('updateProductId', id);
   },
   async updateProduct(context, id){
-    let product = await api.GetProductInfo(id);
+    let product = await api.getProductInfo(id);
     context.commit('updateProduct', product);
     return product;
   }

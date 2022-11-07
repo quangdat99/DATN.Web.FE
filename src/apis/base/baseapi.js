@@ -1,4 +1,4 @@
-import BaseAPIConfig from '@/apis/base/baseapiconfig.js';
+import Http from '@/apis/base/httpConfig.js';
 import APIConfig from '@/apis/config/apiconfig.js';
 import store from '@/store/store.js';
 export default class BaseApi {
@@ -32,7 +32,7 @@ export default class BaseApi {
      * Phương thức lấy tất cả dữ liệu
      */
     async getAll() {
-        let res = await BaseAPIConfig.get(`${this.controllerName}`);
+        let res = await Http.axios().get(`${this.controllerName}`);
         return response(res);
     }
     /**
@@ -41,7 +41,7 @@ export default class BaseApi {
      * @param {Object} param object truyền lên
      */
     async update(id, param) {
-        let res = await BaseAPIConfig.put(`${this.controllerName}${id}`, param)
+        let res = await Http.axios().put(`${this.controllerName}${id}`, param)
         return response(res);
     }
     /**
@@ -50,7 +50,7 @@ export default class BaseApi {
      * @returns 
      */
     async delete(id) {
-        let res = await BaseAPIConfig.delete(`${this.controllerName}${id}`);
+        let res = await Http.axios().delete(`${this.controllerName}${id}`);
         return response(res);
     }
     /**
@@ -58,7 +58,7 @@ export default class BaseApi {
      * @param {Guid} id id của đối tượng
      */
     async getById(id) {
-        let res = await BaseAPIConfig.get(`${this.controllerName}/${id}`);
+        let res = await Http.axios().get(`${this.controllerName}/${id}`);
         return this.response(res);
     }
     /**
@@ -66,7 +66,7 @@ export default class BaseApi {
      * @param {Object} payload object truyền vào request
      */
     async deleteMultiple(payload) {
-        let res = await BaseAPIConfig.post(`${this.controllerName}Delete_List`, payload);
+        let res = await Http.axios().post(`${this.controllerName}Delete_List`, payload);
         return response(res);
     }
     /**
@@ -74,7 +74,7 @@ export default class BaseApi {
      * @param {Object} payload 
      */
     async insert(payload) {
-        let res = await BaseAPIConfig.post(`${this.controllerName}`, payload);
+        let res = await Http.axios().post(`${this.controllerName}`, payload);
         return response(res);
     }
     /**
@@ -82,12 +82,12 @@ export default class BaseApi {
      * @param {String} code mã code của đối tượng
      */
     async getByCode(code) {
-        let res = await BaseAPIConfig.get(`${this.controllerName}code/${code}`)
+        let res = await Http.axios().get(`${this.controllerName}code/${code}`)
         return response(res);
     }
 
     getAsync(url, headers) {
-        let res = BaseAPIConfig.get(url, {
+        let res = Http.axios().get(url, {
             headers
         });
         return response(res);
@@ -99,7 +99,7 @@ export default class BaseApi {
             headers = { "Authorization": `Bearer ${store.state.token}` };
         }
 
-        return await BaseAPIConfig.post(url, data, {
+        return await Http.axios().post(url, data, {
             headers
         });
     }

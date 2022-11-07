@@ -297,7 +297,6 @@ export default {
 
     const productRelationProducts = ref();
     onMounted(async () => {
-      debugger;
       let productId = proxy.$store.state["moduleProductPage"].productId;
       const data = await proxy.$store.dispatch(
         "moduleProductPage/updateProduct",

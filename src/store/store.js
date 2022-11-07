@@ -7,6 +7,7 @@ import getters from './getters.js';
 import mutations from './mutations.js';
 import actions from './actions.js';
 
+import moduleContext from './context/moduleContext.js'
 import moduleProduct from './module/moduleProduct.js';
 import moduleProductPage from './module/moduleProductPage.js';
 
@@ -17,6 +18,7 @@ const store = createStore({
   actions,
   getters,
   modules: {
+    moduleContext,
     moduleProduct,
     moduleProductPage,
   },

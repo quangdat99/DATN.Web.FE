@@ -10,8 +10,8 @@
             Tài khoản
           </div>
           <div class="login-field-input">
-            <base-input placeholder="Nhập email hoặc số điện thoại" :modelValue="model.account"
-              @update:modelValue="updateValue" field="account"></base-input>
+            <base-input placeholder="Nhập email hoặc số điện thoại" v-model="model.account"
+              field="account"></base-input>
           </div>
         </div>
         <div class="login-field-container flex flex-column">
@@ -19,7 +19,7 @@
             Mật khẩu
           </div>
           <div class="login-field-input">
-            <base-input placeholder="Mật khẩu" type="password" :modelValue="model.password" @update:modelValue="updateValue"
+            <base-input placeholder="Mật khẩu" type="password" v-model="model.password"
               field="password"></base-input>
           </div>
         </div>
@@ -58,8 +58,8 @@
 <script>
 import BaseButton from '@/components/button/BaseButton.vue';
 import BaseInput from '@/components/input/BaseInput.vue';
-import { ref, getCurrentInstance } from 'vue';
-import AccountAPI from '@/apis/components/accountAPI';
+import { ref, getCurrentInstance, reactive } from 'vue';
+import userAPI from '@/apis/components/userAPI.js';
 import jwt_decode from "jwt-decode";
 export default {
   name: 'LoginPage',
@@ -69,37 +69,25 @@ export default {
   },
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
-    const model = ref({});
-    const updateValue = (value, field) => {
-      model.value[field] = value;
-    }
+    const model = reactive({
+
+    });
 
     const goToSignup = () => {
       proxy.$router.push("/signup");
     }
     const login = async () => {
       if(proxy.model){
-        let res = await AccountAPI.signIn(proxy.model);
-        if(res && res.data && res.data.data ){
-          const userInfo = jwt_decode(res.data.data);
-          if(userInfo && typeof userInfo === 'object'){
-            let payload = {
-              userId : userInfo.userId,
-              avatar : userInfo.avatar,
-              fullName : userInfo.fullName
-            };
-            proxy.$store.dispatch("updateAccount", payload);
-            proxy.$store.dispatch("updateToken",{
-              token : res.data.data
-            });
-            proxy.$router.push('homepage');
-          }
+        let res = await proxy.$store.dispatch("moduleContext/login", model)
+        if(res){
+          proxy.$router.push('homepage');
+        } else {
+          proxy.$toast.error(`Tài khoản hoặc mật khẩu không đúng`);
         }
       }
     }
     return {
       model,
-      updateValue,
       goToSignup,
       login
     }

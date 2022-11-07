@@ -1,9 +1,9 @@
 import BaseAPI from '@/apis/base/baseapi.js'
-import BaseAPIConfig from '@/apis/base/baseapiconfig.js'
+import Http from '@/apis/base/httpConfig.js'
 class OrderAPI extends BaseAPI {
     constructor(){
         super();
-        this.BaseAPIConfig = BaseAPIConfig;
+        this.Http = Http;
         this.controller = 'Order';
     }
 
