@@ -45,5 +45,6 @@ module.exports = {
     'vue/no-v-html': 'off',
     'vue/html-quotes': 'off',
     'no-debugger': 'off',
+    'no-prototype-builtins': 'off',
   }
 }

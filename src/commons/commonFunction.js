@@ -111,3 +111,4 @@ class CommonFunction {
     return arr;
   }
 }
+export default new CommonFunction();
