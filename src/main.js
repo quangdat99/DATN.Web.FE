@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import "@/assets/scss/main.scss";
 import router from '@/routers/router.js';
 import FloatingVue from 'floating-vue'
 import VueAgile from 'vue-agile'
@@ -14,7 +13,8 @@ import Toaster from '@meforma/vue-toaster';
 const app = createApp(App);
 
 /* Styles */
-
+import "@/assets/scss/main.scss";
+import "@/assets/scss/app.scss";
 import '@/assets/css/flexbox.css';
 import '@/assets/scss/icons.scss';
 import '@/assets/scss/control.scss';

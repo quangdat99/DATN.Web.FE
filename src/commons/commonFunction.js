@@ -99,9 +99,15 @@ class CommonFunction {
         if (e.hasOwnProperty(key)) {
           let v = e[key];
           let enumText = i18n.t('i18nEnum.' + enumName + '.' + key);
-          
+          let item = {
+            enumValue: v,
+            enumKey: key,
+            enumText: enumText
+          }
+          arr.push(item);
         }
       }
     }
+    return arr;
   }
 }
