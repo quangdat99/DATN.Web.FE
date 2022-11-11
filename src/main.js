@@ -1,9 +1,9 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
 import router from '@/routers/router.js';
-import FloatingVue from 'floating-vue'
-import VueAgile from 'vue-agile'
-import VTooltip from 'v-tooltip'
+import FloatingVue from 'floating-vue';
+import VueAgile from 'vue-agile';
+// import VTooltip from 'v-tooltip';
 import store from '@/store/store.js';
 import PrimeVue from 'primevue/config';
 import Dialog from 'primevue/dialog';
@@ -30,7 +30,7 @@ import 'primevue/resources/themes/saga-blue/theme.css';
 app.use(store);
 app.use(router);
 app.use(VueAgile);
-app.use(VTooltip);
+// app.use(VTooltip);
 app.use(FloatingVue);
 app.use(PrimeVue);
 app.use(ToastService);

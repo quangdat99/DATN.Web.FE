@@ -98,7 +98,7 @@ export default class {
       totalMoneyCart(state) {
         let totalMoney = 0;
         if (state.productCartList) {
-          state.productCartList.forEach(item => totalMoney += item.productQuantity * item.productPrice);
+          state.productCartList.forEach(item => totalMoney += item.productQuantity * item.sale_price);
         }
         return totalMoney;
       }

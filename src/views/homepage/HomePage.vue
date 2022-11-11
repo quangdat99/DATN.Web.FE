@@ -1,6 +1,6 @@
 <template>
   <div class="homepage-container">
-    <div class="advertise-slider">
+    <div class="advertise-slider" v-if="!search">
       <base-slider :autoplay="true">
         <template #slider-content>
           <div
@@ -16,18 +16,15 @@
         </template>
       </base-slider>
     </div>
-    <grid-product-card
-      v-for="(grid, index) in gridList"
-      :key="index"
-      :productList="grid"
-    ></grid-product-card>
+    <grid-product-card :productList="gridList" :search="search"></grid-product-card>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import BaseSlider from "@/components/slider/slider.vue";
 import GridProductCard from "@/components/card/GridProductCard.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, getCurrentInstance } from "vue";
 export default {
   components: {
     BaseSlider,
@@ -35,6 +32,8 @@ export default {
   },
   name: "HomePage",
   setup() {
+    const { proxy } = getCurrentInstance();
+    const search = ref(true); // Đánh dấu có đang tìm kiếm không
     const listSlider = ref([
       {
         src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide1.jpg",
@@ -53,51 +52,42 @@ export default {
         page: "",
       },
     ]);
-    const productDiscountList = [
-      {
-        productId: "386825b2-1b4d-11ed-8dc4-34415dd21b70",
-        productDiscount: 25,
-        productName: "Bánh bơ trứng Richy gói 270g",
-        productUnit: "Gói",
-        productPrice: 27400,
-        productOldPrice: 36400,
-        productImage:
-          "https://res.cloudinary.com/mp32022/image/upload/v1659936363/Banner/slide5.jpg",
-      },
-      {
-        productId: "b36e6a6f-1800-11ed-83c5-34415dd21b70",
-        productDiscount: 36,
-        productName: "Sữa đậu nành hạnh nhân 1L",
-        productUnit: "Hộp",
-        productPrice: 41900,
-        productOldPrice: 65500,
-        productImage:
-          "https://res.cloudinary.com/mp32022/image/upload/v1659936363/Banner/slide5.jpg",
-      },
-      {
-        productDiscount: 34,
-        productName: "Xà bông tắm naturel CaMay 125g",
-        productUnit: "Cái",
-        productPrice: 12500,
-        productOldPrice: 16400,
-        productImage:
-          "https://res.cloudinary.com/mp32022/image/upload/v1659936363/Banner/slide5.jpg",
-      },
-    ];
+    const product_discountList = ref({
+      productId: "386825b2-1b4d-11ed-8dc4-34415dd21b70",
+      product_discount: 25,
+      product_name:
+        "Bánh bơ trứng Richy gói 270g bơ trứng Richy gói 270g Bánh bơ trứng Richy gói 270g",
+      product_unit: "Gói",
+      sale_price: 27400,
+      sale_price_old: 36400,
+      rating: 3.6,
+      img_url:
+        "https://res.cloudinary.com/mp32022/image/upload/v1659936363/Banner/slide5.jpg",
+    });
     const gridList = ref([]);
     onMounted(() => {
-      gridList.value.push(productDiscountList);
+      setTimeout(() => {
+      }, 200);
+      for (let i = 0; i < 20; i++) {
+        let item = Object.assign({}, product_discountList.value);
+        gridList.value.push(item);
+      }
+      window.homePage = proxy;
     });
     return {
       listSlider,
       gridList,
+      search,
     };
   },
+  // computed: {
+  //   ...mapGetters({
+  //     search: "moduleHomePage/Search",
+  //   }),
+  // },
 };
 </script>
 
 <style lang="scss">
-.homepage-container {
-  @import "./homepage.scss";
-}
+@import "./HomePage.scss";
 </style>

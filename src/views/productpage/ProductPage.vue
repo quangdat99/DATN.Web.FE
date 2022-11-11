@@ -1,7 +1,7 @@
 <template>
   <div class="product-page flex flex-column">
     <div class="product-navigation">
-      <a :href="homepage">Trang chủ/</a> {{ productName }}
+      <a :href="homepage">Trang chủ/</a> {{ product_name }}
     </div>
     <div class="product-page-main-content flex flex-row">
       <div class="product-page-image-container">
@@ -20,7 +20,7 @@
         <div class="product-main-information-price-status">
           <div
             class="old-price price flex flex-row sub-information flex-center"
-            v-if="product.productDiscount != 0"
+            v-if="product.product_discount != 0"
           >
             <div class="old-price-title price-title product-detail-title">
               Giá niêm yết
@@ -202,9 +202,9 @@
         <div>Sản phẩm liên quan</div>
       </div>
       <div class="product-page-relation-content">
-        <grid-list-product-card
+        <grid-relation-product-card
           :listProduct="productRelationProducts"
-        ></grid-list-product-card>
+        ></grid-relation-product-card>
       </div>
     </div>
   </div>
@@ -219,7 +219,7 @@ import BaseButton from "@/components/button/BaseButton.vue";
 import VueNumberInput from "@chenfengyuan/vue-number-input";
 import StarRating from "vue-star-rating";
 import BaseInput from "@/components/input/BaseInput.vue";
-import GridListProductCard from "@/components/card/GridListProductCard.vue";
+import GridRelationProductCard from "@/components/card/GridRelationProductCard.vue";
 import ProductAPI from "@/apis/components/productAPI";
 import { useFormat } from "@/commons/format.js";
 
@@ -232,7 +232,7 @@ export default {
     BaseButton,
     StarRating,
     BaseInput,
-    GridListProductCard,
+    GridRelationProductCard,
   },
   async setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
@@ -240,7 +240,7 @@ export default {
     const product = ref({});
 
     const homepage = ref();
-    const productName = ref("Bánh bơ trứng Richy gói 270g");
+    const product_name = ref("Bánh bơ trứng Richy gói 270g");
     const listSlider = ref([]);
     const listTypeButtons = ref([]);
     const value = ref(1);
@@ -328,7 +328,7 @@ export default {
         } 
         else {
           listSlider.value.push({
-            src: product.value.productImage,
+            src: product.value.img_url,
           });
         }
       }
@@ -337,7 +337,7 @@ export default {
     });
     return {
       homepage,
-      productName,
+      product_name,
       listSlider,
       listTypeButtons,
       value,

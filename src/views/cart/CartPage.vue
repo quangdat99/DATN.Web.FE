@@ -11,14 +11,14 @@
                 <div class="cart-page-product-detail flex flex-between" v-for="(product, index) in productList"
                     :key="index">
                     <div class="cart-page-product-image">
-                        <img :src="product.productImage" alt="">
+                        <img :src="product.img_url" alt="">
                     </div>
                     <div class="main-information flex flex-column flex-bs-33">
                         <div class="main-information-product-name main-information-product-detail">
-                            {{ product.productName }}
+                            {{ product.product_name }}
                         </div>
                         <div class="main-information-product-unit main-information-product-detail">
-                            ĐVT: {{ product.productUnit }}
+                            ĐVT: {{ product.product_unit }}
                         </div>
                         <div class="main-information-delete main-information-product-detail">
                             <div class="" @click="confirmDeleteProduct(product)">
@@ -137,7 +137,7 @@ export default {
         }
         const confirmDeleteProduct = (product) => {
             confirm.require({
-                message: `Bạn có chắc chắn muốn xóa sản phẩm ${product.productName} khỏi giỏ hàng không?`,
+                message: `Bạn có chắc chắn muốn xóa sản phẩm ${product.product_name} khỏi giỏ hàng không?`,
                 header: 'XÓA SẢN PHẨM?',
                 accept: () => {
                     proxy.$store.dispatch('removeProductCart',product);
@@ -153,7 +153,7 @@ export default {
         const totalComputedMoney = computed(() => {
             let total = 0;
             if (proxy.$store.state.productCartList) {
-                proxy.$store.state.productCartList.forEach(item => total += item.productQuantity * item.productPrice);
+                proxy.$store.state.productCartList.forEach(item => total += item.productQuantity * item.sale_price);
             }
             return total;
         });

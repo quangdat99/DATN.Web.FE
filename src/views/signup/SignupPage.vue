@@ -55,7 +55,7 @@
                         </div>
                     </a>
                     <div class="welcome-text">
-                        Chào mừng bạn đến mới Tân Thời Shop
+                        Chào mừng bạn đến mới Eshop Shop
                     </div>
                 </div>
                 <div class="ask">

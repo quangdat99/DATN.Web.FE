@@ -7,9 +7,10 @@ import getters from './getters.js';
 import mutations from './mutations.js';
 import actions from './actions.js';
 
-import moduleContext from './context/moduleContext.js'
+import moduleContext from './context/moduleContext.js';
 import moduleProduct from './module/moduleProduct.js';
 import moduleProductPage from './module/moduleProductPage.js';
+import moduleHomePage from './module/moduleHomePage.js';
 
 // Create a new store instance.
 const store = createStore({
@@ -21,6 +22,7 @@ const store = createStore({
     moduleContext,
     moduleProduct,
     moduleProductPage,
+    moduleHomePage,
   },
   strict: true,
   plugins: [createPersistedState()]

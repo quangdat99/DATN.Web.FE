@@ -1,0 +1,111 @@
+@import "../../assets/scss/variables.scss";
+
+.product-card {
+  font-size: 12px;
+  height: 290px;
+  width: 180px;
+
+  .card {
+    height: 100%;
+    background-color: #ffffff;
+    overflow: hidden;
+    border-radius: 1px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    box-shadow: rgb(153 153 153 / 60%) 0px 0px 3px 0px;
+
+    &:hover {
+      border: 1px solid $primary;
+      box-shadow: rgb(153 153 153 / 60%) 0px 0px 10px 0px;
+    }
+
+    .card-top {
+      margin-bottom: 10px;
+
+      .card-image {
+        height: 188px;
+        width: 188px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        overflow: hidden;
+        flex: 1;
+      }
+
+      .card-sub-information {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+
+        .info-discount {
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+          position: relative;
+          font-weight: 400;
+          line-height: .8125rem;
+          color: $white;
+          text-transform: uppercase;
+          box-sizing: border-box;
+          padding: 4px 2px 3px;
+          background-color: $primary;
+
+          &::after {
+            content: "";
+            width: 0;
+            height: 0;
+            left: 0;
+            bottom: -4px;
+            position: absolute;
+            border-color: transparent $primary;
+            border-style: solid;
+            border-width: 0 18px 4px;
+          }
+        }
+      }
+    }
+
+    .card-bottom {
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+
+      .card-name {
+        font-size: 12px;
+        font-weight: normal;
+        color: $black;
+        overflow: hidden;
+        height: 29px;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        margin-bottom: 4px;
+      }
+
+      .card-detail-information {
+        display: flex;
+        font-size: 16px;
+
+        .product-detail {
+          margin-bottom: 5px;
+          color: $primary;
+
+          &.product-old-price {
+            text-decoration: line-through;
+            color: #82869e;
+            font-size: 14px;
+            margin-right: 8px;
+          }
+        }
+      }
+
+      .card-button-container {
+        width: 100%;
+      }
+    }
+
+  }
+}

@@ -4,6 +4,10 @@
 $loading-rotate-time: 0.6s;
 $loading-size: 20px;
 
+*,::after,::before {
+  box-sizing: border-box;
+}
+
 .loading {
   display: -webkit-flex;
   display: flex;

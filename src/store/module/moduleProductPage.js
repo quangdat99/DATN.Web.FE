@@ -12,7 +12,8 @@ const state = {
     }
   },
   productId: '',
-  product: {}
+  product: {},
+  search: false,
 };
 const getters = {
   ...crud.getters,

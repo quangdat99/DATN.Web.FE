@@ -1,57 +1,60 @@
 <template>
   <div class="grid-list-product-card">
     <div class="product-container">
-      <product-card v-for="(product, index) in listProduct" :key="index"
-        :hide="!(indexView <= index && index <= indexView + 5)" :productId="product.productId"
-        :productDiscount="product.productDiscount" :productName="product.productName" :productUnit="product.productUnit"
-        :productPrice="product.productPrice" :productOldPrice="product.productOldPrice"
-        :productImage="product.productImage">
-
+      <product-card
+        v-for="(product, index) in productList"
+        :key="index"
+        :product="product"
+      >
       </product-card>
     </div>
-    <div class="button-action flex flex-between" v-if="listProduct?.length > 6">
+    <div class="button-action flex flex-between" v-if="productList?.length > 6">
       <div v-if="indexView == 0"></div>
-      <div class="button-prev icon24 previous" @click="handleClickButtonAction(-1)" v-if="indexView > 0">
-
-      </div>
-      <div class="button-next icon24 next" @click="handleClickButtonAction(1)"
-        v-if="indexView + 5 < listProduct?.length - 1">
-
-      </div>
+      <div
+        class="button-prev icon24 previous"
+        @click="handleClickButtonAction(-1)"
+        v-if="indexView > 0"
+      ></div>
+      <div
+        class="button-next icon24 next"
+        @click="handleClickButtonAction(1)"
+        v-if="indexView + 5 < productList?.length - 1"
+      ></div>
     </div>
   </div>
-
 </template>
 
 <script>
 import ProductCard from "@/components/card/ProductCard.vue";
-import { ref } from 'vue';
+import { ref } from "vue";
 export default {
-  name: "GridListProductCard",
+  name: "GridRelationProductCard",
   components: {
-    ProductCard
+    ProductCard,
   },
   props: {
-    listProduct: {
+    productList: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   setup(props, { emit }) {
     const indexView = ref(0);
     const handleClickButtonAction = (direction) => {
       if (indexView.value > 0 || direction > 0) {
-        if (!(direction > 0 && indexView.value == props.listProduct.length - 1)) {
+        if (
+          !(direction > 0 && indexView.value == props.productList.length - 1)
+        ) {
           indexView.value = indexView.value + direction;
         }
       }
-    }
+    };
     return {
       indexView,
-      handleClickButtonAction
-    }
-  }
-}
+      handleClickButtonAction,
+    };
+  },
+};
 </script>
 
 <style lang="scss">
@@ -65,8 +68,7 @@ export default {
     display: flex;
     overflow: hidden;
     gap: 5px;
-    background-color: #fff !important;
-
+    width: fit-content;
   }
 
   .flex1 {

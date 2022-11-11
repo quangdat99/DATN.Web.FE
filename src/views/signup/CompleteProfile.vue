@@ -61,7 +61,7 @@
                         </div>
                     </a>
                     <div class="welcome-text">
-                        Chào mừng bạn đến mới Tân Thời Shop
+                        Chào mừng bạn đến mới Eshop Shop
                     </div>
                 </div>
                 <div class="ask">
@@ -117,23 +117,8 @@ export default {
                     // redirect: "follow",
                 };
 
-                // if(publicID.value){
-                //     var requestDeleteOptions = {
-                //         method : "POST",
-                //         body: JSON.stringify({
-                //             public_id: publicID.value,
-                //             signature : signature.value,
-                //             api_key : apiKey.value,
-                //             timestamp : timestamp.value
-                //         })
-                //     }
-                //     fetch("https://api.cloudinary.com/v1_1/mp32022/image/destroy", requestDeleteOptions)
-                //     .then((response) => response.json())
-                //     .then((result) => {
-                        
-                //     })
-                //     .catch((error) => console.log("error", error));
-                // }
+                
+                
 
                 fetch("https://api.cloudinary.com/v1_1/mp32022/upload/", requestOptions)
                     .then((response) => response.json())

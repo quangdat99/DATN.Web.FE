@@ -1,6 +1,5 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="header ">
+  <div class="header">
     <div class="flex-between container">
       <div class="logo-container flex-between">
         <a href="/">
@@ -16,17 +15,6 @@
           rightIcon="search-red" :hasBorder="false"></base-input>
       </div>
       <div class="row-action flex-between">
-        <div class="row-group account flex-row flex-center cursor-pointer" @click="goToLogin">
-          <div class="icon24 account mr-4" v-if="!$store.state.account || !$store.state.account['userId']">
-
-          </div>
-          <div v-else class="avatar">
-            <img :src="$store.state.account['avatar'] " alt="">
-          </div>
-          <div class="text text-white">
-            {{ !$store.state.account || !$store.state.account['userId'] ? account : $store.state.account['fullName'] }}
-          </div>
-        </div>
         <v-menu>
           <div class="row-group flex-row flex-center cart">
             <div class="icon24 shopping-cart mr-4">
@@ -46,21 +34,21 @@
                 <div class="product-detail-content flex flex-row " v-for="(product, index) in listProductCard"
                   :key="index">
                   <div class="product-detail-content-img">
-                    <img :src="product.productImage" alt="">
+                    <img :src="product.img_url" alt="">
                   </div>
                   <div class="product-detail-content-main flex flex-column flex2">
                     <div class="product-detail-content-main-name">
-                      {{ product.productName }}
+                      {{ product.product_name }}
                     </div>
                     <div class="product-detail-content-main-unit">
-                      ĐVT: {{ product.productUnit }}
+                      ĐVT: {{ product.product_unit }}
                     </div>
                     <div class="product-detail-content-main-quantity">
                       x{{ product.productQuantity }}
                     </div>
                   </div>
                   <div class="product-detail-content-price flex flex-end flex2">
-                    {{ formatVND(product.productQuantity * product.productPrice) }}
+                    {{ formatVND(product.productQuantity * product.sale_price) }}
                   </div>
                 </div>
               </div>
@@ -81,14 +69,15 @@
             </div>
           </template>
         </v-menu>
-
-
-        <div class="row-group flex-row flex-center position">
-          <div class="icon24 position mr-4">
+        <div class="row-group account flex-row flex-center cursor-pointer" @click="goToLogin">
+          <div class="icon24 account mr-4" v-if="!$store.state.account || !$store.state.account['userId']">
 
           </div>
+          <div v-else class="avatar">
+            <img :src="$store.state.account['avatar'] " alt="">
+          </div>
           <div class="text text-white">
-            {{ position }}
+            {{ !$store.state.account || !$store.state.account['userId'] ? account : $store.state.account['fullName'] }}
           </div>
         </div>
       </div>
@@ -145,7 +134,7 @@ export default {
     const totalComputedMoney = computed(() => {
       let total = 0;
       if (proxy.$store.state.productCartList) {
-        proxy.$store.state.productCartList.forEach(item => total += item.productQuantity * item.productPrice);
+        proxy.$store.state.productCartList.forEach(item => total += item.productQuantity * item.sale_price);
       }
       return total;
     })
@@ -178,16 +167,6 @@ export default {
   },
 };
 </script>
-<!-- eslint-disable prettier/prettier -->
 <style lang="scss">
-@import "@/assets/scss/main.scss";
-
-.header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 78px;
-  background-color: var(--color-background-header);
-  @import "./TheHeader.scss";
-}
+@import "./TheHeader.scss";
 </style>

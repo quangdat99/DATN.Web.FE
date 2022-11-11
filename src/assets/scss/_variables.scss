@@ -2,6 +2,9 @@
 $image-sprite: '@/assets/images/sprites.png';
 $image-loading: '@/assets/images/icon/loading.svg';
 
+/* Size */
+$width-container: 1105px;
+$height-footer: 350px;
 
 /* Color */
 $primary: #de3618;
@@ -9,7 +12,9 @@ $secondary: #c1c4cc;
 $semi-secondary: #707070;
 $white: #fff;
 $black: #111111;
+$text-grey: rgba(0,0,0,.54);
 $bg-grey: #f4f5f8;
+$bg-main: #f5f5f5;
 
 $color-error: #ff7777;
 $color-focus: #2080ff;

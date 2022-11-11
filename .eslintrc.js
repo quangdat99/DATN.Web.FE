@@ -46,5 +46,7 @@ module.exports = {
     'vue/html-quotes': 'off',
     'no-debugger': 'off',
     'no-prototype-builtins': 'off',
+    'vue/prop-name-casing': 'off',
+    'vue/require-valid-default-prop': 'off'
   }
 }
