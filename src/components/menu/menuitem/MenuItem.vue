@@ -49,7 +49,5 @@ export default {
 </script>
 
 <style lang="scss">
-
 @import './MenuItem.scss';
-
 </style>

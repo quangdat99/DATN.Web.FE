@@ -1,5 +1,9 @@
 <template>
-  <div class="base-input w-100">
+  <div
+    class="base-input"
+    :class="[width ? '' : 'w-100']"
+    :style="{ width: `${width}px` }"
+  >
     <label class="label" v-if="label">{{ label }}</label>
     <div
       class="flex-row"
@@ -16,18 +20,18 @@
       ></div>
       <input
         :title="internalText"
-        class="base-input-item flex w-100"
+        class="base-input-item flex"
         :placeholder="placeholder"
         :disabled="disabled"
         :readOnly="readOnly"
         :maxlength="maxLength"
-        :style="{ width: `${width}px` }"
         ref="input"
         :class="{
           disabled: disabled,
           'has-right-icon': rightIcon,
           'has-left-icon': leftIcon,
           'has-border': hasBorder,
+          'w-100': !width,
         }"
         v-on="listeners"
         :type="type"

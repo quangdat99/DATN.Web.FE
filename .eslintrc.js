@@ -47,6 +47,9 @@ module.exports = {
     'no-debugger': 'off',
     'no-prototype-builtins': 'off',
     'vue/prop-name-casing': 'off',
-    'vue/require-valid-default-prop': 'off'
+    'vue/require-valid-default-prop': 'off',
+    'vue/no-mutating-props': 'off',
+    'no-dupe-keys': 'off',
+    'vue/no-dupe-keys': 'off'
   }
 }

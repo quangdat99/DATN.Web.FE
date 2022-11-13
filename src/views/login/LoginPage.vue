@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="login-button">
-          <base-button text="ĐĂNG NHẬP" customClass="btn-white btn-padding w-100" @click="login">
+          <base-button text="ĐĂNG NHẬP" customClass="white btn-padding w-100" @click="login">
           </base-button>
         </div>
         <div class="forgot-password flex flex-end color-red">
@@ -47,7 +47,7 @@
           Bạn chưa có tài khoản ?
         </div>
         <div class="signup-button">
-          <base-button text="ĐĂNG KÝ" customClass="btn-red btn-padding" @click="goToSignup">
+          <base-button text="ĐĂNG KÝ" customClass="primary btn-padding" @click="goToSignup">
           </base-button>
         </div>
       </div>

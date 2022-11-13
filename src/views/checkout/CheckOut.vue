@@ -101,7 +101,7 @@
 
                 </div>
                 <div class="flex flex-center">
-                    <base-button text="THANH TOÁN" customClass="btn-white btn-padding" @click.stop="takePayment">
+                    <base-button text="THANH TOÁN" customClass="white btn-padding" @click.stop="takePayment">
                     </base-button>
                 </div>
             </div>

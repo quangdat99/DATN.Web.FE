@@ -2,8 +2,8 @@
 @import "@/assets/scss/_variables.scss";
 .header {
     width: 100%;
-    height: 78px;
-    background-color: var(--color-background-header);
+    height: 67px;
+    background-color: $primary;
     display: flex;
     justify-content: center;
 

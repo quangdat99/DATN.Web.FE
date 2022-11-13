@@ -1,95 +1,90 @@
-button.btn{
-    padding: 0;
+@import "@/assets/scss/_variables.scss";
+
+button.btn {
+    height: $height-control;
+    padding: 0px 15px;
 }
 
-button.text{
+button.text {
     font-weight: bold;
 }
 
-button{
-    outline: none !important;
+button {
+    outline: none;
 }
 
-.base-button{
+.base-button {
     transition: all 0.2s ease;
     cursor: pointer;
     display: flex;
     align-items: center;
 }
 
-.btn-border-none{
-    border: none !important;
+.btn-border-none {
+    border: none;
 }
 
-.btn-opacity{
-    &:hover{
+.btn-opacity {
+    &:hover {
         opacity: 1;
     }
-    &:focus{
+
+    &:focus {
         opacity: 1;
     }
-    &:focus-within{
+
+    &:focus-within {
         opacity: 1;
     }
 }
 
-.disabled-btn{
-    opacity: 0.9 !important;
-    cursor : unset !important;
-    &:hover{
-        background-color: transparent !important;
+.disabled-btn {
+    opacity: 0.9;
+    cursor: unset;
+
+    &:hover {
+        background-color: transparent;
     }
 }
-.btn-padding{
-    padding: 5px 15px !important;
-    margin-right: 5px;
-}
-.btn-red{
-    height: 36px;
-    transition: all 0.35s !important;
-    border: 1px solid #c20000 !important;
-    cursor: pointer !important;
-    text-transform: inherit !important;
-    font-weight: 500 !important;
-    border-radius: 4px !important;
-    font-size: 14px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background-color: #fff !important;
-    color: #c20000 !important;
+
+.primary {
+    transition: all 0.35s;
+    cursor: pointer;
+    text-transform: inherit;
+    font-weight: 500;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $primary;
+    color: $primary;
     overflow: hidden;
-    &.no-active:active{
-        color: #c20000 !important;
-        background-color: #fff !important;
-    }
-    &:active{
-        color: #fff !important;
-        background-color: #c20000 !important;
+
+    &:active {
+        color: $primary;
+        background-color: $primary;
     }
 }
 
-.btn-white{
-    height: 36px;
-    transition: all 0.35s !important;
-    border: 1px solid #c20000 !important;
-    cursor: pointer !important;
-    text-transform: inherit !important;
-    font-weight: 500 !important;
-    border-radius: 4px !important;
-    font-size: 14px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background-color: #c20000 !important;
-    color: #fff !important;
+.white {
+    transition: all 0.35s;
+    cursor: pointer;
+    text-transform: inherit;
+    font-weight: 500;
+    border-radius: 2px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    color: $black;
     overflow: hidden;
-    &.no-active:active{
-        color: #fff !important;
-        background-color: #c20000 !important;
+    &:hover {
+        color: $primary;
     }
-    &:active{
-        color: #c20000 !important;
-        background-color: #fff !important;
+    &.active {
+        color: $white;
+        background-color: $primary;
     }
 }

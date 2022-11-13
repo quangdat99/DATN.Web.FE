@@ -7,7 +7,6 @@
       radius ? 'btn-radius' : '',
       hasBorder ? '' : 'btn-border-none',
       disabled ? 'disabled-icon' : '',
-      customClass,
     ]"
     :disabled="disabled || processing"
     v-tooltip="title"
@@ -76,10 +75,6 @@ export default {
     hasBorder: {
       default: false,
       type: Boolean,
-    },
-    customClass: {
-      default: null,
-      type: String,
     },
     leftIconFocus: {
       default: null,

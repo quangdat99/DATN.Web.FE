@@ -77,12 +77,12 @@
         <div class="product-main-information-placement flex flex-row">
           <base-button
             text="MUA NGAY"
-            customClass="btn-white btn-padding no-active"
+            customClass="white btn-padding no-active"
           >
           </base-button>
           <base-button
             text="THÊM VÀO GIỎ"
-            customClass="btn-red btn-padding no-active"
+            customClass="primary btn-padding no-active"
             leftIcon="shopping-cart-red"
           >
           </base-button>
@@ -190,7 +190,7 @@
           <div class="flex button-rate flex-row">
             <div class="flex1"></div>
             <div class="flex5">
-              <base-button text="ĐÁNH GIÁ" customClass="btn-white btn-padding ">
+              <base-button text="ĐÁNH GIÁ" customClass="white btn-padding ">
               </base-button>
             </div>
           </div>

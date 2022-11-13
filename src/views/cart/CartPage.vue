@@ -2,9 +2,9 @@
     <div class="cart-page flex flex-row">
         <div class="cart-page-left flex4">
             <div class="cart-page-action-button flex flex-between">
-                <base-button text="TIẾP TỤC MUA HÀNG" customClass="btn-white btn-padding no-active" @click="goBackToHomepage">
+                <base-button text="TIẾP TỤC MUA HÀNG" customClass="white btn-padding no-active" @click="goBackToHomepage">
                 </base-button>
-                <base-button text="XÓA GIỎ HÀNG?" customClass="btn-red btn-padding " @click="confirmDeleteCart">
+                <base-button text="XÓA GIỎ HÀNG?" customClass="primary btn-padding " @click="confirmDeleteCart">
                 </base-button>
             </div>
             <div class="cart-page-product-list">
@@ -85,7 +85,7 @@
             <div class="sub-information cart-page-right-item">
                 (Giá đã bao gồm VAT)
             </div>
-            <base-button text="THANH TOÁN" customClass="btn-white btn-padding w-100" @click="goToCheckout">
+            <base-button text="THANH TOÁN" customClass="white btn-padding w-100" @click="goToCheckout">
                 </base-button>
         </div>
         <confirm-dialog></confirm-dialog>

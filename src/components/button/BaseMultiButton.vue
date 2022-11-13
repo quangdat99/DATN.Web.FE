@@ -2,7 +2,7 @@
     <div class="base-multi-button ">
         <div class=" flex-row">
             <base-button  v-for="(button, index) in listButtons" :key="index" :text="button.text"
-                customClass=" btn-red" @click="onClickButton(index)" :class="['button-element',index == selectedButtonIndex ? 'selected' : '']">
+                customClass=" primary" @click="onClickButton(index)" :class="['button-element',index == selectedButtonIndex ? 'selected' : '']">
             </base-button>
         </div>
 

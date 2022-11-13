@@ -38,7 +38,7 @@
           <star-rating
             :rating="product.rating"
             :increment="0.1"
-            :star-size="15"
+            :star-size="12"
             read-only
             :show-rating="false"
           ></star-rating>

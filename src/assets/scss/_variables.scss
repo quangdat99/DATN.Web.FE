@@ -5,15 +5,18 @@ $image-loading: '@/assets/images/icon/loading.svg';
 /* Size */
 $width-container: 1105px;
 $height-footer: 350px;
+$height-control: 32px;
 
 /* Color */
-$primary: #de3618;
+$primary: #C20000;
+// $primary: #1ca8ff;
 $secondary: #c1c4cc;
 $semi-secondary: #707070;
 $white: #fff;
 $black: #111111;
-$text-grey: rgba(0,0,0,.54);
+$text-grey: rgba(0, 0, 0, .54);
 $bg-grey: #f4f5f8;
+$bg-grey-1: #ededed;
 $bg-main: #f5f5f5;
 
 $color-error: #ff7777;
@@ -29,9 +32,9 @@ $input-hover-border-color: $color-focus;
 $input-focus-border-color: $color-focus;
 $input-error-border-color: #ff0000;
 $input-disabled-color: $secondary;
-$input-disabled-bg:  $bg-grey;
+$input-disabled-bg: $bg-grey;
 $input-outline: $black auto 1px;
-$input-height: 38px !default;
+$input-height: $height-control !default;
 
 
 /* Font */

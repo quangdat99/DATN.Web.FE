@@ -1,15 +1,37 @@
-.menu-wrapper-item{
-    &.menu-border{
+@import "@/assets/scss/_variables.scss";
+
+.menu-wrapper-item {
+    outline: none;
+    color: inherit;
+    text-decoration: none;
+    line-height: $combo-height;
+    height: $combo-height;
+    cursor: pointer;
+    padding: 0 16px;
+    display: block;
+    transition: all 0.7s ease;
+    &:hover {
+        outline: 0;
+        background-color: $menu-wrapper-hv;
+        border-radius: 2px;
+        color: $primary;
+        transition: all 0.2s ease;
+    }
+
+    &.menu-border {
         border-bottom: 1px solid #dadada;
     }
-    &.menu-wrapper-item-icon{
+
+    &.menu-wrapper-item-icon {
         padding: 0 16px 0 6px !important;
         white-space: nowrap;
     }
-    .menu-item-ic{
+
+    .menu-item-ic {
         margin-right: 8px;
     }
-    &.disabled-item{
+
+    &.disabled-item {
         pointer-events: none;
         color: #afafaf;
     }

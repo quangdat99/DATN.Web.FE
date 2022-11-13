@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="signup-button">
-                    <base-button text="HOÀN THÀNH" customClass="btn-white btn-padding w-100" @click="completeProfile">
+                    <base-button text="HOÀN THÀNH" customClass="white btn-padding w-100" @click="completeProfile">
                     </base-button>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                     Bạn đã có tài khoản?
                 </div>
                 <div class="signup-button">
-                    <base-button text="ĐĂNG NHẬP" customClass="btn-red btn-padding" @click="goToLogin">
+                    <base-button text="ĐĂNG NHẬP" customClass="primary btn-padding" @click="goToLogin">
                     </base-button>
                 </div>
             </div>

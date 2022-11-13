@@ -62,9 +62,9 @@
               </div>
             </div>
             <div class="product-cart-action flex flex-row flex-between">
-              <base-button text="Xem chi tiết" customClass="btn-white btn-padding no-active" @click="viewCart">
+              <base-button text="Xem chi tiết" customClass="white btn-padding no-active" @click="viewCart">
               </base-button>
-              <base-button text="Thanh toán ngay" customClass="btn-red btn-padding no-active" @click="goToCheckout">
+              <base-button text="Thanh toán ngay" customClass="primary btn-padding no-active" @click="goToCheckout">
               </base-button>
             </div>
           </template>
