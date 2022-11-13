@@ -14,6 +14,7 @@ import Toaster from '@meforma/vue-toaster';
 import BaseDropdown from '@/components/dropdown/BaseDropdown.vue';
 import BaseInput from '@/components/input/BaseInput.vue';
 import BaseNumber from '@/components/number/BaseNumber.vue';
+import BaseCheckbox from '@/components/checkbox/BaseCheckbox.vue';
 const app = createApp(App);
 
 /* Styles */
@@ -45,5 +46,6 @@ app.component('BaseDropdown', BaseDropdown);
 app.component('Dropdown', Dropdown);
 app.component('BaseInput', BaseInput);
 app.component('BaseNumber', BaseNumber);
+app.component('BaseCheckbox', BaseCheckbox);
 
 app.mount('#app')

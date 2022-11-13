@@ -243,7 +243,7 @@ export default defineComponent({
     function initOptions() {
       let me = proxy;
       let options = {
-        allowDecimalPadding: props.allowDecimalPadding, // Cho phép hiển thi đầy đủ phần thập phân
+        // allowDecimalPadding: props.allowDecimalPadding, // Cho phép hiển thi đầy đủ phần thập phân
         decimalCharacter: ",",
         decimalPlaces: props.decimalPlaces,
         digitGroupSeparator: ".",
@@ -380,54 +380,5 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import "@/assets/scss/variables.scss";
-.base-input {
-  align-items: center;
-  padding: 0px;
-  input {
-    background: $white;
-  }
-  .ms-number-item {
-    border: none;
-    padding: 9px 12px;
-    text-align: left;
-    &:focus {
-      outline: none;
-    }
-  }
-  .ms-number-spin {
-    width: 28px;
-    min-width: 28px;
-    height: $input-height;
-    border-left: 1px solid $secondary;
-  }
-  .spin {
-    position: relative;
-    &::before {
-      content: "";
-      position: absolute;
-      background: transparent url($image-sprite) no-repeat -96px -48px;
-      width: 28px;
-      height: 10px;
-      left: 0px;
-    }
-    &.up::before {
-      transform: rotate(180deg);
-      top: 4px;
-    }
-    &.down::before {
-      top: 2px;
-    }
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
-
-input {
-  &.has-border {
-    border: 1px solid #c9c9c9 !important;
-    border-radius: 3px;
-  }
-}
+@import './BaseNumber.scss'
 </style>

@@ -16,7 +16,12 @@
         </template>
       </base-slider>
     </div>
-    <grid-product-card :productList="gridList" :search="search"></grid-product-card>
+    <grid-product-card
+      :productList="gridList"
+      :search="search"
+      :model="model"
+      @update:model="updateModel"
+    ></grid-product-card>
   </div>
 </template>
 
@@ -24,7 +29,8 @@
 import { mapActions, mapGetters } from "vuex";
 import BaseSlider from "@/components/slider/slider.vue";
 import GridProductCard from "@/components/card/GridProductCard.vue";
-import { ref, onMounted, getCurrentInstance } from "vue";
+import { ref, onMounted, getCurrentInstance, reactive, watch } from "vue";
+import { useRoute } from "vue-router";
 export default {
   components: {
     BaseSlider,
@@ -34,6 +40,15 @@ export default {
   setup() {
     const { proxy } = getCurrentInstance();
     const search = ref(true); // Đánh dấu có đang tìm kiếm không
+    const route = useRoute();
+    const model = ref({
+      keyword: null,
+      rating: null,
+      fromAmount: null,
+      toAmount: null,
+      page: null,
+      sort: null,
+    });
     const listSlider = ref([
       {
         src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide1.jpg",
@@ -66,18 +81,42 @@ export default {
     });
     const gridList = ref([]);
     onMounted(() => {
-      setTimeout(() => {
-      }, 200);
+      setTimeout(() => {}, 200);
       for (let i = 0; i < 20; i++) {
         let item = Object.assign({}, product_discountList.value);
         gridList.value.push(item);
       }
-      window.homePage = proxy;
+      window.proxy = proxy;
+
+      let query = route.query;
+      Object.assign(model.value, query);
     });
+
+    watch(model.value, (newVal, oldVal) => {
+      if (newVal != oldVal) {
+        let query = Object.assign({}, model.value);
+        Object.keys(query).forEach((key) => {
+          if (query[key] === null || query[key] === "") {
+            delete query[key];
+          }
+        });
+        proxy.$router.push({ path: "search", query: query });
+      }
+    });
+
+    /**
+     * Cập nhật model
+     */
+    const updateModel = (value) => {
+      Object.assign(model.value, value);
+    };
+
     return {
       listSlider,
       gridList,
       search,
+      model,
+      updateModel,
     };
   },
   // computed: {

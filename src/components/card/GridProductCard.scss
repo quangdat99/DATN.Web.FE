@@ -1,0 +1,68 @@
+@import "@/assets/scss/_variables.scss";
+
+.grid-product-card {
+  .grid-product-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0px;
+    color: $black;
+    line-height: 24px;
+    font-size: 16px;
+    font-weight: 600;
+
+    .header-left {
+      flex: 1;
+      display: flex;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 32px;
+    }
+
+    .header-right {
+      flex: 5;
+      color: $text-grey;
+
+      .sort-option {
+        height: 60px;
+        background-color: $bg-grey-1;
+      }
+
+      .sort-title {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .container-grid {
+    display: flex;
+
+    .container-filter {
+      flex: 1;
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 5px;
+      background-color: $white;
+      width: fit-content;
+
+      &.search {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+  }
+
+  @media only screen and (max-width: 414px) {
+    .product-container {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  .key-filter {
+    span {
+      color: $primary;
+    }
+  }
+}

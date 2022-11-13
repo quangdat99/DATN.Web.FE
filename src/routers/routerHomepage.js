@@ -2,7 +2,9 @@ export default [
     {
         path: '/homepage/:key?',
         component: () => import("@/views/homepage/HomePage.vue"),
-        meta: {},
+        meta: {
+            anonymous: true
+        },
         name: 'Trang chủ',
     }
 ]

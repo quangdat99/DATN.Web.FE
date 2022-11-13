@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import routerHomepage from "./routerHomepage";
+import routerHomepage from "./routerHomePage.js";
+import routerSearch from "./routerSearch.js";
 import routerProductPage from "./routerProductPage.js";
 import routerCart from "./routerCart.js";
 import routerCheckout from "./routerCheckout.js";
@@ -20,6 +21,7 @@ const router = createRouter({
       },
       children: [
         ...routerHomepage,
+        ...routerSearch,
         ...routerProductPage,
         ...routerCart,
         ...routerCheckout,

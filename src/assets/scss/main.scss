@@ -294,6 +294,9 @@ body {
 .align-center {
   align-items: center;
 }
+.justify-between {
+  justify-content: space-between;
+}
 
 /* Font size*/
 .fs-10 {
@@ -314,7 +317,7 @@ body {
 
 
 /* Color*/
-.primary {
+.color-primary {
   color: $primary;
 }
 .txt-grey {

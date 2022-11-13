@@ -36,10 +36,11 @@
     <div class="container-grid">
       <div class="container-filter">
         <div class="group-filter">
-          <div class="title-ft fs-14 black">Đánh giá</div>
+          <div class="title-ft fs-14 black">Đánh Giá</div>
           <div class="container-ft ml-2">
             <div
               class="d-flex align-center cursor-pointer mt-2"
+              @click="updateRating(6 - i)"
               v-for="i in 5"
               :key="i"
             >
@@ -56,14 +57,30 @@
             </div>
           </div>
         </div>
-        <div class="group-filter mt-4">
-          <div class="title-ft fs-14 black">Khoảng giá</div>
-          <div class="container-ft mt-2">
-            <div class="d-flex">
+        <div class="group-filter mt-4 mr-4">
+          <div class="title-ft fs-14 black">Khoảng Giá</div>
+          <div class="container-ft mt-4">
+            <div class="d-flex justify-between">
               <base-number placeholder="&#8363; Từ" :width="80"></base-number>
               <span class="ml-1 mr-1 mt-2">-</span>
               <base-number placeholder="&#8363; Đến" :width="80"></base-number>
             </div>
+            <div class="d-flex mt-4">
+              <base-button text="ÁP DỤNG" class="w-100"></base-button>
+            </div>
+          </div>
+        </div>
+        <div class="group-filter mt-4 mr-4">
+          <div class="title-ft fs-14 black">Theo Danh Mục</div>
+          <div class="container-ft mt-4">
+            <base-checkbox class="mt-1" label="Áo khoác"></base-checkbox>
+            <base-checkbox class="mt-2" label="Áo Hoode"></base-checkbox>
+            <base-checkbox
+              class="mt-2"
+              label="Quần jean"
+              :disabled="true"
+              checked
+            ></base-checkbox>
           </div>
         </div>
       </div>
@@ -79,13 +96,20 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import {
+  ref,
+  onMounted,
+  watch,
+  defineComponent,
+  getCurrentInstance,
+  reactive,
+} from "vue";
 import { mapGetters } from "vuex";
 import ProductCard from "@/components/card/ProductCard.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
 import MenuItem from "../menu/menuitem/MenuItem.vue";
 import StarRating from "vue-star-rating";
-export default {
+export default defineComponent({
   name: "GridProductCard",
   components: {
     ProductCard,
@@ -102,78 +126,50 @@ export default {
       type: Boolean,
       default: false,
     },
+    model: {
+      type: Object,
+      default: null,
+    },
   },
+  emits: ["update:model"],
   setup(props, { emit }) {
+    const { proxy } = getCurrentInstance();
+    const data = ref({});
+    onMounted(() => {
+      Object.assign(data.value, props.model);
+    });
     const sort_amount = ref(null);
+
+    /**
+     * Thay đổi đánh giá
+     */
+    const updateRating = (rating) => {
+      if (data.value.rating != rating) {
+        data.value.rating = rating;
+      } else {
+        data.value.rating = null;
+      }
+    };
+
+    watch(
+      () => data.value,
+      (value) => {
+        if (value !== props.model) {
+          emit("update:model", value);
+        }
+      },
+      { deep: true }
+    );
+
     return {
       sort_amount,
+      data,
+      updateRating,
     };
   },
-  // computed: {
-  //   ...mapGetters({
-  //     search: "moduleHomePage/Search",
-  //   }),
-  // },
-};
+});
 </script>
 
-<style lang="scss">
-@import "@/assets/scss/_variables.scss";
-.grid-product-card {
-  .grid-product-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0px;
-    color: $black;
-    line-height: 24px;
-    font-size: 16px;
-    font-weight: 600;
-    .header-left {
-      flex: 1;
-      display: flex;
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 32px;
-    }
-    .header-right {
-      flex: 5;
-      color: $text-grey;
-      .sort-option {
-        height: 60px;
-        background-color: $bg-grey-1;
-      }
-      .sort-title {
-        font-size: 14px;
-      }
-    }
-  }
-  .container-grid {
-    display: flex;
-    .container-filter {
-      flex: 1;
-    }
-    .product-container {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 5px;
-      background-color: $white;
-      width: fit-content;
-      &.search {
-        grid-template-columns: repeat(5, 1fr);
-      }
-    }
-  }
-
-  @media only screen and (max-width: 414px) {
-    .product-container {
-      grid-template-columns: repeat(1, 1fr);
-    }
-  }
-  .key-filter {
-    span {
-      color: $primary;
-    }
-  }
-}
+<style lang="scss" scoped>
+@import "./GridProductCard.scss";
 </style>
