@@ -20,16 +20,28 @@
       :productList="gridList"
       :search="search"
       :model="model"
+      :listCategory="listCategory"
+      :paging="paging"
       @update:model="updateModel"
+      @update:listCategory="updateListCategory"
+      @update:sort="updateSort"
+      @update:page="updatePage"
     ></grid-product-card>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import BaseSlider from "@/components/slider/slider.vue";
 import GridProductCard from "@/components/card/GridProductCard.vue";
-import { ref, onMounted, getCurrentInstance, reactive, watch } from "vue";
+import {
+  ref,
+  onMounted,
+  getCurrentInstance,
+  reactive,
+  watch,
+  computed,
+} from "vue";
 import { useRoute } from "vue-router";
 export default {
   components: {
@@ -39,16 +51,38 @@ export default {
   name: "HomePage",
   setup() {
     const { proxy } = getCurrentInstance();
-    const search = ref(true); // Đánh dấu có đang tìm kiếm không
+    const search = ref(false); // Đánh dấu có đang tìm kiếm không
     const route = useRoute();
     const model = ref({
       keyword: null,
       rating: null,
       fromAmount: null,
       toAmount: null,
-      page: null,
-      sort: null,
+      page: 0,
+      sort: null, // 1: Mới nhất, 2: Báy chạy, 3: Giá Thấp đến cao, 4: Giá Cao đến thấp
+      category: null,
     });
+    const paging = ref({
+      pageSize: 5,
+      totalPage: 5
+    })
+    const listCategory = ref([
+      {
+        selected: false,
+        category_code: "A0001",
+        category_name: "Áo khoác",
+      },
+      {
+        selected: false,
+        category_code: "A0002",
+        category_name: "Áo hoodie",
+      },
+      {
+        selected: false,
+        category_code: "A0003",
+        category_name: "Quần jean",
+      },
+    ]);
     const listSlider = ref([
       {
         src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide1.jpg",
@@ -87,21 +121,79 @@ export default {
         gridList.value.push(item);
       }
       window.proxy = proxy;
+      if (route.path == "/search") {
+        search.value = true;
+      } else {
+        proxy.$store.dispatch('moduleHomePage/search', '');
+      }
 
       let query = route.query;
       Object.assign(model.value, query);
-    });
-
-    watch(model.value, (newVal, oldVal) => {
-      if (newVal != oldVal) {
-        let query = Object.assign({}, model.value);
-        Object.keys(query).forEach((key) => {
-          if (query[key] === null || query[key] === "") {
-            delete query[key];
+      parceValue(model.value);
+      
+      if (model.value.category) {
+        let arrCode = model.value.category.split("%");
+        arrCode.forEach((item) => {
+          let category = listCategory.value.find(
+            (x) => x.category_code == item
+          );
+          if (category) {
+            category.selected = true;
           }
         });
-        proxy.$router.push({ path: "search", query: query });
       }
+
+      if (model.value.keyword) {
+        proxy.$store.dispatch('moduleHomePage/search', model.value.keyword);
+      } else {
+        proxy.$store.dispatch('moduleHomePage/search', '');
+      }
+    });
+
+    /**
+     * Chuẩn hóa dữ liệu
+     */
+    const parceValue = (data)=>{
+      if (data.toAmount) {
+        data.toAmount = parseInt(data.toAmount);
+      }
+      if (data.fromAmount) {
+        data.fromAmount = parseInt(data.fromAmount);
+      }
+      if (data.rating) {
+        data.rating = parseInt(data.rating);
+      }
+      if (data.sort) {
+        data.sort = parseInt(data.sort);
+      }
+      if (data.page) {
+        data.page = parseInt(data.page);
+      }
+    }
+
+    watch(
+      listCategory.value,
+      (value) => {
+        let listChecked = value.filter((x) => x.selected == true);
+        if (listChecked.length > 0) {
+          model.value.category = listChecked
+            .map((x) => x.category_code)
+            .join("%");
+        } else {
+          model.value.category = null;
+        }
+      },
+      { deep: true }
+    );
+
+    watch(model.value, (newVal) => {
+      let query = Object.assign({}, model.value);
+      Object.keys(query).forEach((key) => {
+        if (query[key] === null || query[key] === "" || query[key] === 0) {
+          delete query[key];
+        }
+      });
+      proxy.$router.push({ path: "search", query: query });
     });
 
     /**
@@ -111,18 +203,60 @@ export default {
       Object.assign(model.value, value);
     };
 
+    /**
+     * Cập nhật lại trạng thái của nhóm sản phẩm
+     */
+    const updateListCategory = (selected, categoryCode) => {
+      let category = listCategory.value.find(
+        (x) => x.category_code == categoryCode
+      );
+      if (category) {
+        category.selected = selected;
+      }
+    };
+
+    const updateSort = (sort) => {
+      if (model.value.sort != sort) {
+        model.value.sort = sort;
+      } else {
+        model.value.sort = null;
+      }
+    };
+    const updatePage = (page) => {
+      model.value.page = page;
+    }
+
+    const searchText = computed(() => {
+      return proxy.$store.state["moduleHomePage"].searchText;
+    });
+
+    watch(searchText, (value) => {
+      if (value) {
+        model.value.keyword = value;
+        search.value = true;
+      }
+    });
+
     return {
       listSlider,
       gridList,
       search,
       model,
       updateModel,
+      listCategory,
+      updateListCategory,
+      updateSort,
+      paging,
+      updatePage
     };
   },
   // computed: {
   //   ...mapGetters({
-  //     search: "moduleHomePage/Search",
+  //     searchText: "moduleHomePage/Search",
   //   }),
+  //   ...mapState("moduleHomePage", {
+  //     searchText: state => state.searchText
+  //   })
   // },
 };
 </script>

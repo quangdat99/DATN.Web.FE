@@ -6,43 +6,77 @@
         <div class="title-filter fw-600 txt-grey">BỘ LỌC TÌM KIẾM</div>
       </div>
       <div class="header-right" v-if="search">
-        <div class="key-filter-container d-flex mb-2">
+        <div class="key-filter-container d-flex mb-2" v-if="model.keyword">
           <div class="icon24 research mr-2"></div>
           <div class="key-filter">
-            Kết quả tìm kiếm cho từ khoá "<span>{{ "abc" }}</span
+            Kết quả tìm kiếm cho từ khoá "<span>{{ model.keyword }}</span
             >"
           </div>
         </div>
         <div class="sort-option d-flex align-center">
           <div class="sort-title ml-4 mr-2">Sắp xếp theo</div>
-          <base-button text="Mới nhất" class="mr-2" type="white"></base-button>
-          <base-button text="Bán chạy" class="mr-2" type="white"></base-button>
+          <base-button
+            text="Mới nhất"
+            class="mr-2"
+            :type="model.sort == 1 ? 'primary' : 'white'"
+            @click="updateSort(1)"
+          ></base-button>
+          <base-button
+            text="Bán chạy"
+            class="mr-2"
+            :type="model.sort == 2 ? 'primary' : 'white'"
+            @click="updateSort(2)"
+          ></base-button>
           <base-dropdown
-            v-model="sort_amount"
-            :options="[
-              { name: 'Giá: Thấp đến cao', code: 'A' },
-              { name: 'Giá: Cao đến thấp', code: 'B' },
-            ]"
-            optionLabel="name"
-            optionValue="code"
+            valueField="id"
+            displayField="content"
             placeholder="Giá"
-            :width="180"
-            :fontSize="14"
-          ></base-dropdown>
+            :listDropdownData="[
+              { content: 'Giá: Thấp đến cao', id: 3 },
+              { content: 'Giá: Cao đến thấp', id: 4 },
+            ]"
+            :chosenValue="model.sort"
+            @update:modelValue="updateSort"
+          >
+          </base-dropdown>
+          <div class="paging d-flex flex1" style="flex-direction: row-reverse">
+            <div class="paging-btn d-flex align-center">
+              <div class="mr-4">
+                <span class="color-primary">{{ model.page + 1 }}</span>
+                <span class="black">/{{ paging.totalPage }}</span>
+              </div>
+              <base-button
+                class="mr-1"
+                leftIcon="previous-black mr-1px"
+                classIcon="mr-1px"
+                type="white"
+                :disabled="model.page == 0"
+                @click="updatePage(model.page - 1)"
+              ></base-button>
+              <base-button
+                class="mr-3"
+                leftIcon="next-black mr-1px"
+                type="white"
+                :disabled="model.page == paging.totalPage - 1"
+                @click="updatePage(model.page + 1)"
+              ></base-button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="header-right" v-if="!search">Gợi ý sản phẩm</div>
     </div>
-    <div class="container-grid">
-      <div class="container-filter">
+    <div class="container-grid mb-4">
+      <div class="container-filter" v-if="search">
         <div class="group-filter">
           <div class="title-ft fs-14 black">Đánh Giá</div>
           <div class="container-ft ml-2">
             <div
-              class="d-flex align-center cursor-pointer mt-2"
+              class="container-rating d-flex align-center cursor-pointer mt-2"
               @click="updateRating(6 - i)"
               v-for="i in 5"
               :key="i"
+              :class="[model.rating == 6 - i ? 'active' : '']"
             >
               <star-rating
                 :rating="6 - i"
@@ -61,25 +95,46 @@
           <div class="title-ft fs-14 black">Khoảng Giá</div>
           <div class="container-ft mt-4">
             <div class="d-flex justify-between">
-              <base-number placeholder="&#8363; Từ" :width="80"></base-number>
+              <base-number
+                :min="0"
+                placeholder="&#8363; Từ"
+                :width="80"
+                v-model="data.fromAmount"
+              ></base-number>
               <span class="ml-1 mr-1 mt-2">-</span>
-              <base-number placeholder="&#8363; Đến" :width="80"></base-number>
+              <base-number
+                :min="0"
+                placeholder="&#8363; Đến"
+                :width="80"
+                v-model="data.toAmount"
+              ></base-number>
+            </div>
+            <div class="txt-error fs-11 mt-3" v-if="errorAmount">
+              Vui lòng điền khoảng giá phù hợp
             </div>
             <div class="d-flex mt-4">
-              <base-button text="ÁP DỤNG" class="w-100"></base-button>
+              <base-button
+                text="ÁP DỤNG"
+                class="w-100"
+                @click="updateAmount()"
+              ></base-button>
             </div>
           </div>
         </div>
         <div class="group-filter mt-4 mr-4">
           <div class="title-ft fs-14 black">Theo Danh Mục</div>
-          <div class="container-ft mt-4">
-            <base-checkbox class="mt-1" label="Áo khoác"></base-checkbox>
-            <base-checkbox class="mt-2" label="Áo Hoode"></base-checkbox>
+          <div
+            class="container-ft mt-4"
+            v-for="(category, i) in listCategory"
+            :key="i"
+          >
             <base-checkbox
-              class="mt-2"
-              label="Quần jean"
-              :disabled="true"
-              checked
+              class="mt-1"
+              :modelValue="category.selected"
+              :label="category.category_name"
+              @change="
+                updateCategory(!category.selected, category.category_code)
+              "
             ></base-checkbox>
           </div>
         </div>
@@ -90,6 +145,40 @@
           :key="index"
           :product="product"
         ></product-card>
+      </div>
+    </div>
+    <div
+      class="paging-container d-flex justify-center mb-4"
+      v-if="paging.totalPage > 1"
+    >
+      <div class="paging-button d-flex">
+        <base-button
+          class="mr-3"
+          leftIcon="previous-black mr-1px"
+          classIcon="mr-1px"
+          type="white"
+          :disabled="model.page == 0"
+          @click="updatePage(model.page - 1)"
+        ></base-button>
+        <div
+          class="lst-btn-page"
+          v-for="(page, i) in paging.totalPage"
+          :key="i"
+        >
+          <base-button
+            class="mr-3"
+            :text="page"
+            :type="[page == model.page + 1 ? 'primary' : 'white']"
+            @click="updatePage(page - 1)"
+          >
+          </base-button>
+        </div>
+        <base-button
+          leftIcon="next-black mr-1px"
+          type="white"
+          :disabled="model.page == paging.totalPage - 1"
+          @click="updatePage(model.page + 1)"
+        ></base-button>
       </div>
     </div>
   </div>
@@ -109,6 +198,7 @@ import ProductCard from "@/components/card/ProductCard.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
 import MenuItem from "../menu/menuitem/MenuItem.vue";
 import StarRating from "vue-star-rating";
+import BaseDropdown from "../dropdown/BaseDropdown.vue";
 export default defineComponent({
   name: "GridProductCard",
   components: {
@@ -116,6 +206,7 @@ export default defineComponent({
     BaseButton,
     MenuItem,
     StarRating,
+    BaseDropdown,
   },
   props: {
     productList: {
@@ -130,11 +221,20 @@ export default defineComponent({
       type: Object,
       default: null,
     },
+    listCategory: {
+      type: Array,
+      default: [],
+    },
+    paging: {
+      type: Object,
+      default: null,
+    },
   },
-  emits: ["update:model"],
+  emits: ["update:model", "update:listCategory", "update:sort", "update:page"],
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
     const data = ref({});
+    const errorAmount = ref(false);
     onMounted(() => {
       Object.assign(data.value, props.model);
     });
@@ -149,13 +249,61 @@ export default defineComponent({
       } else {
         data.value.rating = null;
       }
+      emit("update:model", data.value);
+    };
+
+    /**
+     * thay đổi khoảng tiền
+     */
+    const updateAmount = () => {
+      let fromAmount = data.value.fromAmount;
+      let toAmount = data.value.toAmount;
+
+      if (fromAmount == 0) {
+        fromAmount = null;
+      }
+      if (toAmount == 0) {
+        toAmount = null;
+      }
+
+      if (fromAmount && toAmount && fromAmount > toAmount) {
+        errorAmount.value = true;
+        return;
+      }
+      emit("update:model", data.value);
+      errorAmount.value = false;
+    };
+
+    /**
+     * Thay đổi nhóm hàng hóa
+     * @param {*} selected
+     * @param {*} categoryCode mã nhóm
+     */
+    const updateCategory = (selected, categoryCode) => {
+      emit("update:listCategory", selected, categoryCode);
+    };
+
+    const updateValue = (value, field) => {
+      // model.value[field] = value;
+    };
+    /**
+     * Thay đổi sắp xếp
+     */
+    const updateSort = (sort) => {
+      emit("update:sort", sort);
+    };
+    /**
+     * Thay đổi trang
+     */
+    const updatePage = (page) => {
+      emit("update:page", page);
     };
 
     watch(
-      () => data.value,
+      () => props.model,
       (value) => {
-        if (value !== props.model) {
-          emit("update:model", value);
+        if (value !== data.value) {
+          Object.assign(data.value, value);
         }
       },
       { deep: true }
@@ -163,8 +311,14 @@ export default defineComponent({
 
     return {
       sort_amount,
-      data,
       updateRating,
+      errorAmount,
+      updateAmount,
+      data,
+      updateCategory,
+      updateSort,
+      updateValue,
+      updatePage,
     };
   },
 });

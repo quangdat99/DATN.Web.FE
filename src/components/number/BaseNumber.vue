@@ -197,7 +197,7 @@ export default defineComponent({
       () => proxy.modelValue,
       (newValue, oldValue) => {
         let me = proxy;
-        if (getValue() != newValue && newValue != oldValue) {
+        if (getValue() !== newValue && newValue !== oldValue) {
           if ((!newValue || newValue === 0) && !me.keepZero) {
             me.autoNumneric.clear();
           } else {
@@ -218,8 +218,8 @@ export default defineComponent({
         proxy.modelValue !== "" &&
         typeof proxy.modelValue !== "undefined"
       ) {
-        if (proxy.modelValue > max || proxy.modelValue < min) {
-          me.autoNumneric.set(max);
+        if (proxy.modelValue > me.max || proxy.modelValue < me.min) {
+          me.autoNumneric.set(me.max);
         } else {
           me.autoNumneric.set(proxy.modelValue);
         }
@@ -231,6 +231,9 @@ export default defineComponent({
      * Sự kiện Blur
      */
     function onActionBlur() {
+      if (!me.keepZero && proxy.modelValue == 0) {
+        me.autoNumneric.clear();
+      }
       emit("onActionBlur", proxy.modelValue);
     }
     /**
@@ -252,7 +255,7 @@ export default defineComponent({
         modifyValueOnWheel: "false", // hỗ trợ có lăn chuột thay đổi giá trị
         currencySymbolPlacement: "s",
         maximumValue: props.max,
-        minximumValue: props.min,
+        minimumValue: props.min,
         leadingZero: props.leadingZero, // cho phép giữ số 0 ở đầu
       };
       return options;
@@ -380,5 +383,5 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import './BaseNumber.scss'
+@import "./BaseNumber.scss";
 </style>

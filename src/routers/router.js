@@ -15,7 +15,7 @@ const router = createRouter({
       path: "",
       redirect: '/homepage',
       name: 'Trang chủ',
-      component: () => import('@/layouts/mainLayout/MainLayout.vue'),
+      component: () => import('@/layouts/MainLayout/MainLayout.vue'),
       meta: {
         anonymous: true
       },

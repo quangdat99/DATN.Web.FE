@@ -1,17 +1,41 @@
 <template>
-  <div class="base-dropdown" :class="[fontSize ? 'font-size-' + fontSize : '']">
-    <label class="label" v-if="label">{{ label }}</label>
-    <dropdown
-      v-model="model"
-      :options="options"
-      :optionLabel="optionLabel"
-      :optionValue="optionValue"
-      :placeholder="placeholder"
-      v-on="listeners"
-      :style="{ width: width ? width + 'px' : '' }"
-    />
-    <div class="error-text" v-if="errorMessage">
-      {{ errorMessage }}
+  <div class="base-dropdown">
+    <div class="dropdown-container" @click="toggleDropdown">
+      <base-input
+        ref="inputdropdown"
+        :placeholder="placeholder"
+        :modelValue="internalText"
+        readOnly
+      >
+      </base-input>
+      <div
+        ref="select"
+        style="z-index: 4"
+        v-show="isShow && listData.length > 0"
+        class="select-custom"
+        :class="directionDrop"
+        :style="[{ width: width + 'px' }]"
+      >
+        <div
+          v-for="(option, index) in listData"
+          :key="index"
+          @click="evtMouseChoosingOption(option)"
+          class="option"
+          :class="[
+            option.isPointed ? 'point-option' : '',
+            option.isChosen ? 'show-select' : '',
+          ]"
+          :ref="'option' + index"
+        >
+          <div
+            class="option-content none-pointer"
+            :style="{ textAlign: textAlign }"
+          >
+            {{ option.content }}
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-icon icon24 arrow-down" ref="dropdownIcon"></div>
     </div>
   </div>
 </template>
@@ -26,170 +50,231 @@ import {
   nextTick,
   getCurrentInstance,
 } from "vue";
-import baseComponent from "@/components/base/BaseComponent.vue";
-import { useValidateControl } from "@/setup/validateControl.js";
+import baseInput from "@/components/input/BaseInput.vue";
 export default defineComponent({
-  name: "baseDropdown",
-  extends: baseComponent,
+  name: "BaseDropdown",
+  components: {
+    baseInput,
+  },
   props: {
-    /**
-     * modelValue đẩy ra ngoài để binding 2 chiều
-     */
-    modelValue: {
-      default: null,
-    },
     placeholder: {
-      fault: null,
-      type: [Number, String],
-    },
-    width: {
-      type: [Number, String],
       default: null,
+      type: [Number, String],
     },
-    options: {
-      type: Array,
+    listDropdownData: {
       default: [],
+      type: Array,
     },
-    label: {
-      type: String,
+    directionDrop: {
       default: null,
-    },
-    optionLabel: {
       type: String,
-      default: null,
-    },
-    optionValue: {
-      type: String,
-      default: null,
     },
     width: {
+      default: null,
       type: Number,
+    },
+    textAlign: {
+      default: null,
+      type: String,
+    },
+    chosenValue: {
       default: null,
     },
-    fontSize: {
-      type: Number,
+    displayField: {
       default: null,
+      type: String,
+    },
+    valueField: {
+      default: null,
+      type: String,
+    },
+    // Giá trị hiển thị ban đầu của combo
+    initText: {
+      default: null,
+      type: String,
     },
   },
-  emits: ["update:modelValue", "change"],
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
-    const model = ref();
-    const { errorMessage, validate, isValidate } = useValidateControl({
-      props,
-    });
-    const cancelBubbleEvent = (e) => {
-      if (e) {
-        if (typeof e.preventDefault === "function") {
-          e.preventDefault();
+    const modelValue = ref();
+    const isShow = ref(false);
+    const listData = ref([]);
+    const indexPointedOption = ref(0);
+    const internalText = ref();
+    function toggleDropdown() {
+      this.isShow = !this.isShow;
+    }
+    /**
+     * Sự kiện click chuột vào option
+     * Created by TBN (22/7/2021)
+     */
+    function evtMouseChoosingOption(obj) {
+      internalText.value = obj[props.displayField];
+      modelValue.value = obj[props.valueField];
+      listData.value.forEach((item) => {
+        if (item[props.valueField] == obj[props.valueField]) {
+          item.isChosen = true;
+        } else {
+          item.isChosen = false;
         }
-        if (typeof e.stopPropagation === "function") {
-          e.stopPropagation();
-        }
-        if (typeof e.stopImmediatePropagation === "function") {
-          e.stopImmediatePropagation();
-        }
-      }
-    };
-    const listeners = computed(() => {
-      return {
-        change: (e) => {
-          cancelBubbleEvent(e);
-          emit("change", e, e.value);
-        },
-      };
-    });
-
+      });
+      isShow.value = false;
+      emit("update:chosenObj", obj, props.displayField);
+    }
     onMounted(() => {
-      model.value = props.modelValue;
+      listData.value = props.listDropdownData;
+      modelValue.value = props.chosenValue;
+      let firstModel = listData.value.find(
+        (x) => x[props.valueField] == props.chosenValue
+      );
+      if (firstModel) {
+        internalText.value = firstModel[props.displayField];
+      } else {
+        internalText.value = props.initText || null;
+      }
     });
 
     watch(
-      () => model.value,
-      (value) => {
-        if (value !== props.modelValue) {
-          emit("update:modelValue", value, model.value);
-          //scrollWidth = input.value.scrollWidth;
+      () => isShow.value,
+      (newVal, oldVal) => {
+        if (newVal) {
+          proxy.$refs.inputdropdown.$refs.input.focus();
+          document.addEventListener("click", documentClick);
+        } else {
+          document.removeEventListener("click", documentClick);
         }
       }
     );
 
+    watch(
+      () => modelValue.value,
+      (newVal) => {
+        emit("update:modelValue", newVal, props.displayField);
+      }
+    );
+
+    watch(
+      () => props.chosenValue,
+      (value) => {
+        selectOption(value);
+      }
+    );
+
+    const selectOption = (value) => {
+      let obj = props.listDropdownData.find(
+        (x) => x[props.valueField] == value
+      );
+      if (obj) {
+        evtMouseChoosingOption(obj);
+      } else {
+        internalText.value = null;
+        listData.value.forEach((item) => {
+          item.isChosen = false;
+        });
+      }
+    };
+
+    function documentClick(e) {
+      let dropdownInput = proxy.$refs.inputdropdown,
+        dropdownIcon = proxy.$refs.dropdownIcon;
+      let target = e.target;
+
+      if (
+        dropdownInput &&
+        target != dropdownIcon &&
+        !dropdownInput.$el.contains(target)
+      ) {
+        isShow.value = false;
+      }
+    }
+    function evtKeyboardChoosingOption(keyCode, event) {
+      let initialValue = isShow.value;
+      // Sự kiên ẩn hiện dropdown của combobox
+      if (keyCode != 13) {
+        // Nếu là nút lên, xuống thì hiện dropdown và thiết lập ô được chỉ đến
+        if (isShow.value == false) {
+          // Nếu trước đó dropdown đang đóng
+          indexPointedOption.value = 0; // Set option đầu tiên được trỏ đến
+          setPointedOption(
+            listData.value[indexPointedOption.value][props.valueField]
+          );
+        }
+        isShow.value = true;
+      } else {
+        // Sự kiên Enter
+        // Toggle dropdown
+        isShow.value = !isShow.value;
+        if (listData.value.length == 0) return;
+        // Chờ một khoảng thời gian
+        if (isShow.value == false) {
+          // Nếu trước đó dropdown đang hiện
+          if (indexPointedOption.value >= 0) {
+            // Mượn sự kiện click chuột vào option
+            evtMouseChoosingOption(listData.value[indexPointedOption.value]);
+          }
+        } else {
+          // Nếu trước đó dropdown đang đóng
+          indexPointedOption.value = 0; // Set option đầu tiên được trỏ đến
+          setPointedOption(
+            listData.value[indexPointedOption.value][props.valueField]
+          );
+        }
+        return;
+      }
+      if (initialValue) {
+        // Sự kiện mũi tên lên,xuống sau khi đã hiện dropdown
+        setTimeout(() => {
+          let maxIndex = listData.value.length - 1;
+          if (keyCode == 38) {
+            // Nút lên kiểm tra xem có đang ở option đầu tiên
+            indexPointedOption.value =
+              indexPointedOption.value <= 0
+                ? maxIndex
+                : indexPointedOption.value - 1;
+          } else if (keyCode == 40) {
+            // Nút xuống kiểm tra xem có đang ở option cuối cùng k
+            indexPointedOption.value =
+              indexPointedOption.value == maxIndex
+                ? 0
+                : indexPointedOption.value + 1;
+          }
+          // Chuyển pointed option sang option mới
+          setPointedOption(
+            listData.value[indexPointedOption.value][props.valueField]
+          );
+          // Scroll nội dung xuống option hiện tại
+          let option =
+            proxy.$refs[
+              "option" +
+                (indexPointedOption.value >= 0 ? indexPointedOption.value : 0)
+            ][0];
+          let topOps = option.offsetTop;
+          proxy.$refs.select.scrollTop = topOps;
+        }, 20);
+      }
+    }
+    function setPointedOption(id) {
+      listData.value.forEach((element) => {
+        if (element[props.valueField] == id) {
+          element.isPointed = true;
+        } else {
+          element.isPointed = false;
+        }
+      });
+    }
     return {
-      errorMessage,
-      isValidate,
-      listeners,
-      model,
+      modelValue,
+      isShow,
+      listData,
+      toggleDropdown,
+      evtMouseChoosingOption,
+      evtKeyboardChoosingOption,
+      internalText,
     };
   },
 });
 </script>
 
-<style lang="scss">
-@import "@/assets/scss/_variables.scss";
-.p-dropdown {
-  height: $height-control;
-  .p-dropdown-label {
-    font-size: 12px;
-    color: $black !important;
-    line-height: 32px;
-    padding: 0px 15px;
-    display: flex;
-    align-items: center;
-    font-family: Roboto, sans-serif;
-  }
-  .p-dropdown-trigger {
-    .pi-chevron-down {
-      height: 24px;
-      width: 24px;
-      top: 3px;
-      left: 8px;
-      position: absolute;
-      content: "";
-      background: transparent url($image-sprite) no-repeat;
-      background-position: -24px -48px;
-      &::before {
-        display: none;
-      }
-      transform: rotate(0deg);
-      transition: all 0.3s ease;
-    }
-  }
-  &.p-overlay-open {
-    .p-dropdown-trigger {
-      // position: relative;
-      .pi-chevron-down {
-        // height: 24px;
-        // width: 24px;
-        // top: 4px;
-        // left: 8px;
-        // position: absolute;
-        // content: "";
-        // background: transparent url($image-sprite) no-repeat;
-        // background-position: -24px -48px;
-        // &::before {
-        //   display: none;
-        // }
-        transform: rotate(180deg);
-        transition: all 0.3s ease;
-      }
-    }
-  }
-  &:not(.p-disabled):hover {
-    border-color: $primary !important;
-  }
-  &:not(.p-disabled).p-focus {
-    border-color: $primary !important;
-    box-shadow: none !important;
-  }
-}
-.p-dropdown-items-wrapper {
-  font-size: 12px;
-}
-.base-dropdown {
-  &.font-size-14 {
-    .p-dropdown-label {
-      font-size: 14px;
-    }
-  }
-}
+<style lang="scss" scoped>
+@import "./BaseDropdown.scss";
 </style>

@@ -2,7 +2,7 @@ const state = {
   /**
    * Đang tìm kiếm
    */
-  search: true,
+  searchText: '',
 };
 const getters = {
   Search(state){
@@ -10,13 +10,13 @@ const getters = {
   }
 };
 const actions = {
-  search(context){
-    context.commit('updateSearch', true);
+  search(context, searchText){
+    context.commit('updateSearch', searchText);
   }
 };
 const mutations = {
   updateSearch(state, res){
-    state.search = res;
+    state.searchText = res;
   }
 };
 

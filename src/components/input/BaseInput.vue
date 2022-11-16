@@ -19,7 +19,7 @@
         @click="onClickLeftIcon"
       ></div>
       <input
-        :title="internalText"
+        :title="title"
         class="base-input-item flex"
         :placeholder="placeholder"
         :disabled="disabled"
@@ -115,6 +115,10 @@ export default defineComponent({
       default: null,
     },
     label: {
+      type: String,
+      default: null,
+    },
+    title: {
       type: String,
       default: null,
     },
@@ -278,5 +282,10 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "@/assets/scss/_variables.scss";
+input:read-only {
+  color: $black;
+  cursor: default;
+}
 </style>

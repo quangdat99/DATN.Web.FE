@@ -39,6 +39,15 @@
 
     .container-filter {
       flex: 1;
+
+      .container-rating {
+        padding: 4px 16px;
+        border-radius: 16px;
+        width: fit-content;
+        &.active {
+          background-color: $bg-grey-1;
+        }
+      }
     }
 
     .product-container {

@@ -88,3 +88,8 @@ button {
         background-color: $primary;
     }
 }
+
+.disabled-icon{
+    pointer-events: none;
+    opacity: 0.4;
+}

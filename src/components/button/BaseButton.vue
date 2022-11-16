@@ -7,6 +7,8 @@
       radius ? 'btn-radius' : '',
       hasBorder ? '' : 'btn-border-none',
       disabled ? 'disabled-icon' : '',
+      text ? '': 'pl-0',
+      text ? '': 'pr-0',
     ]"
     :disabled="disabled || processing"
     v-tooltip="title"
@@ -80,6 +82,10 @@ export default {
       default: null,
       type: String,
     },
+    disabled: {
+      default: false,
+      type: Boolean
+    }
   },
   setup(props, { emit }) {
     /**

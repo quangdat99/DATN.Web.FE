@@ -32,7 +32,7 @@
     }
 
     &.search-red::before {
-        background-position: -626px -10px;
+        background-position: -96px -24px;
     }
 
     &.service::before {
@@ -56,11 +56,19 @@
     }
 
     &.previous::before {
-        background-position: -10px -10px;
+        background-position: 0 0;
     }
 
     &.next::before {
-        background-position: -538px -10px;
+        background-position: -48px -24px;
+    }
+
+    &.previous-black::before {
+        background-position: -0 -96px;
+    }
+
+    &.next-black::before {
+        background-position: -24px -96px;
     }
 
     &.shopping-cart-red::before {
