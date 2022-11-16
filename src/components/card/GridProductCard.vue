@@ -149,37 +149,20 @@
     </div>
     <div
       class="paging-container d-flex justify-center mb-4"
-      v-if="paging.totalPage > 1"
+      v-if="paging.totalPage > 1 && search"
     >
-      <div class="paging-button d-flex">
-        <base-button
-          class="mr-3"
-          leftIcon="previous-black mr-1px"
-          classIcon="mr-1px"
-          type="white"
-          :disabled="model.page == 0"
-          @click="updatePage(model.page - 1)"
-        ></base-button>
-        <div
-          class="lst-btn-page"
-          v-for="(page, i) in paging.totalPage"
-          :key="i"
-        >
-          <base-button
-            class="mr-3"
-            :text="page"
-            :type="[page == model.page + 1 ? 'primary' : 'white']"
-            @click="updatePage(page - 1)"
-          >
-          </base-button>
-        </div>
-        <base-button
-          leftIcon="next-black mr-1px"
-          type="white"
-          :disabled="model.page == paging.totalPage - 1"
-          @click="updatePage(model.page + 1)"
-        ></base-button>
-      </div>
+      <grid-product-paging
+        :pageNumber="model.page"
+        :totalPage="paging.totalPage"
+        @updatePage="updatePage"
+      ></grid-product-paging>
+    </div>
+    <div class="option-filter d-flex justify-center mb-4" v-if="!search">
+      <base-button
+        text="Xem thêm sản phẩm"
+        :width="300"
+        @click="searchProduct()"
+      ></base-button>
     </div>
   </div>
 </template>
@@ -199,6 +182,7 @@ import BaseButton from "@/components/button/BaseButton.vue";
 import MenuItem from "../menu/menuitem/MenuItem.vue";
 import StarRating from "vue-star-rating";
 import BaseDropdown from "../dropdown/BaseDropdown.vue";
+import GridProductPaging from "./GridProductPaging.vue";
 export default defineComponent({
   name: "GridProductCard",
   components: {
@@ -207,6 +191,7 @@ export default defineComponent({
     MenuItem,
     StarRating,
     BaseDropdown,
+    GridProductPaging,
   },
   props: {
     productList: {
@@ -230,7 +215,13 @@ export default defineComponent({
       default: null,
     },
   },
-  emits: ["update:model", "update:listCategory", "update:sort", "update:page"],
+  emits: [
+    "update:model",
+    "update:listCategory",
+    "update:sort",
+    "update:page",
+    "updateStatusSearch",
+  ],
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
     const data = ref({});
@@ -299,6 +290,22 @@ export default defineComponent({
       emit("update:page", page);
     };
 
+    const searchProduct = () => {
+      document.getElementsByClassName(
+        "main-container-content"
+      )[0].scrollTop = 0;
+
+      proxy.$router.push({ path: "search" });
+      document
+        .getElementsByClassName("input-filter-product")[0]
+        .getElementsByTagName("input")[0]
+        .focus();
+      emit("updateStatusSearch", true);
+      // setTimeout(() => {
+      //   proxy.$router.go();
+      // }, 100);
+    };
+
     watch(
       () => props.model,
       (value) => {
@@ -319,6 +326,7 @@ export default defineComponent({
       updateSort,
       updateValue,
       updatePage,
+      searchProduct,
     };
   },
 });

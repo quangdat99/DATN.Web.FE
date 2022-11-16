@@ -112,7 +112,6 @@ export default defineComponent({
     }
     /**
      * Sự kiện click chuột vào option
-     * Created by TBN (22/7/2021)
      */
     function evtMouseChoosingOption(obj) {
       internalText.value = obj[props.displayField];

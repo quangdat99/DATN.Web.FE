@@ -89,6 +89,28 @@ button {
     }
 }
 
+.transparent {
+    transition: all 0.35s;
+    cursor: pointer;
+    text-transform: inherit;
+    font-weight: 500;
+    border-radius: 2px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: $black;
+    overflow: hidden;
+    &:hover {
+        color: $primary;
+    }
+    &.active {
+        color: $white;
+        background-color: $primary;
+    }
+}
+
 .disabled-icon{
     pointer-events: none;
     opacity: 0.4;

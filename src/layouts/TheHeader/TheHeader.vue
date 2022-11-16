@@ -9,6 +9,7 @@
 
       <div class="search flex-row flex-center">
         <base-input
+          class="input-filter-product"
           placeholder="Nhập tên sản phẩm, mã sản phẩm, từ khóa cần tìm..."
           :width="widthSearchBar"
           rightIcon="search-red"

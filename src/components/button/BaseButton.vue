@@ -51,7 +51,6 @@ export default {
     },
     text: {
       default: null,
-      type: String,
     },
     leftIcon: {
       default: null,
@@ -61,7 +60,7 @@ export default {
       default: null,
       type: String,
     },
-    // primary/secondary
+    // primary/secondary/transparent
     type: {
       default: "primary",
       type: String,

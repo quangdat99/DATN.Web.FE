@@ -26,6 +26,7 @@
       @update:listCategory="updateListCategory"
       @update:sort="updateSort"
       @update:page="updatePage"
+      @updateStatusSearch="updateStatusSearch"
     ></grid-product-card>
   </div>
 </template>
@@ -64,8 +65,8 @@ export default {
     });
     const paging = ref({
       pageSize: 5,
-      totalPage: 5
-    })
+      totalPage: 15,
+    });
     const listCategory = ref([
       {
         selected: false,
@@ -124,13 +125,13 @@ export default {
       if (route.path == "/search") {
         search.value = true;
       } else {
-        proxy.$store.dispatch('moduleHomePage/search', '');
+        proxy.$store.dispatch("moduleHomePage/search", "");
       }
 
       let query = route.query;
       Object.assign(model.value, query);
       parceValue(model.value);
-      
+
       if (model.value.category) {
         let arrCode = model.value.category.split("%");
         arrCode.forEach((item) => {
@@ -144,16 +145,16 @@ export default {
       }
 
       if (model.value.keyword) {
-        proxy.$store.dispatch('moduleHomePage/search', model.value.keyword);
+        proxy.$store.dispatch("moduleHomePage/search", model.value.keyword);
       } else {
-        proxy.$store.dispatch('moduleHomePage/search', '');
+        proxy.$store.dispatch("moduleHomePage/search", "");
       }
     });
 
     /**
      * Chuẩn hóa dữ liệu
      */
-    const parceValue = (data)=>{
+    const parceValue = (data) => {
       if (data.toAmount) {
         data.toAmount = parseInt(data.toAmount);
       }
@@ -169,7 +170,7 @@ export default {
       if (data.page) {
         data.page = parseInt(data.page);
       }
-    }
+    };
 
     watch(
       listCategory.value,
@@ -224,11 +225,18 @@ export default {
     };
     const updatePage = (page) => {
       model.value.page = page;
-    }
+      document.getElementsByClassName(
+        "main-container-content"
+      )[0].scrollTop = 0;
+    };
 
     const searchText = computed(() => {
       return proxy.$store.state["moduleHomePage"].searchText;
     });
+
+    const updateStatusSearch = (status) => {
+      search.value = status;
+    };
 
     watch(searchText, (value) => {
       if (value) {
@@ -247,7 +255,8 @@ export default {
       updateListCategory,
       updateSort,
       paging,
-      updatePage
+      updatePage,
+      updateStatusSearch,
     };
   },
   // computed: {
