@@ -33,40 +33,51 @@
 
           <!-- This will be the content of the popover -->
           <template #popper>
-            <div class="product-cart-list">
+            <div class="product-cart-list" style="width: 400px">
               <div class="product-list-content flex flex-column">
                 <div
                   class="product-detail-content flex flex-row"
                   v-for="(product, index) in listProductCard"
                   :key="index"
                 >
-                  <div class="product-detail-content-img">
+                  <div class="product-detail-content-img mr-2">
                     <img :src="product.img_url" alt="" />
                   </div>
                   <div
                     class="product-detail-content-main flex flex-column flex2"
                   >
                     <div class="product-detail-content-main-name">
-                      {{ product.product_name }}
+                      {{ product.product_name
+                      }}{{
+                        product.color_name && product.size_name
+                          ? ` (${product.color_name}/${product.size_name})`
+                          : ""
+                      }}{{
+                        product.color_name && !product.size_name
+                          ? ` (${product.color_name})`
+                          : ""
+                      }}{{
+                        !product.color_name && product.size_name
+                          ? ` (${product.size_name})`
+                          : ""
+                      }}
                     </div>
-                    <div class="product-detail-content-main-unit">
-                      ĐVT: {{ product.product_unit }}
-                    </div>
-                    <div class="product-detail-content-main-quantity">
-                      x{{ product.productQuantity }}
+                    <div
+                      class="product-detail-content-main-quantity color-primary"
+                    >
+                      x{{ product.quantity }}
                     </div>
                   </div>
                   <div class="product-detail-content-price flex flex-end flex2">
-                    {{
-                      formatVND(product.productQuantity * product.sale_price)
-                    }}
+                    {{ formatVND(product.quantity * product.sale_price) }}
                   </div>
                 </div>
               </div>
             </div>
             <div class="product-cart-summary flex flex-row flex-between">
               <div class="product-cart-total-product">
-                Có tổng số {{ listProductCard?.length }} sản phẩm
+                Có tổng số
+                <span class="color-primary">{{ countProduct }}</span> sản phẩm
               </div>
               <div class="product-cart-total-price">
                 Tổng số:
@@ -116,6 +127,7 @@
 </template>
 <!-- eslint-disable prettier/prettier -->
 <script>
+import { mapActions, mapGetters, mapState } from "vuex";
 import { ref, computed, getCurrentInstance, watch, onMounted } from "vue";
 import baseInput from "@/components/input/BaseInput.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
@@ -165,19 +177,16 @@ export default {
     const widthSearchBar = ref(450);
     const { formatVND } = useFormat();
     const cartContent = computed(() => {
-      let productList = proxy.$store.state.productCartList;
-      return "Giỏ hàng (" + productList?.length + ")";
+      return "Giỏ hàng (" + proxy.countProduct + ")";
     });
     const listProductCard = computed(() => {
-      return proxy.$store.state.productCartList;
+      return proxy.$store.state["moduleCart"].products;
     });
     const totalComputedMoney = computed(() => {
       let total = 0;
-      if (proxy.$store.state.productCartList) {
-        proxy.$store.state.productCartList.forEach(
-          (item) => (total += item.productQuantity * item.sale_price)
-        );
-      }
+      proxy.$store.state["moduleCart"].products.forEach(
+        (item) => (total += item.quantity * item.sale_price)
+      );
       return total;
     });
     const viewCart = () => {
@@ -233,6 +242,11 @@ export default {
       updateSearch,
       enterSearch,
     };
+  },
+  computed: {
+    ...mapGetters({
+      countProduct: "moduleCart/countProduct",
+    }),
   },
 };
 </script>

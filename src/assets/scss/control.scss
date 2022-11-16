@@ -5,15 +5,21 @@
 }
 
 .product-cart-list{
-    padding: 15px;
+    margin: 15px 0 0 0;
+    .product-list-content {
+        max-height: 400px;
+        overflow: auto;
+        padding: 0 15px 0px 15px;
+    }
     .product-detail-content{
         font-size: 13px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         justify-content: flex-end;
+        min-height: 50px;
         .product-detail-content-img{
             img{
-                height: 70px;
-                width: 70px;
+                height: 50px;
+                width: 50px;
             }
         }
         .product-detail-content-main{
