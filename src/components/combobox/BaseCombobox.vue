@@ -1,15 +1,29 @@
 <template>
-  <div class="base-combobox">
+  <div
+    class="base-combobox"
+    :class="{ 'ms-validate': isValidate, 'w-100': !width }"
+  >
     <div class="dropdown-container">
-      <base-input
-        ref="inputdropdown"
-        :placeholder="placeholder"
-        @update:modelValue="updateValue"
-        @input="filterOption"
-        @baseKeydown="tabPress"
-        :modelValue="internalText"
+      <div
+        class="flex-row"
+        :class="[
+          { error: errorMessage, disabled: disabled },
+          hasBorder ? 'border' : '',
+        ]"
       >
-      </base-input>
+        <base-input
+          ref="inputdropdown"
+          :placeholder="placeholder"
+          @update:modelValue="updateValue"
+          @input="filterOption"
+          @baseKeydown="tabPress"
+          :modelValue="internalText"
+          :disabled="disabled"
+          @blur="onBlur"
+        >
+        </base-input>
+      </div>
+
       <div
         ref="select"
         style="z-index: 4"
@@ -33,7 +47,7 @@
             class="option-content none-pointer"
             :style="{ textAlign: textAlign }"
           >
-            {{ option.content }}
+            {{ option[displayField] }}
           </div>
         </div>
       </div>
@@ -42,6 +56,10 @@
         @click="toggleDropdown"
         ref="dropdownIcon"
       ></div>
+    </div>
+
+    <div class="error-text mt-1 txt-error" v-if="errorMessage">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -57,7 +75,10 @@ import {
   getCurrentInstance,
 } from "vue";
 import baseInput from "@/components/input/BaseInput.vue";
+import baseComponent from "@/components/base/BaseComponent.vue";
+import { useValidateControl } from "@/setup/validateControl.js";
 export default defineComponent({
+  extends: baseComponent,
   name: "BaseCombobox",
   components: {
     baseInput,
@@ -67,13 +88,17 @@ export default defineComponent({
       default: null,
       type: [Number, String],
     },
-    listDropdownData: {
+    data: {
       default: [],
       type: Array,
     },
     directionDrop: {
       default: null,
       type: String,
+    },
+    hasBorder: {
+      default: true,
+      type: Boolean,
     },
     width: {
       default: null,
@@ -99,6 +124,14 @@ export default defineComponent({
       default: null,
       type: String,
     },
+    disabled: {
+      default: false,
+      type: Boolean,
+    },
+    title: {
+      default: null,
+      type: String,
+    },
   },
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
@@ -107,6 +140,9 @@ export default defineComponent({
     const listData = ref([]);
     const indexPointedOption = ref(0);
     const internalText = ref();
+    const { errorMessage, validate, isValidate } = useValidateControl({
+      props,
+    });
     function toggleDropdown() {
       this.isShow = !this.isShow;
     }
@@ -124,10 +160,11 @@ export default defineComponent({
         }
       });
       isShow.value = false;
-      emit("update:chosenObj", obj, props.displayField);
+      emit("change", obj);
+      onBlur();
     }
     onMounted(() => {
-      listData.value = props.listDropdownData;
+      listData.value = props.data;
       modelValue.value = props.chosenValue;
       let firstModel = listData.value.find(
         (x) => x[props.valueField] == props.chosenValue
@@ -137,10 +174,6 @@ export default defineComponent({
       } else {
         internalText.value = props.initText || null;
       }
-      //   if (listData.value.length > 0) {
-      //     let firstElement = listData.value[0];
-      //     evtMouseChoosingOption(firstElement, firstElement[props.valueField]);
-      //   }
     });
 
     watch(
@@ -158,7 +191,12 @@ export default defineComponent({
     watch(
       () => modelValue.value,
       (newVal) => {
-        emit("update:modelValue", newVal, props.displayField);
+        let obj = listData.value.find((x) => x[props.valueField] == newVal);
+        if (obj) {
+          emit("update:modelValue", newVal, obj[props.displayField]);
+        } else {
+          emit("update:modelValue", newVal, null);
+        }
       }
     );
 
@@ -170,9 +208,7 @@ export default defineComponent({
     );
 
     const selectOption = (value) => {
-      let obj = props.listDropdownData.find(
-        (x) => x[props.valueField] == value
-      );
+      let obj = props.data.find((x) => x[props.valueField] == value);
       if (obj) {
         evtMouseChoosingOption(obj);
       } else {
@@ -183,17 +219,12 @@ export default defineComponent({
       }
     };
 
-    // watch(
-    //   () => props.listDropdownData,
-    //   (newVal) => {
-    //     listData.value = newVal;
-    //     modelValue.value = props.chosenValue;
-    //     if (listData.value.length > 0) {
-    //       let firstElement = listData.value[0];
-    //       evtMouseChoosingOption(firstElement, firstElement[props.valueField]);
-    //     }
-    //   }
-    // );
+    watch(
+      () => props.data,
+      (newVal) => {
+        listData.value = newVal;
+      }
+    );
 
     function documentClick(e) {
       let dropdownInput = proxy.$refs.inputdropdown,
@@ -223,9 +254,9 @@ export default defineComponent({
       let check = content.replace(/\\$/, "");
       let initialContent = content;
       content = content.toString().replace("\\", "");
-      listData.value = props.listDropdownData.filter(
+      listData.value = props.data.filter(
         (element) =>
-          element.content
+          element[props.displayField]
             .toString()
             .toLowerCase()
             .search(content.toLowerCase()) != -1 || content == ""
@@ -237,16 +268,6 @@ export default defineComponent({
       listData.value.forEach((element) => {
         element["isPointed"] = false;
       });
-      // Nếu không có dữ liệu sẽ hiển thị lỗi
-      // if (listData.value.length == 0 || check != initialContent) {
-      //     this.$refs.inputCombobox.errorContentData = this.dictionaryError[this.name].noOption;
-      //     this.$refs.inputCombobox.isError = true;
-      //     if (check != initialContent) {
-      //         this.data = [];
-      //     }
-      // } else {
-      //     this.$refs.inputCombobox.isError = false;
-      // }
     }
     function updateValue(value) {
       internalText.value = value;
@@ -343,6 +364,16 @@ export default defineComponent({
         }
       });
     }
+
+    const onBlur = (e) => {
+      validate();
+      emit("blur", modelValue.value);
+    };
+
+    const getValue = () => {
+      return modelValue.value;
+    };
+
     return {
       modelValue,
       isShow,
@@ -354,6 +385,11 @@ export default defineComponent({
       updateValue,
       evtKeyboardChoosingOption,
       internalText,
+      isValidate,
+      errorMessage,
+      validate,
+      getValue,
+      onBlur,
     };
   },
 });

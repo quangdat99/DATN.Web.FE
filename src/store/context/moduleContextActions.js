@@ -21,13 +21,25 @@ export default {
   /**
    * Đăng xuất
    */
-  async logout(context, payload){
+  logout(context) {
+    context.commit('updateLogout');
+    location.href = "login";
+  },
+
+  /**
+   * Đăng ký
+   */
+  async signup(context, payload) {
     context.commit('updateLoading', true);
-    var res = await userAPI.logout(payload);
+    context.commit('updateLogout');
+    var res = await userAPI.signup(payload);
 
     context.commit('updateLoading', false);
-    context.commit('updateLogout', res);
-
-    location.href = BASE_URL + "login";
-  }
+    if (res && res.data && res.data.statusCode == 200) {
+      if (res.data.Token) {
+        context.commit('updateToken', res.data);
+      }
+    }
+    return res.data;
+  },
 }

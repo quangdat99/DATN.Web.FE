@@ -43,6 +43,9 @@ input{
         border: 1px solid #C9C9C9;
         border-radius: 3px;
     }
+    &.disabled {
+        background-color: $input-disabled-bg;
+    }
 }
 .error-icon{
     margin: 5px 6px 0 0;

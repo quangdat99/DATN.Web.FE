@@ -50,6 +50,7 @@ module.exports = {
     'vue/require-valid-default-prop': 'off',
     'vue/no-mutating-props': 'off',
     'no-dupe-keys': 'off',
-    'vue/no-dupe-keys': 'off'
+    'vue/no-dupe-keys': 'off',
+    'no-case-declarations': 'off'
   }
 }

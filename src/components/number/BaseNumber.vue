@@ -1,16 +1,12 @@
 <template>
   <div
     class="base-input"
-    :class="[width ? '' : 'w-100']"
     :style="{ width: `${width}px` }"
+    :class="{ 'ms-validate': isValidate, 'w-100': !width }"
   >
     <label class="label" v-if="label">{{ label }}</label>
     <div
       class="flex-row"
-      :class="[
-        { error: errorMessage, disabled: disabled },
-        hasBorder ? 'border' : '',
-      ]"
     >
       <input
         class="base-input-item flex"
@@ -21,6 +17,8 @@
           disabled: disabled,
           'has-border': hasBorder,
           'w-100': !width,
+          error: errorMessage,
+          border: hasBorder,
         }"
         v-on="listeners"
         :tabindex="0"
@@ -31,9 +29,9 @@
         <div class="flex spin up" @click="plus()"></div>
         <div class="flex spin down" @click="less()"></div>
       </div>
-      <div class="error-text" v-if="errorMessage">
-        {{ errorMessage }}
-      </div>
+    </div>
+    <div class="error-text mt-1 txt-error" v-if="errorMessage">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -142,7 +140,7 @@ export default defineComponent({
      */
     allowDigitGroupSeparator: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     /**
      * Cho phép giá trị là null/undefined mà không phải set mặc đinh là 0
@@ -158,6 +156,10 @@ export default defineComponent({
     decimalPlaces: {
       type: Number,
       default: 0,
+    },
+    title: {
+      type: String,
+      default: null,
     },
   },
   emits: ["update:modelValue", "baseKeyDown", "onActionBlur", "focus"],
@@ -249,7 +251,7 @@ export default defineComponent({
         // allowDecimalPadding: props.allowDecimalPadding, // Cho phép hiển thi đầy đủ phần thập phân
         decimalCharacter: ",",
         decimalPlaces: props.decimalPlaces,
-        digitGroupSeparator: ".",
+        digitGroupSeparator: props.allowDigitGroupSeparator ? "." : "",
         decimalCharaterAlternative: ".",
         negativePositiveSignPlacement: "p",
         modifyValueOnWheel: "false", // hỗ trợ có lăn chuột thay đổi giá trị
@@ -374,6 +376,7 @@ export default defineComponent({
     return {
       listeners,
       errorMessage,
+      getValue,
       validate,
       isValidate,
       onActionBlur,

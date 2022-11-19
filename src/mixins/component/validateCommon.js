@@ -8,9 +8,10 @@ export const validateCommon = {
                 res = me.validateRequired(value);
                 break;
         }
+        return res;
     },
     validateRequired(value){
-        if(value === undefined || value === null || isNaN(value) || value == ''){
+        if(value === undefined || value === null || (isNaN(value) && typeof value == 'number') || value == ''){
             return false;
         }
         return true;

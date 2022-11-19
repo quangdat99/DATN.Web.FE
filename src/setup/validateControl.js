@@ -39,12 +39,12 @@ export const useValidateControl = ({
                     // Nếu rule này được thiết lập validate riêng
                     if (customValidate && typeof customValidate === 'function') {
                         message = customValidate(controlValue, compareValue);
-                        if(message){
+                        if (message) {
                             break;
                         }
-                    }else{
-                        message = handlerRule(name,controlValue,compareValue);
-                        if(message){
+                    } else {
+                        message = handlerRule(name, controlValue, compareValue);
+                        if (message) {
                             break;
                         }
                     }
@@ -55,27 +55,28 @@ export const useValidateControl = ({
         return message;
     }
 
-    const handlerRule = (rule, controlValue, compareValue) =>{
+    const handlerRule = (rule, controlValue, compareValue) => {
         let message = '';
 
         const titleError = getTileError();
 
-        switch(rule){
+        switch (rule) {
             case 'required':
-                if(!validateCommon.validateRule(rule,controlValue)){
+                if (!validateCommon.validateRule(rule, controlValue)) {
                     message = `${titleError} không được để trống`;
                 }
                 break;
             case 'differentZero':
-                if(!validateNumber.validateRule(rule, controlValue)){
+                if (!validateNumber.validateRule(rule, controlValue)) {
                     message = `${titleError} không được để trống hoặc phải có giá trị khác 0`
                 }
                 break;
             case 'email':
             case 'phoneNumber':
             case 'password':
-                if(!validateText.validateRule(rule, control)){
-                    message = `${titleError} không hợp lệ, vui lòng kiểm tra lại`;
+                let error = validateText.validateRule(rule, controlValue);
+                if (error) {
+                    message = error;
                 }
                 break;
             default:
@@ -89,24 +90,21 @@ export const useValidateControl = ({
     }
 
     const getTileError = () => {
-        const {
-            tile
-        } = props;
-        return title || getValidateName();
+        return props?.title || getValidateName() || '';
     }
-    
+
     const getValidateName = () => {
-        let fn = function(el, c){
-            if(!el || c > 10){
+        let fn = function (el, c) {
+            if (!el || c > 10) {
                 return null;
             }
             let labelElement = el.querySelector('label');
-            if(labelElement){
-                return (labelElement.innerText || '').replace('*','');
+            if (labelElement) {
+                return (labelElement.innerText || '').replace('*', '');
             }
             return fn(el.parentNode, c + 1);
         }
-        
+
         return fn(proxy.$el, 0);
     }
 

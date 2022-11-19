@@ -4,7 +4,7 @@ export default {
         state.User = payload.User;
         state.Context = payload.Context;
     },
-    updateLogout(state, payload){
+    updateLogout(state){
         state.Token = null;
         state.User = null;
         state.Context = null;

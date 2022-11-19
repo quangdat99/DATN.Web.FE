@@ -1,5 +1,8 @@
 <template>
-  <div class="base-dropdown">
+  <div
+    class="base-dropdown"
+    :class="{ 'ms-validate': isValidate, 'w-100': !width }"
+  >
     <div class="dropdown-container" @click="toggleDropdown">
       <base-input
         ref="inputdropdown"

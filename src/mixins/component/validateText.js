@@ -1,9 +1,9 @@
 export const validateText = {
-    validateRule(rule,value){
+    validateRule(rule, value) {
         const me = this;
-        let res = true;
+        let res = '';
 
-        switch(rule){
+        switch (rule) {
             case 'phoneNumber':
                 res = me.validatePhoneNumber(value);
                 break;
@@ -14,56 +14,51 @@ export const validateText = {
                 res = me.validatePassword(value);
                 break;
         }
+        return res;
     },
     validatePhoneNumber(value) {
-        try{
+        try {
             let rex = /^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$/;
             let result = value;
-            if(!rex.test(result.trim())){
-                return false;
+            if (!rex.test(result.trim())) {
+                return 'Số điện thoại không hợp lệ, vui lòng kiểm tra lại';
             }
-        }catch(e){
-            return false;
+        } catch (e) {
+            return 'Số điện thoại không hợp lệ, vui lòng kiểm tra lại';
         }
-        return true;
+        return '';
     },
     validateEmail(value) {
-        try{
+        try {
             let rex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             let result = value;
-            if(!rex.test(result.trim())){
-                return false;
+            if (!rex.test(result.trim())) {
+                return 'Email không hợp lệ, vui lòng kiểm tra lại';
             }
-        }catch(e){
-            return false;
+        } catch (e) {
+            return 'Email không hợp lệ, vui lòng kiểm tra lại';
         }
-        return true;
+        return '';
     },
     validatePassword(value) {
         const me = this;
-        let lengthPass = false;
-        if(value  && value.length >= 8){
-            lengthPass = true;
+        if (!value) {
+            return 'Mật khẩu không được để trống';
+        }
+        if (value.length < 8) {
+            return 'Mật khẩu phải dài ít nhất 8 kí tự'
         }
 
-        let textPass = false;
-        let uppercasePass = false;
-        let lowercasePass = false;
-
-        if(value && /[^A-Z]/g.test(value)){
-            uppercasePass = true;
+        if (!(/[^A-Z]/g.test(value))) {
+            return 'Mật khẩu phải có ít nhất một chữ cái viết hoa';
         }
-        if(value && /[^a-z]/g.test(value)){
-            lowercasePass = true;
-        }
-        if(uppercasePass && lowercasePass){
-            textPass = true;
+        if (!(/[^a-z]/g.test(value))) {
+            return 'Mật khẩu phải có ít nhất một chữ cái viết thường';
         }
 
-        let numberPass = false;
-        if(value && /[^0-9]/g.test(value)){
-            numberPass = true;
+        if (!(/[^0-9]/g.test(value))) {
+            return 'Mật khẩu phải có ít nhất một chữ số';
         }
-        return lengthPass && textPass && numberPass;
+        return '';
     }
 }

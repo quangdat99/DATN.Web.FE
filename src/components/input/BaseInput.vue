@@ -1,17 +1,11 @@
 <template>
   <div
     class="base-input"
-    :class="[width ? '' : 'w-100']"
     :style="{ width: `${width}px` }"
+    :class="{ 'ms-validate': isValidate, 'w-100': !width }"
   >
     <label class="label" v-if="label">{{ label }}</label>
-    <div
-      class="flex-row"
-      :class="[
-        { error: errorMessage, disabled: disabled },
-        hasBorder ? 'border' : '',
-      ]"
-    >
+    <div class="flex-row">
       <div
         :class="['icon24 icon left', leftIcon]"
         v-if="leftIcon"
@@ -32,6 +26,8 @@
           'has-left-icon': leftIcon,
           'has-border': hasBorder,
           'w-100': !width,
+          error: errorMessage,
+          border: hasBorder,
         }"
         v-on="listeners"
         :type="type"
@@ -43,9 +39,9 @@
         :title="errorProvider.errorMessage"
         @click="onClickRightIcon"
       ></div>
-      <div class="error-text" v-if="errorMessage">
-        {{ errorMessage }}
-      </div>
+    </div>
+    <div class="error-text mt-1 txt-error" v-if="errorMessage">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -121,6 +117,10 @@ export default defineComponent({
     title: {
       type: String,
       default: null,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: [
