@@ -1,7 +1,8 @@
 <template>
   <div
     class="base-dropdown"
-    :class="{ 'ms-validate': isValidate, 'w-100': !width }"
+    :class="{ 'w-100': !width }"
+    :style="[{ width: width + 'px' }]"
   >
     <div class="dropdown-container" @click="toggleDropdown">
       <base-input
@@ -99,7 +100,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
-    const modelValue = ref();
+    const modelValue = ref(null);
     const isShow = ref(false);
     const listData = ref([]);
     const indexPointedOption = ref(0);

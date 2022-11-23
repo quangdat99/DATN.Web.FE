@@ -1,7 +1,8 @@
 <template>
   <div
-    class="base-combobox"
-    :class="{ 'ms-validate': isValidate, 'w-100': !width }"
+    class="base-combobox ms-editor"
+    :class="{ 'w-100': !width, 'ms-validate': isValidate }"
+    :style="[{ width: width + 'px' }]"
   >
     <div class="dropdown-container">
       <div
@@ -140,9 +141,10 @@ export default defineComponent({
     const listData = ref([]);
     const indexPointedOption = ref(0);
     const internalText = ref();
-    const { errorMessage, validate, isValidate } = useValidateControl({
-      props,
-    });
+    const { errorMessage, validate, isValidate, clearValidate } =
+      useValidateControl({
+        props,
+      });
     function toggleDropdown() {
       this.isShow = !this.isShow;
     }
@@ -366,6 +368,18 @@ export default defineComponent({
     }
 
     const onBlur = (e) => {
+      if (!internalText.value) {
+        emit("update:modelValue", null, null);
+      } else {
+        let obj = listData.value.find(
+          (x) => x[props.valueField] == modelValue.value
+        );
+        if (obj) {
+          internalText.value = obj[props.displayField];
+        } else {
+          internalText.value = props.initText;
+        }
+      }
       validate();
       emit("blur", modelValue.value);
     };
@@ -389,6 +403,7 @@ export default defineComponent({
       errorMessage,
       validate,
       getValue,
+      clearValidate,
       onBlur,
     };
   },

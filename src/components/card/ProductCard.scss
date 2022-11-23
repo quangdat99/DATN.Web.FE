@@ -50,7 +50,7 @@
           text-transform: uppercase;
           box-sizing: border-box;
           padding: 4px 2px 3px;
-          background-color: $primary;
+          background-color: $sub-primary;
 
           &::after {
             content: "";
@@ -59,9 +59,41 @@
             left: 0;
             bottom: -4px;
             position: absolute;
-            border-color: transparent $primary;
+            border-color: transparent $sub-primary;
             border-style: solid;
             border-width: 0 18px 4px;
+          }
+        }
+      }
+      .card-sub-outstanding {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1;
+
+        .info-outstanding {
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+          position: relative;
+          font-weight: 400;
+          line-height: .8125rem;
+          color: $white;
+          text-transform: uppercase;
+          box-sizing: border-box;
+          padding: 4px 2px 3px;
+          background-color: $primary;
+
+          &::after {
+            content: "";
+            width: 0;
+            height: 0;
+            left: 52px;
+            bottom: 0;
+            position: absolute;
+            border-color: transparent $primary;
+            border-style: solid;
+            border-width: 0px 0px 20px 22px;
           }
         }
       }
@@ -88,16 +120,15 @@
       .card-detail-information {
         display: flex;
         font-size: 16px;
+        margin-bottom: 10px;
 
         .product-detail {
-          margin-bottom: 5px;
           color: $primary;
 
           &.product-old-price {
             text-decoration: line-through;
             color: #82869e;
             font-size: 14px;
-            margin-right: 8px;
           }
         }
       }

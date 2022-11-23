@@ -1,91 +1,142 @@
 <template>
   <div class="product-page flex flex-column">
     <div class="product-navigation">
-      <a :href="homepage">Trang chủ/</a> {{ product_name }}
+      <a :href="homepage">Trang chủ /</a> {{ product.product_name }}
     </div>
-    <div class="product-page-main-content flex flex-row">
-      <div class="product-page-image-container">
+    <div class="product-page-content flex flex-row">
+      <div class="product-page-image-container flex-column">
         <div class="list-product-image">
           <base-thumbnail-slider :listSlider="listSlider">
           </base-thumbnail-slider>
         </div>
       </div>
-      <div class="product-page-main-information flex flex-column">
-        <div class="product-main-information-name sub-information">
-          {{ product.product_name }}
-        </div>
-        <div class="product-main-information-code sub-information">
-          SKU: {{ product.product_code }}
-        </div>
-        <div class="product-main-information-price-status">
+      <div class="product-page-infor flex flex-column">
+        <div class="product-infor d-flex mb-4">
           <div
-            class="old-price price flex flex-row sub-information flex-center"
-            v-if="product.product_discount != 0"
+            class="outstanding mr-4 fs-12 color-white"
+            v-if="product.outstanding > 5"
           >
-            <div class="old-price-title price-title product-detail-title">
-              Giá niêm yết
-            </div>
-            <div class="old-price-value price-value product-detail-content">
-              {{ formatVND(product.sale_price) }}
-            </div>
+            Nổi bật
           </div>
-          <div class="price flex flex-row sub-information flex-center">
-            <div class="price-title product-detail-title">Giá bản lẻ</div>
-            <div class="price-value product-detail-content">
-              {{ formatVND(product.sale_price) }}
-            </div>
-          </div>
-          <div class="status flex flex-row">
-            <div class="status-title product-detail-title">Tình trạng</div>
-            <div class="status-value product-detail-content">
-              {{ product.productStatus == 1 ? "Còn hàng" : "Hết hàng" }}
-            </div>
+          <div class="product-infor-name">
+            {{ product.product_name }}
           </div>
         </div>
-        <div class="product-main-information-delivery flex flex-row">
-          <div class="delivery-title product-detail-title">Vận chuyển</div>
-          <div class="delivery-content product-detail-content">
-            Giao nhanh trong vòng 2-4 tiếng khi đơn hàng được xác nhận. Các đơn
-            hàng đặt sau 18:00 sẽ được giao trước 12:00 sáng ngày hôm sau. Liên
-            hệ hỗ trợ: 024 71066866
+        <div class="d-flex mb-4">
+          <div class="rating d-flex mr-4">
+            <div class="rate-text mr-3 fs-16 color-primary">
+              {{ product.rate }}
+            </div>
+            <star-rating
+              :rating="product.rate"
+              :increment="0.01"
+              :star-size="15"
+              read-only
+              :show-rating="false"
+              active-color="#C20000"
+              :padding="2"
+            ></star-rating>
+          </div>
+          <div class="count-comment d-flex pl-4 bl-grey mr-4">
+            <div class="count-cm mr-2">{{ product.count_comment }}</div>
+            <div class="text-cm txt-grey-2">Đánh Giá</div>
+          </div>
+          <div class="count-order d-flex pl-4 bl-grey">
+            <div class="count-ord mr-2">{{ product.count_order }}</div>
+            <div class="text-ord txt-grey-2">Đã Bán</div>
           </div>
         </div>
-        <div class="product-main-information-type flex flex-row flex-between">
-          <div class="product-detail-title">Chọn loại</div>
-          <div class="product-detail-content">
-            <base-multi-button :listButtons="listTypeButtons">
-            </base-multi-button>
-          </div>
-        </div>
-        <div
-          class="product-main-information-quantity flex flex-row flex-between"
-        >
-          <div class="product-detail-title">Số lượng</div>
-          <div class="product-detail-content">
-            <vue-number-input
-              v-model="value"
-              :inputtable="false"
-              :min="1"
-              :max="product.productQuantity"
-              size="small"
-              inline
-              controls
+        <div class="ml-4">
+          <div class="d-flex align-center mb-4">
+            <div
+              class="product-detail product-old-price mr-4"
+              v-if="product.sale_price_old > 0"
             >
-            </vue-number-input>
+              {{ formatVND(product.sale_price_old) }}
+            </div>
+            <div
+              class="product-detail product-price mr-4"
+              v-if="
+                product.sale_price_min == product.sale_price_max &&
+                product.sale_price_min > 0
+              "
+            >
+              {{ formatVND(product.sale_price_min) }}
+            </div>
+            <div
+              class="d-flex mr-4"
+              v-if="
+                product.sale_price_min != product.sale_price_max &&
+                product.sale_price_min > 0
+              "
+            >
+              <div class="product-detail product-price">
+                {{ formatVND(product.sale_price_min) }}
+              </div>
+              <div class="product-detail product-price">&nbsp;-&nbsp;</div>
+              <div class="product-detail product-price">
+                {{ formatVND(product.sale_price_max) }}
+              </div>
+            </div>
+            <div class="discount" v-if="product.product_discount > 0">
+              {{ product.product_discount }}% GIẢM
+            </div>
           </div>
-        </div>
-        <div class="product-main-information-placement flex flex-row">
-          <base-button
-            text="MUA NGAY"
-            customClass="white btn-padding no-active"
-          >
-          </base-button>
-          <base-button
-            text="THÊM VÀO GIỎ"
-            customClass="primary btn-padding no-active"
-            leftIcon="shopping-cart-red"
-          >
-          </base-button>
+          <div class="product-infor-type flex flex-row flex-between">
+            <div class="product-detail-title">Màu sắc</div>
+            <div class="product-detail-content">
+              <div
+                class="option-item"
+                :class="{
+                  active: item.active,
+                }"
+                v-for="(item, i) in colors"
+                :key="i"
+                @click="chooseColor(item.option, item.active)"
+              >
+                {{ item.option }}
+                <div class="icon-stick"></div>
+              </div>
+            </div>
+          </div>
+          <div class="product-infor-type flex flex-row flex-between">
+            <div class="product-detail-title">Size</div>
+            <div class="product-detail-content">
+              <div
+                class="option-item"
+                :class="{
+                  active: item.active,
+                }"
+                v-for="(item, i) in sizes"
+                :key="i"
+                @click="chooseSize(item.option, item.active)"
+              >
+                {{ item.option }}
+                <div class="icon-stick"></div>
+              </div>
+            </div>
+          </div>
+          <div class="product-infor-quantity mb-4 flex flex-row flex-between">
+            <div class="product-detail-title">Số lượng</div>
+            <div class="product-detail-content">
+              <vue-number-input
+                v-model="value"
+                :min="1"
+                :max="product.total_quantity"
+                size="small"
+                inline
+                controls
+              >
+              </vue-number-input>
+            </div>
+          </div>
+          <div class="product-infor-placement flex flex-row">
+            <div class="btn-add-to-cart mr-4">
+              <div class="icon24 add-to-cart mr-3"></div>
+              <div class="add-to-cart-text">Thêm Vào Giỏ Hàng</div>
+            </div>
+            <div class="buy-now">Mua Ngay</div>
+          </div>
         </div>
       </div>
     </div>
@@ -222,6 +273,7 @@ import BaseInput from "@/components/input/BaseInput.vue";
 import GridRelationProductCard from "@/components/card/GridRelationProductCard.vue";
 import ProductAPI from "@/apis/components/productAPI";
 import { useFormat } from "@/commons/format.js";
+import { useRoute } from "vue-router";
 
 export default {
   components: {
@@ -236,13 +288,16 @@ export default {
   },
   async setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
+    const route = useRoute();
     const { formatVND } = useFormat();
+    const isChoosed = ref(false);
+    const colors = ref([]);
+    const sizes = ref([]);
     const product = ref({});
 
     const homepage = ref();
     const product_name = ref("Bánh bơ trứng Richy gói 270g");
     const listSlider = ref([]);
-    const listTypeButtons = ref([]);
     const value = ref(1);
     const description =
       ref(`<h2>Nước táo lên men Strongbow Apple Ciders Red Berries chai 330ml (Vị dâu đỏ)</h2>
@@ -296,25 +351,37 @@ export default {
     const rating = ref(0);
 
     const productRelationProducts = ref();
+
+    function handleOption(options) {
+      let onlyUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+      };
+      let arr = options
+        ?.split(";")
+        ?.filter((x) => x != "")
+        ?.filter(onlyUnique);
+      if (arr) {
+        arr = arr.map((x) => ({
+          active: false,
+          option: x,
+        }));
+        return arr;
+      }
+      return [];
+    }
     onMounted(async () => {
-      let productId = proxy.$store.state["moduleProductPage"].productId;
+      // let productId = proxy.$store.state["moduleProductPage"].productId;
+      let query = route.query;
+      let productId = query.id;
+
       const data = await proxy.$store.dispatch(
         "moduleProductPage/updateProduct",
         productId
       );
       product.value = data;
-      // homepage.value = window._appConfig.homepage;
-      listTypeButtons.value = [
-        {
-          text: "Hộp",
-        },
-        {
-          text: "Thùng",
-        },
-        {
-          text: "Gói 6",
-        },
-      ];
+      colors.value = handleOption(data.colors);
+      sizes.value = handleOption(data.sizes);
+      homepage.value = "/";
       // Gán ảnh cho sản phẩm
       if (product.value && product.value.productDetails) {
         if (Array.isArray(product.value.productDetails)) {
@@ -325,8 +392,7 @@ export default {
               });
             }
           });
-        } 
-        else {
+        } else {
           listSlider.value.push({
             src: product.value.img_url,
           });
@@ -335,11 +401,26 @@ export default {
       // Gán sản phẩm liên quan
       productRelationProducts.value = product.value.relationProduct;
     });
+
+    function chooseColor(value, active) {
+      colors.value.forEach((x) => (x.active = false));
+      let item = colors.value.find((x) => x.option == value);
+      if (item) {
+        item.active = !active;
+      }
+    }
+
+    function chooseSize(value, active) {
+      sizes.value.forEach((x) => (x.active = false));
+      let item = sizes.value.find((x) => x.option == value);
+      if (item) {
+        item.active = !active;
+      }
+    }
     return {
       homepage,
       product_name,
       listSlider,
-      listTypeButtons,
       value,
       description,
       descriptionInformation,
@@ -347,6 +428,11 @@ export default {
       productRelationProducts,
       product,
       formatVND,
+      isChoosed,
+      colors,
+      sizes,
+      chooseColor,
+      chooseSize,
     };
   },
 };

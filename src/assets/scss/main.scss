@@ -357,11 +357,23 @@ body {
 .txt-grey {
   color: $text-grey;
 }
+.txt-grey-2 {
+  color: $color-grey;
+}
 .black {
   color: $black;
 }
+
+.color-white {
+  color: $white;
+}
 .txt-error {
   color: $color-error;
+}
+
+/* Background-color */
+.bg-primary{
+  background-color: $primary;
 }
 
 
@@ -374,4 +386,9 @@ body {
 }
 .fw-600 {
   font-weight: 600;
+}
+
+/* Border */
+.bl-grey {
+  border-left: 1px solid rgba(0,0,0,.14);
 }

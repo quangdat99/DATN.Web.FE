@@ -37,9 +37,10 @@
             ]"
             :chosenValue="model.sort"
             @update:modelValue="updateSort"
+            :width="160"
           >
           </base-dropdown>
-          <div class="paging d-flex flex1" style="flex-direction: row-reverse">
+          <div class="paging d-flex flex1" style="flex-direction: row-reverse" v-if="paging.totalPage > 1">
             <div class="paging-btn d-flex align-center">
               <div class="mr-4">
                 <span class="color-primary">{{ model.page + 1 }}</span>
@@ -121,7 +122,7 @@
             </div>
           </div>
         </div>
-        <div class="group-filter mt-4 mr-4">
+        <div class="group-filter mt-4 mr-4" v-if="listCategory?.length > 0">
           <div class="title-ft fs-14 black">Theo Danh Mục</div>
           <div
             class="container-ft mt-4"
@@ -133,7 +134,7 @@
               :modelValue="category.selected"
               :label="category.category_name"
               @change="
-                updateCategory(!category.selected, category.category_code)
+                updateCategory(!category.selected, category.category_id)
               "
             ></base-checkbox>
           </div>
@@ -247,17 +248,18 @@ export default defineComponent({
      * thay đổi khoảng tiền
      */
     const updateAmount = () => {
-      let fromAmount = data.value.fromAmount;
-      let toAmount = data.value.toAmount;
-
-      if (fromAmount == 0) {
-        fromAmount = null;
+      if (data.value.fromAmount == 0) {
+        data.value.fromAmount = null;
       }
-      if (toAmount == 0) {
-        toAmount = null;
+      if (data.value.toAmount == 0) {
+        data.value.toAmount = null;
       }
 
-      if (fromAmount && toAmount && fromAmount > toAmount) {
+      if (
+        data.value.fromAmount &&
+        data.value.toAmount &&
+        data.value.fromAmount > data.value.toAmount
+      ) {
         errorAmount.value = true;
         return;
       }
@@ -301,9 +303,6 @@ export default defineComponent({
         .getElementsByTagName("input")[0]
         .focus();
       emit("updateStatusSearch", true);
-      // setTimeout(() => {
-      //   proxy.$router.go();
-      // }, 100);
     };
 
     watch(

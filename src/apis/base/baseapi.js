@@ -33,7 +33,7 @@ export default class BaseApi {
      */
     async getAll() {
         let res = await Http.axios().get(`${this.controllerName}`);
-        return response(res);
+        return this.response(res);
     }
     /**
      * Phương thức cập nhật dữ liệu lên database

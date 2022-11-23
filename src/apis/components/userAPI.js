@@ -6,7 +6,7 @@ class UserAPI extends BaseAPI {
 
     async login(model){
         let res = await Http.axios().post(`${this.controllerName}/login`, model);
-        return this.response(res);
+        return res;
     }
     async signup(model){
         let res = await Http.axios().post(`${this.controllerName}/signup`, model);

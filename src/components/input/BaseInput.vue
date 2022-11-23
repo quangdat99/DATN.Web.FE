@@ -1,6 +1,6 @@
 <template>
   <div
-    class="base-input"
+    class="base-input ms-editor"
     :style="{ width: `${width}px` }"
     :class="{ 'ms-validate': isValidate, 'w-100': !width }"
   >
@@ -143,9 +143,10 @@ export default defineComponent({
 
     const { proxy } = getCurrentInstance();
 
-    const { errorMessage, validate, isValidate } = useValidateControl({
-      props,
-    });
+    const { errorMessage, validate, isValidate, clearValidate } =
+      useValidateControl({
+        props,
+      });
 
     // Hook
     onMounted(() => {
@@ -275,6 +276,7 @@ export default defineComponent({
       errorMessage,
       validate,
       isValidate,
+      clearValidate,
       onClickLeftIcon,
       onClickRightIcon,
     };

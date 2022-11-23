@@ -7,9 +7,11 @@
           <div class="login-field-label">Tài khoản</div>
           <div class="login-field-input">
             <base-input
+              ref="account"
               placeholder="Nhập email hoặc số điện thoại"
               v-model="model.account"
-              field="account"
+              :maxLength="100"
+              :rules="[{ name: 'required' }]"
             ></base-input>
           </div>
         </div>
@@ -17,10 +19,12 @@
           <div class="login-field-label">Mật khẩu</div>
           <div class="login-field-input">
             <base-input
+              ref="password"
               placeholder="Mật khẩu"
               type="password"
               v-model="model.password"
-              field="password"
+              :maxLength="50"
+              :rules="[{ name: 'required' }]"
             ></base-input>
           </div>
         </div>
@@ -60,11 +64,12 @@
 <script>
 import BaseButton from "@/components/button/BaseButton.vue";
 import BaseInput from "@/components/input/BaseInput.vue";
-import { ref, getCurrentInstance, reactive } from "vue";
-import userAPI from "@/apis/components/userAPI.js";
-import jwt_decode from "jwt-decode";
+import { ref, getCurrentInstance, nextTick, reactive } from "vue";
+import baseDetail from "../baseDetail";
+import commonFn from "@/commons/commonFunction.js";
 export default {
   name: "LoginPage",
+  extends: baseDetail,
   components: {
     BaseButton,
     BaseInput,
@@ -77,14 +82,33 @@ export default {
       proxy.$router.push("/signup");
     };
     const login = async () => {
+      const me = proxy;
+      if (!me.validateComponents()) {
+        nextTick(() => {
+          me.focusFirstError();
+        });
+        return;
+      }
+      commonFn.mask();
       if (proxy.model) {
         let res = await proxy.$store.dispatch("moduleContext/login", model);
-        if (res) {
+        if (res.statusCode == 200) {
           proxy.$router.push("homepage");
+        } else if (res.statusCode == 207) {
+          proxy.$toast.error(res.userMessage);
+          setTimeout(() => {
+            proxy.$refs.account.$el.querySelector("input").focus();
+          }, 100);
+        } else if (res.statusCode == 208) {
+          proxy.$toast.error(res.userMessage);
+          setTimeout(() => {
+            proxy.$refs.password.$el.querySelector("input").focus();
+          }, 100);
         } else {
-          proxy.$toast.error(`Tài khoản hoặc mật khẩu không đúng`);
+          proxy.$toast.error(`Đã xảy ra lỗi`);
         }
       }
+      commonFn.unmask();
     };
     return {
       model,

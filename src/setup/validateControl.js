@@ -74,7 +74,8 @@ export const useValidateControl = ({
             case 'email':
             case 'phoneNumber':
             case 'password':
-                let error = validateText.validateRule(rule, controlValue);
+            case 'comparePassword':
+                let error = validateText.validateRule(rule, controlValue, compareValue);
                 if (error) {
                     message = error;
                 }
@@ -108,9 +109,14 @@ export const useValidateControl = ({
         return fn(proxy.$el, 0);
     }
 
+    const clearValidate = () => {
+        return errorMessage.value = '';
+    }
+
     return {
         validate,
         errorMessage,
-        isValidate
+        isValidate,
+        clearValidate
     };
 }

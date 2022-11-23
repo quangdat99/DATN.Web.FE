@@ -48,4 +48,15 @@ app.component('BaseInput', BaseInput);
 app.component('BaseNumber', BaseNumber);
 app.component('BaseCheckbox', BaseCheckbox);
 
-app.mount('#app')
+app.mixin({
+  mounted() {
+    const me = this;
+    if (me.$el && !me.$el.getVueInstance) {
+      me.$el.getVueInstance = () => {
+        return this;
+      }
+    }
+  },
+})
+app.mount('#app');
+

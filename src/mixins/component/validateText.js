@@ -1,5 +1,5 @@
 export const validateText = {
-    validateRule(rule, value) {
+    validateRule(rule, value, compareValue) {
         const me = this;
         let res = '';
 
@@ -12,6 +12,9 @@ export const validateText = {
                 break;
             case 'password':
                 res = me.validatePassword(value);
+                break;
+            case 'comparePassword':
+                res = me.validateComparePassword(value, compareValue);
                 break;
         }
         return res;
@@ -58,6 +61,12 @@ export const validateText = {
 
         if (!(/[^0-9]/g.test(value))) {
             return 'Mật khẩu phải có ít nhất một chữ số';
+        }
+        return '';
+    },
+    validateComparePassword(value, compareValue){
+        if (value != compareValue) {
+            return 'Nhập lại mật khẩu không khớp với mật khẩu đã nhập'
         }
         return '';
     }

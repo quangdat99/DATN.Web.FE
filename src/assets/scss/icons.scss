@@ -98,4 +98,26 @@
     &.research::before {
         background-position: -0 -72px;
     }
+    &.add-to-cart::before {
+        background-position: -0 -136px;
+    }
+}
+
+.icon16 {
+    height: 16px;
+    width: 16px;
+    position: relative;
+
+    &:before {
+        content: '';
+        position: absolute;
+        background: transparent url($image-sprite) no-repeat;
+        height: 16px;
+        width: 16px;
+        top: 0;
+        left: 0;
+    }
+    &.tick::before {
+        background-position: -0 -120px;
+    }
 }

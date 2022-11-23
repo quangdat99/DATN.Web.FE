@@ -102,8 +102,7 @@ export default {
     height: 100%;
     border-radius: 5px;
   }
-  margin-bottom: 50px;
-  margin-top: 50px;
+  margin-bottom: 8px;
 }
 .slider-chosen {
   padding: 0px 20px;

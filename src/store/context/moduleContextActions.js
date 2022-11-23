@@ -10,12 +10,12 @@ export default {
     var res = await userAPI.login(payload);
 
     context.commit('updateLoading', false);
-    if (res) {
-      if (res.Token) {
-        context.commit('updateToken', res);
+    if (res && res.data && res.data.statusCode == 200) {
+      if (res.data.data.Token) {
+        context.commit('updateToken', res.data.data);
       }
-      return res;
     }
+    return res.data;
   },
 
   /**
@@ -36,8 +36,8 @@ export default {
 
     context.commit('updateLoading', false);
     if (res && res.data && res.data.statusCode == 200) {
-      if (res.data.Token) {
-        context.commit('updateToken', res.data);
+      if (res.data.data.Token) {
+        context.commit('updateToken', res.data.data);
       }
     }
     return res.data;

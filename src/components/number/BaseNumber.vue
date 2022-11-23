@@ -1,6 +1,6 @@
 <template>
   <div
-    class="base-input"
+    class="base-input ms-editor"
     :style="{ width: `${width}px` }"
     :class="{ 'ms-validate': isValidate, 'w-100': !width }"
   >
@@ -171,7 +171,7 @@ export default defineComponent({
     me.valid = false;
     me.autoNumneric = null;
 
-    const { errorMessage, validate, isValidate } = useValidateControl({
+    const { errorMessage, validate, isValidate, clearValidate } = useValidateControl({
       props,
     });
     const listeners = computed(() => {
@@ -379,6 +379,7 @@ export default defineComponent({
       getValue,
       validate,
       isValidate,
+      clearValidate,
       onActionBlur,
       upDownValue,
     };

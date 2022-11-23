@@ -48,15 +48,13 @@
           <div class="flex-column flex1 ml-2">
             <div class="signup-field-label">Số điện thoại</div>
             <div class="signup-field-input">
-              <base-number
+              <base-input
                 ref="phone"
                 title="Số điện thoại"
                 v-model="model.phone"
-                leadingZero="keep"
-                :allowDigitGroupSeparator="false"
-                :maxLength="11"
+                :maxLength="10"
                 :rules="[{ name: 'required' }, { name: 'phoneNumber' }]"
-              ></base-number>
+              ></base-input>
             </div>
           </div>
         </div>
@@ -69,7 +67,7 @@
                 title="Mật khẩu"
                 v-model="model.password"
                 type="password"
-                :maxLength="20"
+                :maxLength="50"
                 :rules="[{ name: 'required' }, { name: 'password' }]"
               ></base-input>
             </div>
@@ -83,8 +81,12 @@
                 title="Nhập lại mật khẩu"
                 v-model="model.confirmPassword"
                 type="password"
-                :maxLength="20"
-                :rules="[{ name: 'required' }, { name: 'password' }]"
+                :maxLength="50"
+                :rules="[
+                  { name: 'required' },
+                  { name: 'password' },
+                  { name: 'comparePassword', compareValue: model.password },
+                ]"
               ></base-input>
             </div>
           </div>
@@ -255,11 +257,13 @@ import BaseButton from "@/components/button/BaseButton.vue";
 import BaseInput from "@/components/input/BaseInput.vue";
 import BaseCombobox from "@/components/combobox/BaseCombobox.vue";
 import AccountAPI from "@/apis/components/accountAPI";
-import { ref, getCurrentInstance, onMounted } from "vue";
+import { ref, getCurrentInstance, onMounted, nextTick } from "vue";
 import commonFn from "@/commons/commonFunction.js";
 import axios from "axios";
+import baseDetail from "../baseDetail";
 export default {
   name: "SignupPage",
+  extends: baseDetail,
   components: {
     BaseButton,
     BaseCombobox,
@@ -311,6 +315,7 @@ export default {
     };
 
     const changeStep = (value) => {
+      const me = proxy;
       if (value == 0) {
         proxy.$router.go(-1);
       }
@@ -318,15 +323,33 @@ export default {
         step.value = 1;
       }
       if (value == 2) {
+        if (!me.validateComponents()) {
+          nextTick(() => {
+            me.focusFirstError();
+          });
+          return;
+        }
         step.value = 2;
       }
     };
 
     const signup = async () => {
+      const me = proxy;
+
+      if (!me.validateComponents()) {
+        nextTick(() => {
+          me.focusFirstError();
+        });
+        return;
+      }
+
+      commonFn.mask();
       let res = await proxy.$store.dispatch(
         "moduleContext/signup",
         model.value
       );
+
+      commonFn.unmask();
       if (!res) {
         return;
       }

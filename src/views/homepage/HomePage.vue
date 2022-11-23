@@ -35,6 +35,7 @@
 import { mapActions, mapGetters, mapState } from "vuex";
 import BaseSlider from "@/components/slider/slider.vue";
 import GridProductCard from "@/components/card/GridProductCard.vue";
+import commonFn from "@/commons/commonFunction.js";
 import {
   ref,
   onMounted,
@@ -64,25 +65,25 @@ export default {
       category: null,
     });
     const paging = ref({
-      pageSize: 5,
+      pageSize: 20,
       totalPage: 15,
     });
     const listCategory = ref([
-      {
-        selected: false,
-        category_code: "A0001",
-        category_name: "Áo khoác",
-      },
-      {
-        selected: false,
-        category_code: "A0002",
-        category_name: "Áo hoodie",
-      },
-      {
-        selected: false,
-        category_code: "A0003",
-        category_name: "Quần jean",
-      },
+      // {
+      //   selected: false,
+      //   category_id: "A0001",
+      //   category_name: "Áo khoác",
+      // },
+      // {
+      //   selected: false,
+      //   category_id: "A0002",
+      //   category_name: "Áo hoodie",
+      // },
+      // {
+      //   selected: false,
+      //   category_id: "A0003",
+      //   category_name: "Quần jean",
+      // },
     ]);
     const listSlider = ref([
       {
@@ -102,55 +103,75 @@ export default {
         page: "",
       },
     ]);
-    const product_discountList = ref({
-      productId: "386825b2-1b4d-11ed-8dc4-34415dd21b70",
-      product_discount: 25,
-      product_name:
-        "Bánh bơ trứng Richy gói 270g bơ trứng Richy gói 270g Bánh bơ trứng Richy gói 270g",
-      product_unit: "Gói",
-      sale_price: 27400,
-      sale_price_old: 36400,
-      rating: 3.6,
-      img_url:
-        "https://res.cloudinary.com/mp32022/image/upload/v1659936363/Banner/slide5.jpg",
-    });
     const gridList = ref([]);
     onMounted(() => {
-      setTimeout(() => {}, 200);
-      for (let i = 0; i < 20; i++) {
-        let item = Object.assign({}, product_discountList.value);
-        gridList.value.push(item);
-      }
       window.proxy = proxy;
       if (route.path == "/search") {
         search.value = true;
       } else {
         proxy.$store.dispatch("moduleHomePage/search", "");
+        model.value.keyword = null;
+        model.value.rating = null;
+        model.value.fromAmount = null;
+        model.value.toAmount = null;
+        model.value.page = 0;
+        model.value.sort = null;
+        model.value.category = null;
       }
 
       let query = route.query;
       Object.assign(model.value, query);
       parceValue(model.value);
 
-      if (model.value.category) {
-        let arrCode = model.value.category.split("%");
-        arrCode.forEach((item) => {
-          let category = listCategory.value.find(
-            (x) => x.category_code == item
-          );
-          if (category) {
-            category.selected = true;
-          }
-        });
-      }
-
       if (model.value.keyword) {
         proxy.$store.dispatch("moduleHomePage/search", model.value.keyword);
       } else {
         proxy.$store.dispatch("moduleHomePage/search", "");
       }
+
+      fetchProductHomePage();
+      fetchCategory();
     });
 
+    /**
+     * Lấy ds sản phẩm
+     */
+    const fetchProductHomePage = async () => {
+      commonFn.mask();
+      let payload = Object.assign({}, model.value);
+      payload.pageSize = paging.value.pageSize;
+      let products = await proxy.$store.dispatch(
+        "moduleHomePage/fetchHomePage",
+        payload
+      );
+      gridList.value = products;
+      if (products.length > 0) {
+        paging.value.totalPage = Math.ceil(
+          products[0].totalRecord / paging.value.pageSize
+        );
+      }
+
+      document.getElementsByClassName(
+        "main-container-content"
+      )[0].scrollTop = 0;
+      commonFn.unmask();
+    };
+
+    const fetchCategory = async () => {
+      let categorys = await proxy.$store.dispatch(
+        "moduleHomePage/fetchCategory"
+      );
+      listCategory.value = categorys;
+      if (model.value.category) {
+        let arrCode = model.value.category.split("%");
+        arrCode.forEach((item) => {
+          let category = listCategory.value.find((x) => x.category_id == item);
+          if (category) {
+            category.selected = true;
+          }
+        });
+      }
+    };
     /**
      * Chuẩn hóa dữ liệu
      */
@@ -172,20 +193,21 @@ export default {
       }
     };
 
-    watch(
-      listCategory.value,
-      (value) => {
-        let listChecked = value.filter((x) => x.selected == true);
-        if (listChecked.length > 0) {
-          model.value.category = listChecked
-            .map((x) => x.category_code)
-            .join("%");
-        } else {
-          model.value.category = null;
-        }
-      },
-      { deep: true }
-    );
+    // watch(
+    //   listCategory.value,
+    //   (value) => {
+    //     debugger;
+    //     let listChecked = value.filter((x) => x.selected == true);
+    //     if (listChecked.length > 0) {
+    //       model.value.category = listChecked
+    //         .map((x) => x.category_id)
+    //         .join("%");
+    //     } else {
+    //       model.value.category = null;
+    //     }
+    //   },
+    //   { deep: true }
+    // );
 
     watch(model.value, (newVal) => {
       let query = Object.assign({}, model.value);
@@ -202,6 +224,8 @@ export default {
      */
     const updateModel = (value) => {
       Object.assign(model.value, value);
+      model.value.page = 0;
+      fetchProductHomePage();
     };
 
     /**
@@ -209,11 +233,20 @@ export default {
      */
     const updateListCategory = (selected, categoryCode) => {
       let category = listCategory.value.find(
-        (x) => x.category_code == categoryCode
+        (x) => x.category_id == categoryCode
       );
       if (category) {
         category.selected = selected;
       }
+
+      let listChecked = listCategory.value.filter((x) => x.selected == true);
+      if (listChecked.length > 0) {
+        model.value.category = listChecked.map((x) => x.category_id).join("%");
+      } else {
+        model.value.category = null;
+      }
+      model.value.page = 0;
+      fetchProductHomePage();
     };
 
     const updateSort = (sort) => {
@@ -222,12 +255,12 @@ export default {
       } else {
         model.value.sort = null;
       }
+      model.value.page = 0;
+      fetchProductHomePage();
     };
     const updatePage = (page) => {
       model.value.page = page;
-      document.getElementsByClassName(
-        "main-container-content"
-      )[0].scrollTop = 0;
+      fetchProductHomePage();
     };
 
     const searchText = computed(() => {
@@ -239,10 +272,10 @@ export default {
     };
 
     watch(searchText, (value) => {
-      if (value) {
-        model.value.keyword = value;
-        search.value = true;
-      }
+      model.value.keyword = value;
+      search.value = true;
+      model.value.page = 0;
+      fetchProductHomePage();
     });
 
     return {
