@@ -1,22 +1,28 @@
 <template>
   <div class="footer">
     <div class="flex-row footer-top container">
-      <div class="footer-top-content flex flex-center">
-        <div class="footer-top-content-item w-25 flex-center">
-          <img src="~@/assets/images/footer-img1.png" alt="" />
-          <h3 class="about">Sản phẩm an toàn</h3>
+      <div class="footer-top-content flex-row">
+        <div class="footer-top-content-item flex flex-row">
+          <img src="~@/assets/images/return.png" alt="" />
+          <div class="ml-4">
+            <h3 class="about">7 ngày miễn phí trả hàng</h3>
+            <h3 class="about">Trả hàng miễn phí trong 7 ngày</h3>
+          </div>
         </div>
-        <div class="footer-top-content-item w-25 flex-center">
-          <img src="~@/assets/images/footer-img2.png" alt="" />
-          <h3 class="about">Chất lượng cam kết</h3>
+        <div class="footer-top-content-item flex flex-row">
+          <img src="~@/assets/images/guaranteed.png" alt="" />
+          <div class="ml-4">
+            <h3 class="about">Hàng chính hãng 100%</h3>
+            <h3 class="about">Đảm bảo hàng chính hãng hoặc</h3>
+            <h3 class="about">hoàn tiền gấp đôi</h3>
+          </div>
         </div>
-        <div class="footer-top-content-item w-25 flex-center">
-          <img src="~@/assets/images/footer-img3.png" alt="" />
-          <h3 class="about">Dịch vụ vượt trội</h3>
-        </div>
-        <div class="footer-top-content-item w-25 flex-center">
-          <img src="~@/assets/images/footer-img4.png" alt="" />
-          <h3 class="about">Giao hàng nhanh</h3>
+        <div class="footer-top-content-item flex flex-row">
+          <img src="~@/assets/images/transport.png" alt="" />
+          <div class="ml-4">
+            <h3 class="about">Miễn phí vận chuyển</h3>
+            <h3 class="about">Giao hàng miễn phí toàn quốc</h3>
+          </div>
         </div>
       </div>
     </div>

@@ -10,9 +10,15 @@ class ProductAPI extends BaseAPI {
     async getProductHomePage(model){
         let res = await Http.axios().post(`${this.controllerName}/homepage`, model);
         return this.response(res);
+    }    
+    async getProductRelation(id, mode){
+        let res = await Http.axios().get(`${this.controllerName}/relation/${id}/${mode}`);
+        return this.response(res);
+    }
+    async getRateOption(id){
+        let res = await Http.axios().get(`${this.controllerName}/rateOption/${id}`);
+        return this.response(res);
     }
 }
-
-
 
 export default new ProductAPI();

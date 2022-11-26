@@ -140,129 +140,165 @@
         </div>
       </div>
     </div>
-    <div class="product-page-description">
-      <div class="product-page-description-title flex flex-row grid-title">
-        <div class="flex5">Mô tả</div>
-        <div class="flex2">Thông tin</div>
-      </div>
-      <div class="product-page-description-content flex flex-row">
+    <div class="product-genaral flex-row">
+      <div class="product-description-container flex4">
+        <div class="product-description flex-column" v-if="countAttributes > 0">
+          <div class="product-description-info">
+            <div class="title-info">THÔNG TIN SẢN PHẨM</div>
+            <div class="product-list-info flex flex-column">
+              <div
+                v-for="(attr, index) in attributes"
+                :key="index"
+                class="flex flex-row list-information-item fs-16 mb-4"
+              >
+                <div class="flex1 txt-grey-2">
+                  {{ attr.attribute_title }}
+                </div>
+                <div class="flex4">
+                  {{ attr.attribute_value }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="product-description-main mt-4">
+          <div class="product-description-title">MÔ TẢ SẢN PHẨM</div>
+          <div
+            class="product-description-detail"
+            v-if="product.description"
+            v-html="product.description"
+          ></div>
+          <div class="product-description-detail" v-if="!product.description">
+            Chưa có mô tả chi tiết sản phẩm
+          </div>
+        </div>
+
+        <div class="product-page-rate mt-4">
+          <div class="product-page-rate-title grid-title">
+            ĐÁNH GIÁ SẢN PHẨM
+          </div>
+          <div class="product-page-rate-content" v-if="product.rate > 0">
+            <div class="option-rate">
+              <div class="rate-info flex-column flex1">
+                <div class="flex-row">
+                  <div class="rate-real">{{ product.rate }}</div>
+                  <div class="sub">&nbsp; trên 5</div>
+                </div>
+                <star-rating
+                  :rating="product.rate"
+                  :increment="0.01"
+                  :star-size="24"
+                  read-only
+                  :show-rating="false"
+                  active-color="#C20000"
+                  :padding="2"
+                ></star-rating>
+              </div>
+              <div class="rate-search ml-4 flex4">
+                <div class="flex-column">
+                  <div class="list-option">
+                    <div
+                      class="option-item"
+                      :class="{
+                        active: item.active,
+                      }"
+                      v-for="(item, i) in listRateOption"
+                      :key="i"
+                      @click="chooseOptionRate(item.title, item.active)"
+                    >
+                      {{ item.title }}
+                      <div class="icon-stick"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="review-content">
+              <div class="comment-item flex-row">
+                <div class="cmt-avatar ml-4">
+                  <img src="~@/assets/images/user.png" alt="" />
+                </div>
+                <div class="cmt-content ml-4">
+                  <div class="cmt-user-name mt-2">kimngandiu</div>
+                  <div class="rate-cmt mt-2">
+                    <star-rating
+                      :rating="5"
+                      :increment="1"
+                      :star-size="12"
+                      read-only
+                      :show-rating="false"
+                      active-color="#C20000"
+                      :padding="2"
+                    ></star-rating>
+                  </div>
+                  <div class="sub-info d-flex mt-2">
+                    <div class="date">2022-10-26 19:40</div>
+                    <div class="category ml-2">
+                      | Phân loại hàng: Vàng,size 6 (23 - 28kg)
+                    </div>
+                  </div>
+
+                  <div class="content-body mt-2">
+                    Áo đẹp lắm ạ, nhẹ, form dáng chuẩn, có chống nước bé rất
+                    thích, shop giao hàng nhanh. Sẽ ủng hộ tiếp ạ 0:15
+                  </div>
+                  <div class="image-cmt mt-4">
+                    <img src="~@/assets/images/logo.jpg" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="product-page-rate-content txt-grey-2"
+            v-if="product.rate == 0"
+          >
+            chưa có đánh giá nào
+          </div>
+        </div>
         <div
-          class="product-page-description-main flex5"
-          v-html="description"
-        ></div>
-        <div class="product-page-description-information flex2">
-          <div class="product-description-list-information flex flex-column">
-            <div
-              v-for="(information, index) in descriptionInformation"
+          class="product-page-relation mt-4 mb-4"
+          v-if="listProductRelationCount > 0"
+        >
+          <div class="product-page-relation-title">
+            <div>SẢN PHẨM LIÊN QUAN</div>
+          </div>
+          <div class="relation-content">
+            <product-card
+              v-for="(relation, index) in listProductRelation"
               :key="index"
-              class="flex flex-row list-information-item fw-400"
-            >
-              <div class="flex2">
-                {{ information.title }}
-              </div>
-              <div class="flex1">
-                {{ information.content }}
-              </div>
-            </div>
+              :product="relation"
+            ></product-card>
           </div>
         </div>
       </div>
-    </div>
-    <div class="product-page-rate">
-      <div class="product-page-rate-title grid-title">
-        <div>Đánh giá sản phẩm</div>
-      </div>
-      <div class="product-page-rate-content">
-        <div class="review-content"></div>
-        <div class="product-rate-form flex flex-column">
-          <div class="rate-star flex flex-row product-rate-item flex-center">
-            <div class="rate-start-title flex1 product-rate-title">
-              Đánh giá <span class="color-red">*</span>
-            </div>
-            <div class="flex5">
-              <star-rating
-                :rating="rating"
-                :increment="0.5"
-                :star-size="25"
-                :show-rating="false"
-              ></star-rating>
-            </div>
-          </div>
-          <div
-            class="name-customer flex flex-row flex-center product-rate-item"
-          >
-            <div class="name-customer-title flex1 product-rate-title">
-              Khách hàng <span class="color-red">*</span>
-            </div>
-            <div class="name-customer-input flex5">
-              <base-input placeholder="Nhập tên khách hàng..."></base-input>
-            </div>
-          </div>
-          <div
-            class="email-customer flex flex-row flex-center product-rate-item"
-          >
-            <div class="email-customer-title flex1 product-rate-title">
-              Email
-            </div>
-            <div class="email-customer-input flex5">
-              <base-input placeholder="Nhập email..."></base-input>
-            </div>
-          </div>
-          <div
-            class="phone-customer flex flex-row flex-center product-rate-item"
-          >
-            <div class="phone-customer-title flex1 product-rate-title">
-              Điện thoại <span class="color-red">*</span>
-            </div>
-            <div class="phone-customer-input flex5">
-              <base-input placeholder="Nhập số điện thoại..."></base-input>
-            </div>
-          </div>
-          <div
-            class="topic-customer flex flex-row flex-center product-rate-item"
-          >
-            <div class="topic-customer-title flex1 product-rate-title">
-              Tiêu đề <span class="color-red">*</span>
-            </div>
-            <div class="topic-customer-input flex5">
-              <base-input placeholder="Nhập tiêu đề..."></base-input>
-            </div>
-          </div>
-          <div
-            class="content-customer flex flex-row flex-center product-rate-item"
-          >
-            <div class="content-customer-title flex1 product-rate-title">
-              Nội dung <span class="color-red">*</span>
-            </div>
-            <div class="content-customer-input flex5">
-              <base-input placeholder="Nhập nội dung..."></base-input>
-            </div>
-          </div>
-          <div class="flex button-rate flex-row">
-            <div class="flex1"></div>
-            <div class="flex5">
-              <base-button text="ĐÁNH GIÁ" customClass="white btn-padding ">
-              </base-button>
-            </div>
-          </div>
-        </div>
+      <div
+        class="ml-4 mt-4 flex-column relation-content-sell"
+        v-if="listProductRelationSellCount > 0"
+      >
+        <div class="title-relation-sell txt-grey-2 fs-14">Top Sản Phẩm Bán Chạy</div>
+        <product-card
+          v-for="(relation, index) in listProductRelationSell"
+          :key="index"
+          :product="relation"
+        ></product-card>
       </div>
     </div>
-    <div class="product-page-relation">
+    <!-- <div class="product-page-relation">
       <div class="product-page-relation-title grid-title">
         <div>Sản phẩm liên quan</div>
       </div>
       <div class="product-page-relation-content">
         <grid-relation-product-card
-          :listProduct="productRelationProducts"
+          :listProduct="listProductRelation"
         ></grid-relation-product-card>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { onMounted, ref, getCurrentInstance } from "vue";
+import { onMounted, ref, getCurrentInstance, computed } from "vue";
 import BaseSlider from "@/components/slider/slider.vue";
 import BaseThumbnailSlider from "@/components/slider/thumbnailslider.vue";
 import BaseMultiButton from "@/components/button/BaseMultiButton.vue";
@@ -274,6 +310,7 @@ import GridRelationProductCard from "@/components/card/GridRelationProductCard.v
 import ProductAPI from "@/apis/components/productAPI";
 import { useFormat } from "@/commons/format.js";
 import { useRoute } from "vue-router";
+import ProductCard from "@/components/card/ProductCard.vue";
 
 export default {
   components: {
@@ -285,6 +322,7 @@ export default {
     StarRating,
     BaseInput,
     GridRelationProductCard,
+    ProductCard,
   },
   async setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
@@ -294,39 +332,42 @@ export default {
     const colors = ref([]);
     const sizes = ref([]);
     const product = ref({});
+    const attributes = ref([]);
 
     const homepage = ref();
     const product_name = ref("Bánh bơ trứng Richy gói 270g");
     const listSlider = ref([]);
     const value = ref(1);
-    const description =
-      ref(`<h2>Nước táo lên men Strongbow Apple Ciders Red Berries chai 330ml (Vị dâu đỏ)</h2>
-    <br/>
-    <h3>Thông tin sản phẩm</h3><br/>
-    <strong>Nước táo lên men Strongbow Apple Ciders Red Berries chai 330ml(Vị dâu đỏ)</strong> là loại thức uống có nguồn gốc từ châu Âu và đã phổ biến toàn cầu với cách thức chế biến đầy ấn tượng từ quá trình lên men táo tự nhiên, mang đến chất men thuần khiết và hài hòa.<br/>
-    <br/>
-    <strong>Nước táo lên men Strongbow Apple Ciders Red Berries chai 330ml(Vị dâu đỏ)</strong> phù hợp sử dụng trong những bữa tiệc đồ nướng, hải sản, lẩu, những dịp tụ tập, gặp mặt bạn bè hay khi đi du lịch, dã ngoại… Sản phẩm mang đến những trải nghiệm vị giác mới mẻ, đầy thú vị.<br/>
-    <br/>
-    <strong>Hướng dẫn sử dụng:</strong>
-  <br/>
-  <ol>
-  <li data-list="bullet">Dùng trực tiếp, ngon hơn dùng với đá.</li>
-  <li data-list="bullet">Sản phẩm dành cho người trên 18 tuổi.</li>
-  <li data-list="bullet">Không dành cho phụ nữ mang thai.</li>
-  <li data-list="bullet">Đã uống đồ uống có cồn thì không lái xe</li>
-  </ol>
-  <strong>Hướng dẫn bảo quản:</strong>
-  <br/>
-  <ol>
-  <li data-list="bullet">Bảo quản nơi sạch sẽ, khô ráo thoáng mát.</li>
-  <li data-list="bullet">Tránh ánh nắng mặt trời.</li>
-  <li data-list="bullet">Tránh bị đông đá.</li>
-  </ol>
+    const rateComments = ref([
+      {
+        option: "Tất cả",
+      },
+      {
+        option: "5 Sao (117)",
+      },
+      {
+        option: "4 Sao (6)",
+      },
+      {
+        option: "3 Sao (2)",
+      },
+      {
+        option: "2 Sao (1107)",
+      },
+      {
+        option: "1 Sao (2)",
+      },
+      {
+        option: "Có Bình Luận (54)",
+      },
+      {
+        option: "Có Hình Ảnh (41)",
+      },
+    ]);
 
-  <strong>Lưu ý:</strong>
-  <p><strong>- Hạn sử dụng thực tế quý khách vui lòng xem trên bao bì.</strong></p>
-  <p><strong>- Hình sản phẩm chỉ mang tính chất minh họa, hình thực tế bao bì của sản phẩm tùy thời điểm sẽ khác so với thực tế.</strong></p>  
-`);
+    const countAttributes = computed(() => {
+      return attributes.value.length;
+    });
 
     const descriptionInformation = ref([
       {
@@ -350,7 +391,11 @@ export default {
 
     const rating = ref(0);
 
-    const productRelationProducts = ref();
+    const listProductRelation = ref([]);
+    const listProductRelationCount = ref(0);
+    const listProductRelationSell = ref([]);
+    const listProductRelationSellCount = ref(0);
+    const listRateOption = ref([]);
 
     function handleOption(options) {
       let onlyUnique = (value, index, self) => {
@@ -370,6 +415,7 @@ export default {
       return [];
     }
     onMounted(async () => {
+      window.proxy = proxy;
       // let productId = proxy.$store.state["moduleProductPage"].productId;
       let query = route.query;
       let productId = query.id;
@@ -381,6 +427,7 @@ export default {
       product.value = data;
       colors.value = handleOption(data.colors);
       sizes.value = handleOption(data.sizes);
+      attributes.value = data.attributes;
       homepage.value = "/";
       // Gán ảnh cho sản phẩm
       if (product.value && product.value.productDetails) {
@@ -398,8 +445,26 @@ export default {
           });
         }
       }
+
+      // Sp liên quan sắp xếp theo mới nhất đến cũ
+      const dataRelation = await ProductAPI.getProductRelation(
+        data.product_id,
+        1
+      );
+
+      // Sp liên quan sắp xếp theo bán chạy
+      const dataRelationSell = await ProductAPI.getProductRelation(
+        data.product_id,
+        2
+      );
       // Gán sản phẩm liên quan
-      productRelationProducts.value = product.value.relationProduct;
+      listProductRelation.value = dataRelation;
+      listProductRelationSell.value = dataRelationSell;
+      listProductRelationCount.value = listProductRelation.value.length;
+      listProductRelationSellCount.value = listProductRelationSell.value.length;
+
+      // Các option đánh giá của sản phẩm
+      listRateOption.value = await ProductAPI.getRateOption(data.product_id);
     });
 
     function chooseColor(value, active) {
@@ -422,17 +487,23 @@ export default {
       product_name,
       listSlider,
       value,
-      description,
       descriptionInformation,
       rating,
-      productRelationProducts,
+      listProductRelation,
+      listProductRelationSell,
+      listProductRelationCount,
+      listProductRelationSellCount,
       product,
+      attributes,
+      countAttributes,
       formatVND,
       isChoosed,
       colors,
       sizes,
       chooseColor,
       chooseSize,
+      rateComments,
+      listRateOption,
     };
   },
 };

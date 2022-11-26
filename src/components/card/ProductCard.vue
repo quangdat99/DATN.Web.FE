@@ -71,7 +71,7 @@
           </div>
         </div>
         <div class="d-flex">
-          <div class="product-rating mr-1" v-if="product.rate > 0">
+          <div class="product-rating mr-1">
             <star-rating
               :rating="product.rate"
               :increment="0.01"
@@ -122,6 +122,9 @@ export default {
         "moduleProductPage/updateProductId",
         props.product.product_id
       );
+      setTimeout(() => {
+        proxy.$router.go();
+      }, 50);
     };
 
     const productImg = computed(() => {
