@@ -19,6 +19,10 @@ class ProductAPI extends BaseAPI {
         let res = await Http.axios().get(`${this.controllerName}/rateOption/${id}`);
         return this.response(res);
     }
+    async getCommentProduct(payload){
+        let res = await Http.axios().post(`${this.controllerName}/commentProduct`, payload);
+        return this.response(res);
+    }
 }
 
 export default new ProductAPI();

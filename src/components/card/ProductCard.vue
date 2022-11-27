@@ -91,7 +91,7 @@
 
 <script>
 import BaseButton from "@/components/button/BaseButton.vue";
-import { computed, getCurrentInstance } from "vue";
+import { computed, getCurrentInstance, watch } from "vue";
 import { useFormat } from "@/commons/format.js";
 import { useToast } from "primevue/usetoast";
 import StarRating from "vue-star-rating";
@@ -122,10 +122,14 @@ export default {
         "moduleProductPage/updateProductId",
         props.product.product_id
       );
-      setTimeout(() => {
-        proxy.$router.go();
-      }, 50);
     };
+
+    watch(
+      () => proxy.$router.currentRoute.value.fullPath,
+      (value) => {
+        proxy.$router.go();
+      }
+    );
 
     const productImg = computed(() => {
       if (props.product.img_url) {

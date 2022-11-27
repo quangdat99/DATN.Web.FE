@@ -142,7 +142,10 @@
     </div>
     <div class="product-genaral flex-row">
       <div class="product-description-container flex4">
-        <div class="product-description flex-column" v-if="countAttributes > 0">
+        <div
+          class="product-description flex-column mt-4"
+          v-if="countAttributes > 0"
+        >
           <div class="product-description-info">
             <div class="title-info">THÔNG TIN SẢN PHẨM</div>
             <div class="product-list-info flex flex-column">
@@ -173,7 +176,7 @@
           </div>
         </div>
 
-        <div class="product-page-rate mt-4">
+        <div class="product-page-rate mt-4 mb-4">
           <div class="product-page-rate-title grid-title">
             ĐÁNH GIÁ SẢN PHẨM
           </div>
@@ -204,7 +207,7 @@
                       }"
                       v-for="(item, i) in listRateOption"
                       :key="i"
-                      @click="chooseOptionRate(item.title, item.active)"
+                      @click="chooseOptionRate(item.rateCode, item.active)"
                     >
                       {{ item.title }}
                       <div class="icon-stick"></div>
@@ -213,16 +216,29 @@
                 </div>
               </div>
             </div>
-            <div class="review-content">
-              <div class="comment-item flex-row">
+            <div class="review-content" v-if="countComment > 0">
+              <div
+                class="comment-item flex-row"
+                v-for="(comment, i) in listCommentProduct"
+                :key="i"
+              >
                 <div class="cmt-avatar ml-4">
-                  <img src="~@/assets/images/user.png" alt="" />
+                  <img
+                    :src="
+                      comment.avatar
+                        ? comment.avatar
+                        : '~@/assets/images/user.png'
+                    "
+                    alt=""
+                  />
                 </div>
                 <div class="cmt-content ml-4">
-                  <div class="cmt-user-name mt-2">kimngandiu</div>
+                  <div class="cmt-user-name mt-2">
+                    {{ parseEmailToName(comment.email) }}
+                  </div>
                   <div class="rate-cmt mt-2">
                     <star-rating
-                      :rating="5"
+                      :rating="comment.rate"
                       :increment="1"
                       :star-size="12"
                       read-only
@@ -232,21 +248,35 @@
                     ></star-rating>
                   </div>
                   <div class="sub-info d-flex mt-2">
-                    <div class="date">2022-10-26 19:40</div>
-                    <div class="category ml-2">
-                      | Phân loại hàng: Vàng,size 6 (23 - 28kg)
+                    <div class="date">
+                      {{ formatDate(comment.created_date) }}
+                    </div>
+                    <div class="category ml-1">
+                      {{
+                        commentCategory(comment.color_name, comment.size_name)
+                      }}
                     </div>
                   </div>
 
                   <div class="content-body mt-2">
-                    Áo đẹp lắm ạ, nhẹ, form dáng chuẩn, có chống nước bé rất
-                    thích, shop giao hàng nhanh. Sẽ ủng hộ tiếp ạ 0:15
+                    {{ comment.content }}
                   </div>
-                  <div class="image-cmt mt-4">
-                    <img src="~@/assets/images/logo.jpg" alt="" />
+                  <div class="image-cmt mt-4" v-if="comment.img_url">
+                    <img :src="comment.img_url" alt="" />
                   </div>
                 </div>
               </div>
+              <div class="paging-comment">
+                <grid-product-paging
+                  :pageNumber="pageComment"
+                  :totalPage="totalPageComment"
+                  @updatePage="updatePageComment"
+                ></grid-product-paging>
+              </div>
+            </div>
+            <div class="review-content empty" v-if="countComment == 0">
+              <div class="img-empty-comment"></div>
+              <div class="empty-text mt-4">Chưa có đánh giá</div>
             </div>
           </div>
           <div
@@ -276,7 +306,9 @@
         class="ml-4 mt-4 flex-column relation-content-sell"
         v-if="listProductRelationSellCount > 0"
       >
-        <div class="title-relation-sell txt-grey-2 fs-14">Top Sản Phẩm Bán Chạy</div>
+        <div class="title-relation-sell txt-grey-2 fs-14">
+          Top Sản Phẩm Bán Chạy
+        </div>
         <product-card
           v-for="(relation, index) in listProductRelationSell"
           :key="index"
@@ -311,6 +343,9 @@ import ProductAPI from "@/apis/components/productAPI";
 import { useFormat } from "@/commons/format.js";
 import { useRoute } from "vue-router";
 import ProductCard from "@/components/card/ProductCard.vue";
+import moment from "moment";
+import commonFn from "@/commons/commonFunction.js";
+import GridProductPaging from "@/components/card/GridProductPaging.vue";
 
 export default {
   components: {
@@ -323,6 +358,7 @@ export default {
     BaseInput,
     GridRelationProductCard,
     ProductCard,
+    GridProductPaging,
   },
   async setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
@@ -335,60 +371,11 @@ export default {
     const attributes = ref([]);
 
     const homepage = ref();
-    const product_name = ref("Bánh bơ trứng Richy gói 270g");
     const listSlider = ref([]);
     const value = ref(1);
-    const rateComments = ref([
-      {
-        option: "Tất cả",
-      },
-      {
-        option: "5 Sao (117)",
-      },
-      {
-        option: "4 Sao (6)",
-      },
-      {
-        option: "3 Sao (2)",
-      },
-      {
-        option: "2 Sao (1107)",
-      },
-      {
-        option: "1 Sao (2)",
-      },
-      {
-        option: "Có Bình Luận (54)",
-      },
-      {
-        option: "Có Hình Ảnh (41)",
-      },
-    ]);
-
     const countAttributes = computed(() => {
       return attributes.value.length;
     });
-
-    const descriptionInformation = ref([
-      {
-        title: "Xuất xứ",
-        content: "United Kingdom",
-      },
-      {
-        title: "Thành Phần",
-        content:
-          "Cider (nước ép táo lên men với sucrose), nước, siro, màu caramel (E150a), chất điều chỉnh độ acid (E296), khí carbonate, chất bảo quản Kali Metabisulfit (E224), hương táo tự nhiên",
-      },
-      {
-        title: "Hướng Dẫn Sử Dụng",
-        content: "Sử dụng trực tiếp. Ngon hơn khi dùng với đá",
-      },
-      {
-        title: "Bảo Quản",
-        content: "Để nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp",
-      },
-    ]);
-
     const rating = ref(0);
 
     const listProductRelation = ref([]);
@@ -396,6 +383,11 @@ export default {
     const listProductRelationSell = ref([]);
     const listProductRelationSellCount = ref(0);
     const listRateOption = ref([]);
+    const listCommentProduct = ref([]);
+    const activeCommentCode = ref("All");
+    const pageComment = ref(0);
+    const totalPageComment = ref(1);
+    const pageSizeComment = ref(3);
 
     function handleOption(options) {
       let onlyUnique = (value, index, self) => {
@@ -446,26 +438,68 @@ export default {
         }
       }
 
-      // Sp liên quan sắp xếp theo mới nhất đến cũ
-      const dataRelation = await ProductAPI.getProductRelation(
-        data.product_id,
-        1
-      );
+      getProductRelation(data.product_id);
+      getProductRelationSell(data.product_id);
+      getRateOption(data.product_id);
+      getCommentProduct(data.product_id);
+    });
 
-      // Sp liên quan sắp xếp theo bán chạy
+    /**
+     * Các option đánh giá của sản phẩm
+     */
+    async function getCommentProduct(productId) {
+      let payload = {
+        product_id: productId,
+        filterCode: activeCommentCode.value,
+        pageNumber: pageComment.value,
+        pageSize: pageSizeComment.value,
+      };
+      commonFn.mask();
+      let listData = await ProductAPI.getCommentProduct(payload);
+      if (listData) {
+        listCommentProduct.value = listData;
+        if (listData.length > 0) {
+          totalPageComment.value = Math.ceil(
+            listData[0].count_comment / pageSizeComment.value
+          );
+        }
+      }
+      commonFn.unmask();
+    }
+
+    /**
+     * Các option đánh giá của sản phẩm
+     */
+    async function getRateOption(productId) {
+      listRateOption.value = await ProductAPI.getRateOption(productId);
+    }
+
+    /**
+     * Sp liên quan sắp xếp theo mới nhất đến cũ
+     */
+    async function getProductRelation(productId) {
+      const dataRelation = await ProductAPI.getProductRelation(productId, 1);
+      if (dataRelation) {
+        listProductRelation.value = dataRelation;
+        listProductRelationCount.value = listProductRelation.value.length;
+      }
+    }
+
+    /**
+     * Sp liên quan sắp xếp theo bán chạy
+     */
+    async function getProductRelationSell(productId) {
       const dataRelationSell = await ProductAPI.getProductRelation(
-        data.product_id,
+        productId,
         2
       );
       // Gán sản phẩm liên quan
-      listProductRelation.value = dataRelation;
-      listProductRelationSell.value = dataRelationSell;
-      listProductRelationCount.value = listProductRelation.value.length;
-      listProductRelationSellCount.value = listProductRelationSell.value.length;
-
-      // Các option đánh giá của sản phẩm
-      listRateOption.value = await ProductAPI.getRateOption(data.product_id);
-    });
+      if (dataRelationSell) {
+        listProductRelationSell.value = dataRelationSell;
+        listProductRelationSellCount.value =
+          listProductRelationSell.value.length;
+      }
+    }
 
     function chooseColor(value, active) {
       colors.value.forEach((x) => (x.active = false));
@@ -482,12 +516,52 @@ export default {
         item.active = !active;
       }
     }
+
+    function commentCategory(color, size) {
+      if (color) {
+        if (size) {
+          return `| Phân loại hàng: ${color}, ${size}`;
+        } else {
+          return `| Phân loại hàng: ${color}`;
+        }
+      } else {
+        if (size) {
+          return `| Phân loại hàng: ${size}`;
+        } else {
+          return null;
+        }
+      }
+    }
+    function parseEmailToName(email) {
+      return email.split("@")[0];
+    }
+    function formatDate(date) {
+      return moment(date).format("MM/DD/YYYY hh:mm");
+    }
+    async function chooseOptionRate(rateCode, active) {
+      pageComment.value = 0;
+      listRateOption.value.forEach((x) => (x.active = false));
+      let item = listRateOption.value.find((x) => x.rateCode == rateCode);
+      if (item) {
+        item.active = !active;
+        activeCommentCode.value = item.rateCode;
+      }
+      commonFn.mask();
+      await getCommentProduct(product.value.product_id);
+      commonFn.unmask();
+    }
+    const countComment = computed(() => {
+      return listCommentProduct.value.length;
+    });
+
+    const updatePageComment = (page) => {
+      pageComment.value = page;
+      getCommentProduct(product.value.product_id);
+    };
     return {
       homepage,
-      product_name,
       listSlider,
       value,
-      descriptionInformation,
       rating,
       listProductRelation,
       listProductRelationSell,
@@ -502,8 +576,16 @@ export default {
       sizes,
       chooseColor,
       chooseSize,
-      rateComments,
       listRateOption,
+      listCommentProduct,
+      commentCategory,
+      parseEmailToName,
+      formatDate,
+      chooseOptionRate,
+      countComment,
+      pageComment,
+      totalPageComment,
+      updatePageComment,
     };
   },
 };
