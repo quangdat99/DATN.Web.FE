@@ -11,7 +11,7 @@
         <base-input
           class="input-filter-product"
           placeholder="Nhập tên sản phẩm, mã sản phẩm, từ khóa cần tìm..."
-          :width="widthSearchBar"
+          :width="450"
           rightIcon="search-red"
           @onClickRightIcon="updateSearch"
           @baseKeyup="enterSearch"
@@ -22,7 +22,7 @@
       </div>
       <div class="row-action flex-between">
         <v-menu>
-          <div class="row-group flex-row flex-center cart">
+          <div class="row-group cart-container flex-row flex-center cart">
             <div class="icon24 shopping-cart mr-4"></div>
 
             <!-- This will be the popover reference (for the events and position) -->
@@ -106,19 +106,12 @@
           class="row-group account flex-row flex-center cursor-pointer"
           @click="goToLogin"
         >
-          <div
-            class="icon24 account mr-4"
-            v-if="!$store.state.account || !$store.state.account['userId']"
-          ></div>
+          <div class="icon24 account ml-2 mr-2" v-if="!sourceAvatar"></div>
           <div v-else class="avatar">
-            <img :src="$store.state.account['avatar']" alt="" />
+            <img :src="sourceAvatar" alt="" />
           </div>
           <div class="text text-white">
-            {{
-              !$store.state.account || !$store.state.account["userId"]
-                ? account
-                : $store.state.account["fullName"]
-            }}
+            {{ accountName }}
           </div>
         </div>
       </div>
@@ -133,6 +126,8 @@ import baseInput from "@/components/input/BaseInput.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
 import { useRoute } from "vue-router";
 import { useFormat } from "@/commons/format.js";
+import productCartAPI from "@/apis/components/productCartAPI";
+
 export default {
   components: {
     baseInput,
@@ -172,9 +167,8 @@ export default {
       },
     ]);
     const { proxy } = getCurrentInstance();
-    const account = ref("Tài khoản");
-    const position = ref("Hà Nội");
-    const widthSearchBar = ref(450);
+    const context = ref({});
+    const token = ref("");
     const { formatVND } = useFormat();
     const cartContent = computed(() => {
       return "Giỏ hàng (" + proxy.countProduct + ")";
@@ -197,13 +191,7 @@ export default {
     };
 
     const goToLogin = () => {
-      if (
-        !(
-          proxy.$store.state.account &&
-          proxy.$store.state.account["userId"] &&
-          proxy.$store.state.token
-        )
-      ) {
+      if (!token.value) {
         proxy.$router.push("/login");
       }
     };
@@ -219,19 +207,43 @@ export default {
     };
 
     onMounted(() => {
+      let data = proxy.$store.state["moduleContext"];
+      if (data.Token) {
+        token.value = data.Token;
+        context.value = data.Context;
+      }
       if (route.path == "/homepage") {
         search.value = "";
       } else {
         search.value = proxy.$store.state["moduleHomePage"].searchText;
       }
+      getProductCart();
     });
+
+    const accountName = computed(() => {
+      if (token.value) {
+        return `${context.value.firstName} ${context.value.lastName}`;
+      }
+      return "Tài khoản";
+    });
+    const sourceAvatar = computed(() => {
+      if (token.value && context.value.avatar) {
+        return context.value.avatar;
+      }
+      return "";
+    });
+
+    const getProductCart = async () => {
+      let cardId = context.value.cartId;
+      if (cardId) {
+        let productCarts = await productCartAPI.getAll();
+        debugger
+      }
+    }
 
     return {
       menus,
-      account,
       cartContent,
-      position,
-      widthSearchBar,
       listProductCard,
       formatVND,
       totalComputedMoney,
@@ -241,6 +253,9 @@ export default {
       search,
       updateSearch,
       enterSearch,
+      accountName,
+      token,
+      sourceAvatar,
     };
   },
   computed: {

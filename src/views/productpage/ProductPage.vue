@@ -50,36 +50,48 @@
           <div class="d-flex align-center mb-4">
             <div
               class="product-detail product-old-price mr-4"
-              v-if="product.sale_price_old > 0"
+              v-if="salePriceOld > 0"
             >
-              {{ formatVND(product.sale_price_old) }}
+              {{ formatVND(salePriceOld) }}
             </div>
-            <div
-              class="product-detail product-price mr-4"
-              v-if="
-                product.sale_price_min == product.sale_price_max &&
-                product.sale_price_min > 0
-              "
-            >
-              {{ formatVND(product.sale_price_min) }}
-            </div>
-            <div
-              class="d-flex mr-4"
-              v-if="
-                product.sale_price_min != product.sale_price_max &&
-                product.sale_price_min > 0
-              "
-            >
-              <div class="product-detail product-price">
+            <div class="d-flex align-center" v-if="!productDetail">
+              <div
+                class="product-detail product-price mr-4"
+                v-if="
+                  product.sale_price_min == product.sale_price_max &&
+                  product.sale_price_min > 0
+                "
+              >
                 {{ formatVND(product.sale_price_min) }}
               </div>
-              <div class="product-detail product-price">&nbsp;-&nbsp;</div>
-              <div class="product-detail product-price">
-                {{ formatVND(product.sale_price_max) }}
+              <div
+                class="d-flex mr-4"
+                v-if="
+                  product.sale_price_min != product.sale_price_max &&
+                  product.sale_price_min > 0
+                "
+              >
+                <div class="product-detail product-price">
+                  {{ formatVND(product.sale_price_min) }}
+                </div>
+                <div class="product-detail product-price">&nbsp;-&nbsp;</div>
+                <div class="product-detail product-price">
+                  {{ formatVND(product.sale_price_max) }}
+                </div>
+              </div>
+              <div class="discount" v-if="product.product_discount > 0">
+                {{ product.product_discount }}% GIẢM
               </div>
             </div>
-            <div class="discount" v-if="product.product_discount > 0">
-              {{ product.product_discount }}% GIẢM
+            <div class="d-flex align-center" v-if="productDetail">
+              <div
+                class="product-detail product-price mr-4"
+              >
+                {{ formatVND(productDetail.sale_price) }}
+              </div>
+              <div class="discount" v-if="productDetail.product_discount > 0">
+                {{ productDetail.product_discount }}% GIẢM
+              </div>
             </div>
           </div>
           <div class="product-infor-type flex flex-row flex-between">
@@ -120,9 +132,9 @@
             <div class="product-detail-title">Số lượng</div>
             <div class="product-detail-content">
               <vue-number-input
-                v-model="value"
+                v-model="productQuantity"
                 :min="1"
-                :max="product.total_quantity"
+                :max="maxQuantity"
                 size="small"
                 inline
                 controls
@@ -330,7 +342,7 @@
 </template>
 
 <script>
-import { onMounted, ref, getCurrentInstance, computed } from "vue";
+import { onMounted, ref, getCurrentInstance, computed, watch } from "vue";
 import BaseSlider from "@/components/slider/slider.vue";
 import BaseThumbnailSlider from "@/components/slider/thumbnailslider.vue";
 import BaseMultiButton from "@/components/button/BaseMultiButton.vue";
@@ -369,6 +381,7 @@ export default {
     const sizes = ref([]);
     const product = ref({});
     const attributes = ref([]);
+    const productDetail = ref(null);
 
     const homepage = ref();
     const listSlider = ref([]);
@@ -388,6 +401,7 @@ export default {
     const pageComment = ref(0);
     const totalPageComment = ref(1);
     const pageSizeComment = ref(3);
+    const productQuantity = ref(1);
 
     function handleOption(options) {
       let onlyUnique = (value, index, self) => {
@@ -507,6 +521,7 @@ export default {
       if (item) {
         item.active = !active;
       }
+      filterProductDetail();
     }
 
     function chooseSize(value, active) {
@@ -515,7 +530,53 @@ export default {
       if (item) {
         item.active = !active;
       }
+      filterProductDetail();
     }
+
+    function filterProductDetail() {
+      productDetail.value = null;
+      let color = colors.value.find((x) => x.active == true);
+      let size = sizes.value.find((x) => x.active == true);
+      if (product.value.count_detail == 1) {
+        if (color) {
+          productDetail.value = product.value.productDetails.find(
+            (x) => x.color_name == color.option
+          );
+        } else if (size) {
+          productDetail.value = product.value.productDetails.find(
+            (x) => x.size_name == size.option
+          );
+        }
+      } else if (product.value.count_detail > 1) {
+        if (color && size) {
+          productDetail.value = product.value.productDetails.find(
+            (x) => x.color_name == color.option && x.size_name == size.option
+          );
+        }
+      }
+    }
+
+    const salePriceOld = computed(() => {
+      if (productDetail.value) {
+        return productDetail.value.sale_price_old;
+      }
+      return product.value.sale_price_old;
+    });
+
+    const maxQuantity = computed(()=> {
+      if (productDetail.value) {
+        return productDetail.value.quantity;
+      }
+      return product.value.total_quantity;
+    });
+
+    watch(maxQuantity,
+      (value) => {
+        if (productQuantity.value > value) {
+          productQuantity.value = value
+        }
+      }
+    );
 
     function commentCategory(color, size) {
       if (color) {
@@ -586,6 +647,10 @@ export default {
       pageComment,
       totalPageComment,
       updatePageComment,
+      productDetail,
+      salePriceOld,
+      maxQuantity,
+      productQuantity
     };
   },
 };
