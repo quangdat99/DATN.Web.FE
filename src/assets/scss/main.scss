@@ -83,6 +83,9 @@ div {
 .ml-0 {
   margin-left: 0px !important;
 }
+.ml-auto {
+  margin-left: auto !important;
+}
 .ml-1 {
   margin-left: 4px;
 }
@@ -391,4 +394,34 @@ body {
 /* Border */
 .bl-grey {
   border-left: 1px solid rgba(0,0,0,.14);
+}
+
+@-webkit-keyframes rotate /*Safari and chrome*/ {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }

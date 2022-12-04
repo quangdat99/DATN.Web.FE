@@ -193,6 +193,8 @@ export default {
     const goToLogin = () => {
       if (!token.value) {
         proxy.$router.push("/login");
+      } else {
+        proxy.$router.push("/personal");
       }
     };
 
@@ -237,7 +239,7 @@ export default {
       let cardId = context.value.cartId;
       if (cardId) {
         let productCarts = await productCartAPI.getAll();
-        debugger
+        //debugger
       }
     }
 

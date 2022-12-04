@@ -1,51 +1,89 @@
 <template>
-    <div class="base-radio flex flex-row">
-        <div class="base-radio-container" v-for="(radio, index) in listRadio" :key="index">
-            <radio-button :id="radio.group + index" :name="radio.group" :value="radio.value" v-model="chosenValue" />
-            <label :for="radio.group + index">{{radio.label}}</label>
-        </div>
-    </div>
+  <label
+    class="ms-radio"
+    @keypress="keyDownActive"
+    @focus="onFocus"
+    @blur="onBlur"
+  >
+    <input
+      type="radio"
+      :name="name"
+      :value="keyValue"
+      :checked="modelValue === keyValue"
+      @input="$emit('update:modelValue', keyValue)"
+      @change="$emit('msChange', $event)"
+      :disabled="disabled"
+      :tabindex="0"
+    />
+    <span class="checkmark"></span>
+    <span v-if="label" class="ms-radio--text">{{ label }}</span>
+  </label>
 </template>
-
 <script>
-import RadioButton from 'primevue/radiobutton';
-import { ref,watch,onMounted } from 'vue';
 export default {
-    name: "BaseRadio",
-    components: {
-        RadioButton
+  name: "baseRadio",
+  props: {
+    modelValue: {},
+    label: {
+      default: null,
+      type: String,
     },
-    props: {
-        listRadio: {
-            type: Object,
-            default: null
-        },
-        modelValue:{
-            type : Object,
-            default: null
-        },
-        field:{
-            type: String,
-            default: null
-        }
+    keyValue: {
+      default: null,
     },
-    setup(props,{emit}) {
-        const chosenValue = ref();
-
-        onMounted(()=>{
-            chosenValue.value = props.modelValue;
-        })
-
-        watch(()=> chosenValue.value, (value)=>{
-            emit("update:modelValue",value,props.field);
-        })
-        return {
-            chosenValue
-        }
-    }
-}
+    name: {
+      default: null,
+      type: String,
+    },
+    type: {
+      default: "radio",
+      type: String,
+    },
+    disabled: {
+      default: false,
+      type: Boolean,
+    },
+  },
+  data() {
+    return {
+      focused: false,
+    };
+  },
+  method: {
+    keyDownActive(e) {
+      e.preventDefault();
+      switch (e.which) {
+        case 32:
+        case 13:
+          this.$emit("update:modelValue", this.keyValue);
+          this.$el.querySelector('input[type="radio"]').focus();
+          break;
+      }
+    },
+    onFocus(e) {
+      const me = this;
+      me.focused = true;
+    },
+    onBlur(e) {
+      const me = this;
+      me.focused = false;
+    },
+    // computed: {
+    //   listeners() {
+    //     return {
+    //       ...this.$listeners,
+    //     };
+    //   },
+    //   checkHasEvent() {
+    //     let me = this;
+    //     if (me.checked) {
+    //       return true;
+    //     }
+    //   },
+    // },
+  },
+};
 </script>
-
-<style lang="scss" >
-@import './BaseRadio.scss';
+<style lang="scss" scoped>
+@import "./BaseRadio.scss";
 </style>

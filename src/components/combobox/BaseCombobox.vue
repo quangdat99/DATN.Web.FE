@@ -118,12 +118,10 @@ export default defineComponent({
     },
     valueField: {
       default: null,
-      type: String,
     },
     // Giá trị hiển thị ban đầu của combo
     initText: {
       default: null,
-      type: String,
     },
     disabled: {
       default: false,
