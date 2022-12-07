@@ -78,6 +78,7 @@
       background-color: #ffffff;
       padding: 20px;
       border-radius: 10px;
+      min-height: 450px;
 
       &.profile {
 
@@ -90,11 +91,7 @@
           color: $text-grey;
         }
 
-        .hr {
-          border-bottom: 1px solid $text-grey;
-          height: 1px;
-          width: 100%;
-        }
+
 
         .container-profile {
 
@@ -110,12 +107,21 @@
               .label {
                 font-size: 16px;
                 color: $text-grey;
+                text-align: right;
               }
             }
           }
 
           .profile-right {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            .profile-img {
+              background-size: contain;
+              background-repeat: no-repeat;
+            }
           }
         }
       }
@@ -208,6 +214,35 @@
           }
         }
       }
+      &.reset-password {
+        .rs-pw-title {
+          font-size: 18px;
+        }
+        .rs-pw-sub-title{
+          font-size: 14px;
+          color: $text-grey;
+        }
+        .rs-pw-control{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .rs-pw-item {
+            display: flex;
+            width: 500px;
+            align-items: center;
+            .label {
+              font-size: 16px;
+              color: $text-grey;
+              text-align: right;
+            }
+          }
+        }
+      }
     }
+  }
+  .hr {
+    border-bottom: 1px solid $text-grey;
+    height: 1px;
+    width: 100%;
   }
 }

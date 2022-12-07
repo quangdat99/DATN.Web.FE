@@ -115,28 +115,28 @@
           <div class="profile-left">
             <div class="profile-item">
               <div class="label flex1">Họ</div>
-              <base-input class="flex2 ml-2" v-model="profile.first_name">
+              <base-input class="flex2 ml-4" v-model="profile.first_name">
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Tên</div>
-              <base-input class="flex2 ml-2" v-model="profile.last_name">
+              <base-input class="flex2 ml-4" v-model="profile.last_name">
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Địa chỉ Email</div>
-              <base-input class="flex2 ml-2" v-model="profile.email">
+              <base-input class="flex2 ml-4" v-model="profile.email">
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Số điện thoại</div>
-              <base-input class="flex2 ml-2" v-model="profile.phone">
+              <base-input class="flex2 ml-4" v-model="profile.phone">
               </base-input>
             </div>
 
             <div class="profile-item mt-4">
               <div class="label flex1">Giới tính</div>
-              <div class="group-gender ml-2 flex2 flex-row">
+              <div class="group-gender ml-4 flex2 flex-row">
                 <base-radio
                   name="genderX"
                   label="Nam"
@@ -164,7 +164,7 @@
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Ngày sinh</div>
-              <div class="flex-row flex2">
+              <div class="flex-row flex2 ml-4">
                 <base-combobox
                   title="Ngày sinh"
                   class="flex1"
@@ -209,8 +209,23 @@
                 ></base-combobox>
               </div>
             </div>
+            <div class="profile-item mt-4">
+              <div class="label flex1"></div>
+              <div class="flex2 ml-4">
+                <base-button text="Lưu" @click="updateProfile()"> </base-button>
+              </div>
+            </div>
           </div>
-          <div class="profile-right"></div>
+          <div class="profile-right">
+            <div class="profile-img">
+              <img src="~@/assets/images/profile-user.png" alt="" />
+            </div>
+            <base-button
+              type="secondary"
+              class="mt-4"
+              text="Chọn Ảnh"
+            ></base-button>
+          </div>
         </div>
       </div>
       <div class="content addresses" v-if="activeTab == 2">
@@ -220,7 +235,7 @@
             <base-button
               leftIcon="plus-white"
               text="Thêm mới địa chỉ"
-              @click="addAddress()"
+              @click="addAddress('Add')"
             ></base-button>
           </div>
         </div>
@@ -239,7 +254,12 @@
             </div>
             <div class="item-right">
               <div class="flex-end">
-                <div class="update-address">Cập nhật</div>
+                <div
+                  class="update-address"
+                  @click="addAddress('Edit', address)"
+                >
+                  Cập nhật
+                </div>
                 <div class="delete-address ml-2" v-if="!address.is_default">
                   Xóa
                 </div>
@@ -256,7 +276,55 @@
           </div>
         </div>
       </div>
+      <div class="content reset-password" v-if="activeTab == 3">
+        <div class="rs-pw-title">Đổi Mật Khẩu</div>
+        <div class="rs-pw-sub-title mt-2">
+          Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
+        </div>
+        <div class="hr mt-4"></div>
+        <div class="rs-pw-control mt-4">
+          <div class="rs-pw-item mt-4">
+            <div class="label flex1">Mật Khẩu Hiện Tại</div>
+            <base-input
+              type="password"
+              class="flex2 ml-4"
+              v-model="password.current_password"
+            >
+            </base-input>
+          </div>
+          <div class="rs-pw-item mt-4">
+            <div class="label flex1">Mật Khẩu Mới</div>
+            <base-input
+              type="password"
+              class="flex2 ml-4"
+              v-model="password.new_password"
+            >
+            </base-input>
+          </div>
+          <div class="rs-pw-item mt-4">
+            <div class="label flex1">Xác Nhận Mật Khẩu</div>
+            <base-input
+              type="password"
+              class="flex2 ml-4"
+              v-model="password.confirm_password"
+            >
+            </base-input>
+          </div>
+          <div class="rs-pw-item mt-4">
+            <div class="label flex1"></div>
+            <div class="flex2 ml-4">
+              <base-button
+                text="Xác nhận"
+                @click="resetPassword()"
+                disabled
+              ></base-button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <new-address-popup></new-address-popup>
   </div>
 </template>
 
@@ -277,6 +345,8 @@ import BaseButton from "@/components/button/BaseButton.vue";
 import BaseRadio from "@/components/radio/BaseRadio.vue";
 import { usePersonalPageData } from "./PersonalPageData.js";
 import BaseCombobox from "@/components/combobox/BaseCombobox.vue";
+import popupUtil from "@/commons/popupUtil";
+import NewAddressPopup from "./personalPopup/NewAddressPopup.vue";
 
 export default {
   components: {
@@ -284,6 +354,7 @@ export default {
     BaseButton,
     BaseRadio,
     BaseCombobox,
+    NewAddressPopup,
   },
   name: "PersonalPage",
   setup() {
@@ -291,7 +362,13 @@ export default {
     const route = useRoute();
     const expAccount = ref(true);
     const expOrder = ref(true);
-    const activeTab = ref(1);
+    const activeTab = ref(3);
+    const showNewAddress = ref(false);
+    const password = ref({
+      current_password: null,
+      new_password: null,
+      confirm_password: null,
+    });
     const profile = ref({
       first_name: "Đinh Quang",
       last_name: "Đạt",
@@ -331,7 +408,12 @@ export default {
       let url = route.matched[1].path.replace(":key?", value);
       history.pushState({ prv: location.href }, "", url);
     };
-    watch(activeTab.value, (value) => {});
+    // watch(activeTab.value, (value) => {});
+    const addAddress = (mode, data) => {
+      //   popupUtil.show("NewAddressPopup");
+      proxy.$vfm.show("NewAddressPopup", { mode: mode, data: data });
+    };
+
     return {
       expAccount,
       expOrder,
@@ -344,6 +426,8 @@ export default {
       activeTab,
       changeActiveTab,
       arrAddress,
+      password,
+      addAddress,
     };
   },
   // computed: {

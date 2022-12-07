@@ -51,6 +51,7 @@ module.exports = {
     'vue/no-mutating-props': 'off',
     'no-dupe-keys': 'off',
     'vue/no-dupe-keys': 'off',
-    'no-case-declarations': 'off'
+    'no-case-declarations': 'off',
+    'vue/v-slot-style': 'off',
   }
 }

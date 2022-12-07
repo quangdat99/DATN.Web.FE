@@ -65,7 +65,7 @@ export default {
       }
     },
 
-    resetValdiate(){
+    resetValdiate() {
       const me = this;
       if (Array.isArray(me._observeControl)) {
         me._observeControl.forEach((control) => {
@@ -74,6 +74,36 @@ export default {
           }
         })
       }
+    },
+    beforeOpen(e, close) {
+      const me = this;
+      me._formParam = e.ref.params._rawValue;
+    },
+
+    /**
+     * Gọi lên lớp cha
+     */
+    super(methodName, target) {
+      const me = this;
+
+      let pa = target;
+
+      for (let k = 0; k < 5; k++) {
+        let fn = pa.methods[methodName];
+        if (typeof fn === 'function') {
+          let args = [];
+          for (var i = 2; i < arguments.length; i++) {
+            args.push(arguments[i]);
+          }
+          return fn.apply(me, args);
+        }
+        if (!pa.extends) {
+          break;
+        }
+        pa = pa.extends;
+      }
+
+      return null;
     }
   },
 }

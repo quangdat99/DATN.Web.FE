@@ -140,6 +140,9 @@
     &.plus-white::before {
         background-position: -0 -208px;
     }
+    &.close::before {
+        background-position: -240px -0;
+    }
 }
 
 .icon16 {

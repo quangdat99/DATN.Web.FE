@@ -4,6 +4,7 @@ import router from '@/routers/router.js';
 import FloatingVue from 'floating-vue';
 import VueAgile from 'vue-agile';
 // import VTooltip from 'v-tooltip';
+import { vfmPlugin } from 'vue-final-modal';
 import store from '@/store/store.js';
 import PrimeVue from 'primevue/config';
 import Dialog from 'primevue/dialog';
@@ -16,6 +17,9 @@ import BaseInput from '@/components/input/BaseInput.vue';
 import BaseNumber from '@/components/number/BaseNumber.vue';
 import BaseCheckbox from '@/components/checkbox/BaseCheckbox.vue';
 const app = createApp(App);
+
+import {register} from '@/commons/globalPopup.js';
+register(app);
 
 /* Styles */
 import "@/assets/scss/main.scss";
@@ -40,6 +44,7 @@ app.use(PrimeVue);
 app.use(ToastService);
 app.use(ConfirmationService);
 app.use(Toaster, { position: 'top' });
+app.use(vfmPlugin);
 
 app.component('Dialog', Dialog);
 app.component('BaseDropdown', BaseDropdown);

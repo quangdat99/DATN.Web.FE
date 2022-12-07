@@ -399,6 +399,23 @@ export default {
       }
     };
 
+    watch(
+      () => model.value.province_code,
+      (value) => {
+        model.value.district_code = null;
+        model.value.district = null;
+        model.value.commune_code = null;
+        model.value.commune = null;
+      }
+    );
+    watch(
+      () => model.value.district_code,
+      (value) => {
+        model.value.commune_code = null;
+        model.value.commune = null;
+      }
+    );
+
     return {
       model,
       step,

@@ -29,11 +29,21 @@ div {
   }
 }
 
+.button {
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 8px;
+}
+
 .main-content {
   background-color: $bg-main;
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.h-100 {
+  height: 100%;
 }
 
 .w-100 {
@@ -52,9 +62,11 @@ div {
 .mr-1px {
   margin-right: 1px !important;
 }
+
 .mr-2px {
   margin-right: 2px !important;
 }
+
 .mr-0 {
   margin-right: 0px !important;
 }
@@ -74,18 +86,23 @@ div {
 .mr-4 {
   margin-right: 16px;
 }
+
 .ml-1px {
   margin-left: 1px !important;
 }
+
 .ml-2px {
   margin-left: 2px !important;
 }
+
 .ml-0 {
   margin-left: 0px !important;
 }
+
 .ml-auto {
   margin-left: auto !important;
 }
+
 .ml-1 {
   margin-left: 4px;
 }
@@ -159,6 +176,7 @@ div {
 .pr-0 {
   padding-right: 0px !important;
 }
+
 .pr-1 {
   padding-right: 4px;
 }
@@ -178,6 +196,7 @@ div {
 .pl-0 {
   padding-left: 0px !important;
 }
+
 .pl-1 {
   padding-left: 4px;
 }
@@ -320,34 +339,44 @@ body {
     background: rgba(0, 0, 0, 0.15);
   }
 }
+
 .d-flex {
   display: flex;
 }
+
 .align-center {
   align-items: center;
 }
+
 .justify-between {
   justify-content: space-between;
 }
+
 .justify-center {
   justify-content: center;
 }
+
 /* Font size*/
 .fs-10 {
   font-size: 10px;
 }
+
 .fs-11 {
   font-size: 11px;
 }
+
 .fs-12 {
   font-size: 12px;
 }
+
 .fs-14 {
   font-size: 14px;
 }
+
 .fs-16 {
   font-size: 16px;
 }
+
 .fs-18 {
   font-size: 18px;
 }
@@ -357,12 +386,15 @@ body {
 .color-primary {
   color: $primary;
 }
+
 .txt-grey {
   color: $text-grey;
 }
+
 .txt-grey-2 {
   color: $color-grey;
 }
+
 .black {
   color: $black;
 }
@@ -370,12 +402,13 @@ body {
 .color-white {
   color: $white;
 }
+
 .txt-error {
   color: $color-error;
 }
 
 /* Background-color */
-.bg-primary{
+.bg-primary {
   background-color: $primary;
 }
 
@@ -384,24 +417,30 @@ body {
 .fw-400 {
   font-weight: 400;
 }
+
 .fw-500 {
   font-weight: 500;
 }
+
 .fw-600 {
   font-weight: 600;
 }
 
 /* Border */
 .bl-grey {
-  border-left: 1px solid rgba(0,0,0,.14);
+  border-left: 1px solid rgba(0, 0, 0, .14);
 }
 
-@-webkit-keyframes rotate /*Safari and chrome*/ {
+@-webkit-keyframes rotate
+
+/*Safari and chrome*/
+  {
   from {
     -webkit-transform: rotate(0deg);
     -o-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   to {
     -webkit-transform: rotate(360deg);
     -o-transform: rotate(360deg);
@@ -417,6 +456,7 @@ body {
     -o-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   to {
     -ms-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
