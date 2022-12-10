@@ -5,7 +5,7 @@
     :class="{ 'ms-validate': isValidate, 'w-100': !width }"
   >
     <label class="label" v-if="label">{{ label }}</label>
-    <div class="flex-row">
+    <div class="flex-row align-center">
       <div
         :class="['icon24 icon left', leftIcon]"
         v-if="leftIcon"

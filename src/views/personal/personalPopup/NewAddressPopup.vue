@@ -12,7 +12,7 @@
     </template>
     <template v-slot:content>
       <div class="flex-column h-100 popup-container">
-        <div class="flex-row mt-4">
+        <div class="flex-row">
           <base-input
             title="Họ và tên"
             placeholder="Họ và tên"

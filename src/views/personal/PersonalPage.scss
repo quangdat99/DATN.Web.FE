@@ -118,6 +118,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+
             .profile-img {
               background-size: contain;
               background-repeat: no-repeat;
@@ -145,7 +146,7 @@
         .address-list {
           .address-item {
             font-size: 14px;
-            border-top: 1px solid rgba(0,0,0,.09);
+            border-top: 1px solid rgba(0, 0, 0, .09);
             padding: 32px 0;
             display: flex;
 
@@ -190,21 +191,25 @@
 
             .item-right {
               flex: 1;
+
               .update-address {
                 color: $blue;
                 cursor: pointer;
               }
+
               .delete-address {
                 color: $blue;
                 cursor: pointer;
               }
+
               .setting-default {
                 margin-top: 12px;
-                border: 1px solid rgba(0,0,0,.26);
+                border: 1px solid rgba(0, 0, 0, .26);
                 padding: 4px 12px;
                 height: 28px;
                 cursor: pointer;
-                color: rgba(0,0,0,.87);
+                color: rgba(0, 0, 0, .87);
+
                 &.disabled {
                   cursor: not-allowed;
                   opacity: .7;
@@ -214,22 +219,27 @@
           }
         }
       }
+
       &.reset-password {
         .rs-pw-title {
           font-size: 18px;
         }
-        .rs-pw-sub-title{
+
+        .rs-pw-sub-title {
           font-size: 14px;
           color: $text-grey;
         }
-        .rs-pw-control{
+
+        .rs-pw-control {
           display: flex;
           flex-direction: column;
           align-items: center;
+
           .rs-pw-item {
             display: flex;
             width: 500px;
             align-items: center;
+
             .label {
               font-size: 16px;
               color: $text-grey;
@@ -238,8 +248,129 @@
           }
         }
       }
+
+      &.order-container {
+        .order-search {
+          .base-input {
+            background-color: #eaeaea;
+            padding: 5px 0;
+
+            .icon.left {
+              margin-left: 16px;
+            }
+
+            input {
+
+              background-color: #eaeaea;
+            }
+          }
+        }
+
+        .order-list {
+          display: flex;
+          flex-direction: column;
+
+          .order-item {
+            padding: 16px;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            margin-bottom: 16px;
+
+            .order-title {
+              font-size: 14px;
+              border-bottom: 1px solid rgba(0, 0, 0, .09);
+              padding-bottom: 8px;
+
+              .order-code {
+                color: $primary;
+
+              }
+
+              .right-title {
+                .order-status {
+                  color: #2ac0ac;
+
+                  .status-1 {
+                    align-items: center;
+                    display: flex;
+                  }
+                }
+              }
+            }
+
+            .order-body {
+              .order-product {
+                .product-item {
+                  font-size: 14px;
+                  padding: 8px 0;
+                  border-bottom: 1px solid rgba(0, 0, 0, .09);
+                  display: flex;
+
+                  .product-left {
+                    img {
+                      width: 80px;
+                      height: 80px;
+                    }
+                  }
+
+                  .product-content {
+                    flex: 1;
+                    margin-left: 8px;
+
+                    .product-name {
+                      font-size: 16px;
+                      color: rgba(0, 0, 0, .87);
+                    }
+
+                    .product-classify {
+                      margin-top: 4px;
+                      color: rgba(0, 0, 0, .54);
+                    }
+
+                    .product-quantity {
+                      margin-top: 4px;
+                      color: rgba(0, 0, 0, .87);
+                    }
+                  }
+
+                  .product-right {
+                    display: flex;
+                    align-items: center;
+
+                    .sale-price-old {
+                      text-decoration: line-through;
+                      color: #82869e;
+                      font-size: 14px;
+                    }
+
+                    .sale-price {
+                      color: $primary;
+                      font-size: 14px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .order-footer {}
+          }
+        }
+
+        .order-empty {
+          height: 450px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          .empty-text {
+            color: rgba(0, 0, 0, .8);
+            font-size: 18px;
+          }
+        }
+      }
     }
   }
+
   .hr {
     border-bottom: 1px solid $text-grey;
     height: 1px;

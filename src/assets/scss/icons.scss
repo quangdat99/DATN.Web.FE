@@ -98,51 +98,79 @@
     &.research::before {
         background-position: -0 -72px;
     }
+
     &.add-to-cart::before {
         background-position: -0 -136px;
     }
+
     &.my-account::before {
         background-position: -0 -160px;
     }
+
     &.change-key::before {
         background-position: -24px -160px;
     }
+
     &.order-all::before {
         background-position: -48px -160px;
     }
+
     &.order-await::before {
         background-position: -72px -160px;
     }
+
     &.order-await-2::before {
         background-position: -96px -160px;
     }
+
     &.order-delivery::before {
         background-position: -120px -160px;
     }
+
     &.order-delivery-2::before {
         background-position: -144px -160px;
     }
+
     &.order-cancel::before {
         background-position: -168px -160px;
     }
+
     &.order-return::before {
         background-position: -192px -160px;
     }
+
     &.order::before {
         background-position: -0 -184px;
     }
+
     &.file::before {
         background-position: -24px -184px;
     }
+
     &.address::before {
         background-position: -216px -160px;
     }
+
     &.plus-white::before {
         background-position: -0 -208px;
     }
+
     &.close::before {
         background-position: -240px -0;
     }
+
+    &.search-input::before {
+        background-position: -0 -232px;
+    }
+
+    &.status-order::before {
+        background-position: -24px -232px;
+    }
+
+    &.shield-yellow::before {
+        background-position: -264px -0;
+    }
+
 }
 
 .icon16 {
@@ -159,6 +187,7 @@
         top: 0;
         left: 0;
     }
+
     &.tick::before {
         background-position: -0 -120px;
     }

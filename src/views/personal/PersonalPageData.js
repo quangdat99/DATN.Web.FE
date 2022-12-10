@@ -148,11 +148,41 @@ export const usePersonalPageData = () => {
     { value: 1952 },
     { value: 1951 },
     { value: 1950 },
+  ];
+
+  const listOrder = [
+    {
+      
+      order_code: 'AFEDGHT12092022',
+      product_amount: 20000,
+      status: 1,
+      Products: [
+        {
+          url_img: 'https://cf.shopee.vn/file/f4823b1a0d492d7724a362ec64850e75_tn',
+          product_name: `Kính cường lực SIÊU DẺO 100D FULL MÀN iphone 11/12/13/Pro/Max/x/ Xr/Xs/xs max/6/6s/7/8/Se/plus/mini/promax/xsmax`,
+          product_amount: 10000,
+          product_amount_old: 11000,
+          color_name: 'Vàng',
+          size_name: '6splus',
+          quantity: 1,
+        },
+        {
+          url_img: 'https://cf.shopee.vn/file/f4823b1a0d492d7724a362ec64850e75_tn',
+          product_name: `Kính cường lực SIÊU DẺO 100D FULL MÀN iphone 11/12/13/Pro/Max/x/ Xr/Xs/xs max/6/6s/7/8/Se/plus/mini/promax/xsmax`,
+          product_amount: 10000,
+          product_amount_old: 11000,
+          color_name: 'Vàng',
+          size_name: '6splus',
+          quantity: 1,
+        },
+      ]
+    }
   ]
   return {
     days,
     months,
     years,
-    arrAddress
+    arrAddress,
+    listOrder
   }
 }

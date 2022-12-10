@@ -84,9 +84,7 @@
               </div>
             </div>
             <div class="d-flex align-center" v-if="productDetail">
-              <div
-                class="product-detail product-price mr-4"
-              >
+              <div class="product-detail product-price mr-4">
                 {{ formatVND(productDetail.sale_price) }}
               </div>
               <div class="discount" v-if="productDetail.product_discount > 0">
@@ -143,7 +141,7 @@
             </div>
           </div>
           <div class="product-infor-placement flex flex-row">
-            <div class="btn-add-to-cart mr-4">
+            <div class="btn-add-to-cart mr-4" @click="addToCart()">
               <div class="icon24 add-to-cart mr-3"></div>
               <div class="add-to-cart-text">Thêm Vào Giỏ Hàng</div>
             </div>
@@ -358,6 +356,7 @@ import ProductCard from "@/components/card/ProductCard.vue";
 import moment from "moment";
 import commonFn from "@/commons/commonFunction.js";
 import GridProductPaging from "@/components/card/GridProductPaging.vue";
+import productCartAPI from "@/apis/components/productCartAPI";
 
 export default {
   components: {
@@ -563,20 +562,18 @@ export default {
       return product.value.sale_price_old;
     });
 
-    const maxQuantity = computed(()=> {
+    const maxQuantity = computed(() => {
       if (productDetail.value) {
         return productDetail.value.quantity;
       }
       return product.value.total_quantity;
     });
 
-    watch(maxQuantity,
-      (value) => {
-        if (productQuantity.value > value) {
-          productQuantity.value = value
-        }
+    watch(maxQuantity, (value) => {
+      if (productQuantity.value > value) {
+        productQuantity.value = value;
       }
-    );
+    });
 
     function commentCategory(color, size) {
       if (color) {
@@ -619,6 +616,26 @@ export default {
       pageComment.value = page;
       getCommentProduct(product.value.product_id);
     };
+
+    const addToCart = () => {
+      let data = proxy.$store.state["moduleContext"];
+      if (!data.Token) {
+        proxy.$router.push("/login");
+        return;
+      }
+      if (productDetail.value) {
+        let payload = {
+          quantity: productQuantity.value,
+          product_detail_id: productDetail.value.product_detail_id,
+        };
+        productCartAPI.addToCart(payload).then(() => {
+          proxy.$toast.success("Sản phẩm đã được thêm vào Giỏ hàng");
+          proxy.$store.dispatch("moduleCart/updateCart");
+        });
+      } else {
+        proxy.$toast.warning("Vui lòng chọn phân loại sản phẩm");
+      }
+    };
     return {
       homepage,
       listSlider,
@@ -650,7 +667,8 @@ export default {
       productDetail,
       salePriceOld,
       maxQuantity,
-      productQuantity
+      productQuantity,
+      addToCart,
     };
   },
 };

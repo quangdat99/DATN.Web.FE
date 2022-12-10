@@ -322,6 +322,104 @@
           </div>
         </div>
       </div>
+      <div class="content order-container" v-if="activeTab > 3">
+        <!-- <div class="order-search">
+          <base-input
+            class="input-filter-order"
+            placeholder="Tìm kiếm theo mã đơn hàng, tên sản phẩm"
+            leftIcon="search-input"
+            @baseKeyup="enterSearch"
+            :hasBorder="false"
+            v-model="filterOrder"
+            :modelValue="filterOrder"
+          ></base-input>
+        </div> -->
+        <div class="order-list" v-if="countOrder > 0">
+          <div class="order-item" v-for="(order, o) in listOrder" :key="o">
+            <div class="order-title flex-between">
+              <div class="left-title">
+                Mã Đơn Hàng:
+                <span class="order-code">{{ order.order_code }}</span>
+              </div>
+              <div class="right-title">
+                <div class="order-status">
+                  <div class="status-1">
+                    <div class="icon24 status-order mr-2"></div>
+                    <div class="status-text">
+                      {{ statusName(order.status) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="order-body">
+              <div class="order-product">
+                <div
+                  class="product-item"
+                  v-for="(product, p) in order.products"
+                  :key="p"
+                >
+                  <div class="product-left">
+                    <img :src="product.url_img" alt="" />
+                  </div>
+                  <div class="product-content">
+                    <div class="product-name">{{ product.product_name }}</div>
+                    <div class="product-classify">
+                      {{
+                        productClassify(product.color_name, product.size_name)
+                      }}
+                    </div>
+                    <div class="product-quantity">x{{ product.quantity }}</div>
+                  </div>
+                  <div class="product-right">
+                    <div class="sale-price-old mr-2">
+                      {{ formatVND(11000) }}
+                    </div>
+                    <div class="sale-price">{{ formatVND(10000) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="order-footer mt-4">
+              <div class="total-amount flex-end">
+                <div class="icon24 shield-yellow mr-2"></div>
+                <div class="amount fs-14">
+                  Tổng số tiền:
+                  <span class="color-primary fs-20">{{
+                    formatVND(order.product_amount)
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="list-button flex-end mt-8">
+                <base-button
+                  text="Đánh Giá"
+                  class="mr-2 pl-6 pr-6"
+                  v-if="order.status == 1"
+                ></base-button>
+                <base-button
+                  text="Mua Lại"
+                  :type="'white'"
+                  :hasBorder="true"
+                  class="pl-6 pr-6"
+                  v-if="
+                    order.status == 1 || order.status == 4 || order.status == 6
+                  "
+                ></base-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="order-empty" v-if="countOrder == 0">
+          <img
+            src="~@/assets/images/order_empty.png"
+            width="70"
+            height="70"
+            alt=""
+          />
+          <div class="empty-text mt-4">Chưa có đơn hàng</div>
+        </div>
+      </div>
     </div>
 
     <new-address-popup></new-address-popup>
@@ -347,6 +445,8 @@ import { usePersonalPageData } from "./PersonalPageData.js";
 import BaseCombobox from "@/components/combobox/BaseCombobox.vue";
 import popupUtil from "@/commons/popupUtil";
 import NewAddressPopup from "./personalPopup/NewAddressPopup.vue";
+import { useFormat } from "@/commons/format.js";
+import orderAPI from "@/apis/components/orderAPI";
 
 export default {
   components: {
@@ -360,9 +460,10 @@ export default {
   setup() {
     const { proxy } = getCurrentInstance();
     const route = useRoute();
+    const { formatVND } = useFormat();
     const expAccount = ref(true);
     const expOrder = ref(true);
-    const activeTab = ref(3);
+    const activeTab = ref(null);
     const showNewAddress = ref(false);
     const password = ref({
       current_password: null,
@@ -379,7 +480,16 @@ export default {
       month: "Tháng 4",
       year: 1999,
     });
-    const { days, months, years, arrAddress } = usePersonalPageData();
+    const listOrder = ref([]);
+    const filterOrder = ref(null);
+    const countOrder = ref([]);
+    const {
+      days,
+      months,
+      years,
+      arrAddress,
+      // listOrder
+    } = usePersonalPageData();
     onMounted(() => {
       document.getElementsByClassName(
         "main-container-content"
@@ -414,6 +524,74 @@ export default {
       proxy.$vfm.show("NewAddressPopup", { mode: mode, data: data });
     };
 
+    const statusName = (status) => {
+      switch (status) {
+        case 1:
+          return "Giao hàng thành công";
+        default:
+          return "";
+      }
+    };
+
+    function productClassify(color, size) {
+      if (color) {
+        if (size) {
+          return `Phân loại hàng: ${color}/${size}`;
+        } else {
+          return `Phân loại hàng: ${color}`;
+        }
+      } else {
+        if (size) {
+          return `Phân loại hàng: ${size}`;
+        } else {
+          return null;
+        }
+      }
+    }
+
+    watch(
+      () => activeTab.value,
+      async (value) => {
+        let orders = [];
+        commonFn.mask();
+        switch (value) {
+          case 4:
+            orders = await orderAPI.getOrder(0);
+            listOrder.value = orders;
+            break;
+          case 5:
+            orders = await orderAPI.getOrder(5);
+            listOrder.value = orders;
+            break;
+          case 6:
+            orders = await orderAPI.getOrder(2);
+            listOrder.value = orders;
+            break;
+          case 7:
+            orders = await orderAPI.getOrder(3);
+            listOrder.value = orders;
+            break;
+          case 8:
+            orders = await orderAPI.getOrder(1);
+            listOrder.value = orders;
+            break;
+          case 9:
+            orders = await orderAPI.getOrder(4);
+            listOrder.value = orders;
+            break;
+          case 10:
+            orders = await orderAPI.getOrder(6);
+            listOrder.value = orders;
+            break;
+
+          default:
+            break;
+        }
+        countOrder.value = orders.length;
+        commonFn.unmask();
+      }
+    );
+
     return {
       expAccount,
       expOrder,
@@ -428,6 +606,12 @@ export default {
       arrAddress,
       password,
       addAddress,
+      formatVND,
+      listOrder,
+      statusName,
+      productClassify,
+      filterOrder,
+      countOrder,
     };
   },
   // computed: {

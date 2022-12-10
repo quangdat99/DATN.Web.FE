@@ -236,10 +236,9 @@ export default {
     });
 
     const getProductCart = async () => {
-      let cardId = context.value.cartId;
-      if (cardId) {
-        let productCarts = await productCartAPI.getAll();
-        //debugger
+      let productCarts = await proxy.$store.dispatch("moduleCart/updateCart");
+      if (productCarts) {
+        listProductCard.value = productCarts;
       }
     }
 

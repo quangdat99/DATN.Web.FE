@@ -80,9 +80,12 @@ button {
     background-color: $white;
     color: $black;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, .09);
+
     &:hover {
         color: $primary;
     }
+
     &.active {
         color: $white;
         background-color: $primary;
@@ -102,16 +105,18 @@ button {
     background-color: transparent;
     color: $black;
     overflow: hidden;
+
     &:hover {
         color: $primary;
     }
+
     &.active {
         color: $white;
         background-color: $primary;
     }
 }
 
-.disabled-icon{
+.disabled-icon {
     pointer-events: none;
     opacity: 0.4;
 }
