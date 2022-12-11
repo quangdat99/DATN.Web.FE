@@ -22,7 +22,10 @@
       </div>
       <div class="row-action flex-between">
         <v-menu>
-          <div class="row-group cart-container flex-row flex-center cart">
+          <div
+            class="row-group cart-container flex-row flex-center cart"
+            @click="viewCart"
+          >
             <div class="icon24 shopping-cart mr-4"></div>
 
             <!-- This will be the popover reference (for the events and position) -->
@@ -68,7 +71,7 @@
                       x{{ product.quantity }}
                     </div>
                   </div>
-                  <div class="product-detail-content-price flex flex-end flex2">
+                  <div class="product-detail-content-price flex-end">
                     {{ formatVND(product.quantity * product.sale_price) }}
                   </div>
                 </div>
@@ -87,16 +90,11 @@
               </div>
             </div>
             <div class="product-cart-action flex flex-row flex-between">
+              <div class="flex1"></div>
               <base-button
-                text="Xem chi tiết"
+                text="Xem Giỏ hàng"
                 customClass="white btn-padding no-active"
                 @click="viewCart"
-              >
-              </base-button>
-              <base-button
-                text="Thanh toán ngay"
-                customClass="primary btn-padding no-active"
-                @click="goToCheckout"
               >
               </base-button>
             </div>
@@ -240,7 +238,7 @@ export default {
       if (productCarts) {
         listProductCard.value = productCarts;
       }
-    }
+    };
 
     return {
       menus,

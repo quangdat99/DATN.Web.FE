@@ -18,7 +18,7 @@ import BaseNumber from '@/components/number/BaseNumber.vue';
 import BaseCheckbox from '@/components/checkbox/BaseCheckbox.vue';
 const app = createApp(App);
 
-import {register} from '@/commons/globalPopup.js';
+import { register } from '@/commons/globalPopup.js';
 register(app);
 
 /* Styles */
@@ -39,6 +39,16 @@ app.use(router);
 app.use(VueAgile);
 // app.use(VTooltip);
 app.use(FloatingVue);
+// app.use(FloatingVue, {
+//   themes: {
+//     menu: {
+//       delay: {
+//         show: 0,
+//         hide: 40000,
+//       },
+//     }
+//   }
+// })
 app.use(PrimeVue);
 // app.use(Dropdown);
 app.use(ToastService);
