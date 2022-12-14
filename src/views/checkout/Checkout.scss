@@ -1,34 +1,201 @@
-textarea{
-    resize: vertical;
-}
+@import "@/assets/scss/_variables.scss";
 
-.checkout-page{
-    .checkout-page-title{
-        font-size: 24px !important;
-        color: #333333;
-        padding: 16px;
+.checkout-page {
+  width: $width-container;
+  min-height: 400px;
+
+  .checkout-title {
+    font-size: 20px;
+    color: $primary;
+    padding: 20px 30px;
+    box-shadow: 0 1px 1px 0 rgb(0 0 0 / 5%);
+    background-color: $white;
+    margin: 8px 0;
+
+  }
+
+  .checkout-body {
+    .border-top {
+      height: 3px;
+      width: 100%;
+      background-position-x: -30px;
+      background-size: 116px 3px;
+      background-image: repeating-linear-gradient(45deg, #6fa6d6, #6fa6d6 33px, transparent 0, transparent 41px, #f18d9b 0, #f18d9b 74px, transparent 0, transparent 82px);
     }
-    .checkout-page-radio-container{
-        .checkout-page-radio-title{
-            padding: 16px !important;
+
+    .checkout-address {
+      padding: 28px 30px 24px;
+      box-shadow: 0 1px 1px 0 rgb(0 0 0 / 5%);
+      background-color: $white;
+
+      .address-title {
+        display: flex;
+
+        .title {
+          color: $primary;
+          font-size: 20px;
         }
-        .radio-container{
-            padding: 16px;
-            border-radius: 4px;
-            background-color: #fff;
+
+        margin-bottom: 20px;
+      }
+
+      .address-detail {
+        display: flex;
+        font-size: 16px;
+        align-items: center;
+
+        .name,
+        .phone {
+          font-weight: 600;
         }
-    }
-    .checkout-page-address{
-        margin-top: 20px;
-        background-color: #fff;
-        padding: 16px;
-    }
-    .note-detail-checkout{
-        padding: 20px;
-        background-color: #fff;
-        margin-top: 20px;
-        .note-detail-checkout-content{
-            margin-bottom: 20px;
+
+        .default {
+          font-size: 12px;
+          border: 1px solid $primary;
+          padding: 2px;
+          color: $primary;
         }
+
+        .change-address {
+          cursor: pointer;
+          color: $blue;
+          margin-left: 25px;
+        }
+      }
     }
+
+    .product-detail {
+      .table-header {
+
+        display: flex;
+        align-items: center;
+        color: rgba(0, 0, 0, .8);
+        font-size: 14px;
+        height: 55px;
+        box-shadow: 0 1px 1px 0 rgb(0 0 0 / 5%);
+        background-color: $white;
+        padding: 0 20px;
+        margin-bottom: 8px;
+
+        .product-name {
+          flex: 5;
+        }
+
+        .product-unitprice {
+          flex: 1.5;
+          text-align: center;
+        }
+
+        .product-quantity {
+          flex: 1.5;
+          text-align: center;
+        }
+
+        .product-amount {
+          flex: 2;
+          text-align: right;
+        }
+
+      }
+
+      .table-body {
+        box-shadow: 0 1px 1px 0 rgb(0 0 0 / 5%);
+        background-color: $white;
+
+        .product-item {
+          padding: 8px 20px;
+          display: flex;
+          align-items: center;
+          color: rgba(0, 0, 0, .8);
+          font-size: 14px;
+          border-bottom: 1px solid rgba(0, 0, 0, .09);
+
+          .product-name {
+            flex: 5;
+            display: flex;
+            align-items: center;
+
+            .image {
+              img {
+                width: 60px;
+                height: 60px;
+              }
+            }
+
+            .name {
+              margin-left: 16px;
+              flex: 5;
+              text-overflow: ellipsis;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              display: -webkit-box;
+              overflow: hidden;
+            }
+
+            .classify {
+              margin-left: 8px;
+              flex: 2;
+
+              .detail {
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                display: -webkit-box;
+                overflow: hidden;
+              }
+            }
+          }
+
+          .product-unitprice {
+            flex: 1.5;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+          }
+
+          .product-quantity {
+            flex: 1.5;
+            text-align: center;
+          }
+
+          .product-amount {
+            flex: 2;
+            text-align: right;
+            color: $primary;
+          }
+        }
+      }
+
+      .table-footer {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+        height: 100px;
+        box-shadow: 0 1px 1px 0 rgb(0 0 0 / 5%);
+        background-color: $white;
+        font-size: 14px;
+
+        position: -webkit-sticky;
+        position: sticky;
+        bottom: 66px;
+        z-index: 2;
+
+        .footer-left {
+          display: flex;
+          flex: 1;
+
+          .label-checkbox {
+            margin-left: 24px;
+          }
+        }
+
+        .footer-right {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          flex: 1;
+        }
+      }
+    }
+  }
 }

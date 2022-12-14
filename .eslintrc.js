@@ -53,5 +53,6 @@ module.exports = {
     'vue/no-dupe-keys': 'off',
     'no-case-declarations': 'off',
     'vue/v-slot-style': 'off',
+    'no-empty': 'off'
   }
 }

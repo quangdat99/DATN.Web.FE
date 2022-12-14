@@ -170,6 +170,14 @@
     &.shield-yellow::before {
         background-position: -264px -0;
     }
+    
+    &.address-red::before {
+        background-position: -0 -256px;
+    }
+    
+    &.plus-grey::before {
+        background-position: -24px -256px;
+    }
 
 }
 

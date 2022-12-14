@@ -16,6 +16,9 @@ import BaseDropdown from '@/components/dropdown/BaseDropdown.vue';
 import BaseInput from '@/components/input/BaseInput.vue';
 import BaseNumber from '@/components/number/BaseNumber.vue';
 import BaseCheckbox from '@/components/checkbox/BaseCheckbox.vue';
+import BaseRadio from '@/components/radio/BaseRadio.vue';
+import BaseButton from '@/components/button/BaseButton.vue';
+import BaseTextarea from '@/components/textarea/BaseTextarea.vue';
 const app = createApp(App);
 
 import { register } from '@/commons/globalPopup.js';
@@ -62,6 +65,9 @@ app.component('Dropdown', Dropdown);
 app.component('BaseInput', BaseInput);
 app.component('BaseNumber', BaseNumber);
 app.component('BaseCheckbox', BaseCheckbox);
+app.component('BaseRadio', BaseRadio);
+app.component('BaseButton', BaseButton);
+app.component('BaseTextarea', BaseTextarea);
 
 app.mixin({
   mounted() {

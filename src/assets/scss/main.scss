@@ -276,6 +276,13 @@ div {
   padding-bottom: 16px;
 }
 
+.pd-1 {
+  padding: 4px;
+}
+
+.pd-2 {
+  padding: 8px;
+}
 
 /* Position */
 .relative {
@@ -508,4 +515,7 @@ body {
     -o-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+.cursor {
+  cursor: pointer;
 }

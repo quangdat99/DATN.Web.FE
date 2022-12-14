@@ -2,11 +2,13 @@
   <dynamic-popup
     :width="500"
     :height="500"
-    :title="title"
     class="new-address-password"
     name="NewAddressPopup"
     @beforeOpen="beforeOpen($event, close)"
   >
+    <template v-slot:content-title>
+      <span class="title">{{ title }}</span>
+    </template>
     <template v-slot:icon="{ close }">
       <div class="button icon24 close" @click="closePopup(close)"></div>
     </template>
@@ -209,20 +211,35 @@ export default {
       close();
     };
 
-    const beforeOpen = async (e, close) => {
-      await proxy.super("beforeOpen", baseDetail, e, close);
+    const beforeOpen = (e, close) => {
+      proxy.super("beforeOpen", baseDetail, e, close);
+      window.proxy = proxy;
+      proxy.resetValdiate();
+      if (proxy._formParam.data) {
+        model.value = proxy._formParam.data;
+      } else {
+        model.value = {
+          name: null,
+          phone: null,
+          province_code: null,
+          district_code: null,
+          commune_code: null,
+          province: null,
+          district: null,
+          commune: null,
+        };
+      }
+      changeTitle();
+      getProvinces();
+    };
+
+    const getProvinces = async () => {
       commonFn.mask();
       const res = await axios.get(`${BASE_API_URL}/p/`);
       if (res && res.data) {
         dataProvince.value = res.data;
       }
       commonFn.unmask();
-      window.proxy = proxy;
-      proxy.resetValdiate();
-      if (proxy._formParam.data) {
-        model.value = proxy._formParam.data;
-      }
-      changeTitle();
     };
     watch(
       () => model.value.province_code,
@@ -267,4 +284,9 @@ export default {
 .popup-container {
   padding: 20px;
 }
+.title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #262807;
+  }
 </style>

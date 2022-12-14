@@ -14,8 +14,12 @@ const getters = {
 const actions = {
   async updateCart(context) {
     let products = await productCartAPI.getProductCard();
-    context.commit('updateCart', products);
-    return products;
+    if (products) {
+
+      context.commit('updateCart', products);
+      return products;
+    }
+    return [];
   },
 };
 const mutations = {

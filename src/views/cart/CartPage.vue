@@ -30,17 +30,7 @@
               <span class="fs-12">Phân loại hàng:</span>
               <span class="detail">
                 {{
-                  product.color_name && product.size_name
-                    ? ` ${product.color_name}, ${product.size_name}`
-                    : ""
-                }}{{
-                  product.color_name && !product.size_name
-                    ? ` ${product.color_name}`
-                    : ""
-                }}{{
-                  !product.color_name && product.size_name
-                    ? ` ${product.size_name}`
-                    : ""
+                  classifyProduct(product.color_name, product.size_name)
                 }}</span
               >
             </div>
@@ -91,6 +81,7 @@
           <base-button
             text="Mua hàng"
             class="ml-4 mr-4 pl-6 pr-6"
+            @click="checkout()"
           ></base-button>
         </div>
       </div>
@@ -109,6 +100,7 @@ import { useFormat } from "@/commons/format.js";
 import { usePrimeVue } from "primevue/config";
 import { mapActions, mapGetters, mapState } from "vuex";
 import { ref, getCurrentInstance, computed, onMounted, watch } from "vue";
+import commonFn from "@/commons/commonFunction.js";
 
 export default {
   components: {
@@ -184,11 +176,14 @@ export default {
       proxy.$router.push("/checkout");
     };
 
-    onMounted(() => {
+    onMounted(async () => {
       changeToVietnamese();
-      productList.value = JSON.parse(
-        JSON.stringify(proxy.$store.state["moduleCart"].products)
-      );
+      commonFn.mask();
+      let data = await proxy.$store.dispatch("moduleCart/updateCart");
+      if (data && data.length > 0) {
+        productList.value = JSON.parse(JSON.stringify(data));
+      }
+      commonFn.unmask();
     });
     const countSelected = computed(() => {
       return productList.value.filter((x) => x.selected).length;
@@ -218,6 +213,25 @@ export default {
         selectedAll.value = false;
       }
     };
+    const checkout = () => {
+      let selecteds = productList.value.filter((x) => x.selected);
+      if (selecteds.length > 0) {
+        proxy.$router.push("/checkout");
+      } else {
+        proxy.$toast.warning("Vui lòng chọn sản phẩm cần thanh toán");
+      }
+    };
+    const classifyProduct = (color, size) => {
+      if (color && size) {
+        return `${color}, ${size}`;
+      } else if (color && !size) {
+        return `${color}`;
+      } else if (!color && size) {
+        return `${size}`;
+      } else {
+        return "";
+      }
+    };
     return {
       productList,
       totalComputedMoney,
@@ -228,6 +242,8 @@ export default {
       selectedProduct,
       moneyPayment,
       changeSelectedAll,
+      checkout,
+      classifyProduct,
     };
   },
 

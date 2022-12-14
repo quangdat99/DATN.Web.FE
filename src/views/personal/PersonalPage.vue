@@ -507,6 +507,13 @@ export default {
         history.pushState({ prv: location.href }, "", url + "/1");
       }
     };
+
+    watch(
+      () => proxy.$router.currentRoute.value.fullPath,
+      (value) => {
+        getActiveTabFromUrl();
+      }
+    );
     const expandAccount = () => {
       expAccount.value = !expAccount.value;
     };

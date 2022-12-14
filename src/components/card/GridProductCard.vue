@@ -40,7 +40,11 @@
             :width="160"
           >
           </base-dropdown>
-          <div class="paging d-flex flex1" style="flex-direction: row-reverse" v-if="paging.totalPage > 1">
+          <div
+            class="paging d-flex flex1"
+            style="flex-direction: row-reverse"
+            v-if="paging.totalPage > 1"
+          >
             <div class="paging-btn d-flex align-center">
               <div class="mr-4">
                 <span class="color-primary">{{ model.page + 1 }}</span>
@@ -133,19 +137,25 @@
               class="mt-1"
               :modelValue="category.selected"
               :label="category.category_name"
-              @change="
-                updateCategory(!category.selected, category.category_id)
-              "
+              @change="updateCategory(!category.selected, category.category_id)"
             ></base-checkbox>
           </div>
         </div>
       </div>
-      <div class="product-container" :class="[search ? 'search' : '']">
+      <div
+        class="product-container"
+        v-if="countProduct > 0"
+        :class="[search ? 'search' : '']"
+      >
         <product-card
           v-for="(product, index) in productList"
           :key="index"
           :product="product"
         ></product-card>
+      </div>
+      <div class="product-container-empty flex-column align-center w-100" style="margin-top: 150px;" v-if="countProduct == 0">
+        <img src="@/assets/images/empty.png" width="100" height="100" alt="" />
+        <div class="product-text-empty mt-4 fs-20">Không tìm thấy sản phẩm</div>
       </div>
     </div>
     <div
@@ -176,6 +186,7 @@ import {
   defineComponent,
   getCurrentInstance,
   reactive,
+  computed,
 } from "vue";
 import { mapGetters } from "vuex";
 import ProductCard from "@/components/card/ProductCard.vue";
@@ -315,6 +326,10 @@ export default defineComponent({
       { deep: true }
     );
 
+    const countProduct = computed(() => {
+      return props.productList.length;
+    });
+
     return {
       sort_amount,
       updateRating,
@@ -326,6 +341,7 @@ export default defineComponent({
       updateValue,
       updatePage,
       searchProduct,
+      countProduct,
     };
   },
 });

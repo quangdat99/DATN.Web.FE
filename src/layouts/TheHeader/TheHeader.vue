@@ -101,17 +101,54 @@
           </template>
         </v-menu>
         <div
+          v-if="!token"
           class="row-group account flex-row flex-center cursor-pointer"
           @click="goToLogin"
         >
-          <div class="icon24 account ml-2 mr-2" v-if="!sourceAvatar"></div>
-          <div v-else class="avatar">
-            <img :src="sourceAvatar" alt="" />
-          </div>
+          <div class="icon24 account ml-2 mr-2"></div>
           <div class="text text-white">
             {{ accountName }}
           </div>
         </div>
+        <v-menu v-if="token">
+          <div
+            class="row-group account flex-row flex-center cursor-pointer"
+            @click="goToLogin"
+          >
+            <div class="icon24 account ml-2 mr-2" v-if="!sourceAvatar"></div>
+            <div v-else class="avatar">
+              <img :src="sourceAvatar" alt="" />
+            </div>
+            <div class="text text-white">
+              {{ accountName }}
+            </div>
+          </div>
+          <template #popper>
+            <div class="list-option-account flex-column">
+              <div
+                class="option cursor"
+                @click="
+                  () => {
+                    $router.push('/personal/1');
+                  }
+                "
+              >
+                Tài Khoản Của Tôi
+              </div>
+              <div
+                class="option cursor"
+                @click="
+                  () => {
+                    $router.push('/personal/4');
+                  }
+                "
+              >
+                Đơn Mua
+              </div>
+              <div class="option cursor" @click="logout()">Đăng Xuất</div>
+            </div>
+          </template>
+        </v-menu>
       </div>
     </div>
   </div>
@@ -197,7 +234,12 @@ export default {
     };
 
     const updateSearch = () => {
-      proxy.$store.commit("moduleHomePage/updateSearch", search.value);
+      if (route.path != "/search") {
+        proxy.$router.push("/search");
+      }
+      setTimeout(() => {
+        proxy.$store.commit("moduleHomePage/updateSearch", search.value);
+      }, 100);
     };
 
     const enterSearch = (e, value) => {
@@ -240,6 +282,11 @@ export default {
       }
     };
 
+    const logout = () => {
+      proxy.$store.dispatch["moduleContext/logout"];
+      proxy.$router.push("/login");
+    };
+
     return {
       menus,
       cartContent,
@@ -255,6 +302,7 @@ export default {
       accountName,
       token,
       sourceAvatar,
+      logout,
     };
   },
   computed: {
