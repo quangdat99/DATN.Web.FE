@@ -363,7 +363,25 @@
               }
             }
 
-            .order-footer {}
+            .order-footer {
+              display: flex;
+              align-items: center;
+
+              .order-footer-left {
+                display: flex;
+                flex-direction: column;
+                flex: 3;
+              }
+
+              .order-footer-right {
+                flex: 2;
+                display: -webkit-flex;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                align-items: flex-end;
+              }
+            }
           }
         }
 

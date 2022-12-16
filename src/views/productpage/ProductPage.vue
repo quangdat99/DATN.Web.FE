@@ -438,7 +438,10 @@ export default {
       if (product.value && product.value.productDetails) {
         if (Array.isArray(product.value.productDetails)) {
           product.value.productDetails.forEach((item) => {
-            if (item.img_url) {
+            if (
+              item.img_url &&
+              !listSlider.value.some((x) => x.src == item.img_url)
+            ) {
               listSlider.value.push({
                 src: item.img_url,
               });

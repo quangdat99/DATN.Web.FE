@@ -422,36 +422,50 @@
               </div>
             </div>
             <div class="order-footer mt-4">
-              <div class="total-amount flex-end">
-                <div class="icon24 shield-yellow mr-2"></div>
-                <div class="amount fs-14">
-                  Tổng số tiền:
-                  <span class="color-primary fs-20">{{
-                    formatVND(order.product_amount)
-                  }}</span>
+              <div class="order-footer-left">
+                <div class="address-order">
+                  <span class="color-primary">Địa chỉ: </span
+                  >{{ order.address }}
+                </div>
+                <div class="phone-order">
+                  <span class="color-primary">Số điện thoại: </span
+                  >{{ order.phone }}
                 </div>
               </div>
+              <div class="order-footer-right">
+                <div class="total-amount flex-end">
+                  <div class="icon24 shield-yellow mr-2"></div>
+                  <div class="amount fs-14">
+                    Tổng số tiền:
+                    <span class="color-primary fs-20">{{
+                      formatVND(order.product_amount)
+                    }}</span>
+                  </div>
+                </div>
 
-              <div class="list-button flex-end mt-8">
-                <base-button
-                  text="Đánh Giá"
-                  class="mr-2 pl-6 pr-6"
-                  v-if="order.status == 1"
-                ></base-button>
-                <base-button
-                  text="Mua Lại"
-                  :type="'white'"
-                  :hasBorder="true"
-                  class="pl-6 pr-6"
-                  v-if="
-                    order.status == 1 || order.status == 4 || order.status == 6
-                  "
-                ></base-button>
-                <base-button
-                  text="Hủy đơn"
-                  class="pl-6 pr-6"
-                  v-if="order.status == 5"
-                ></base-button>
+                <div class="list-button flex-end mt-8">
+                  <base-button
+                    text="Đánh Giá"
+                    class="mr-2 pl-6 pr-6"
+                    v-if="order.status == 1"
+                  ></base-button>
+                  <base-button
+                    text="Mua Lại"
+                    :type="'white'"
+                    :hasBorder="true"
+                    class="pl-6 pr-6"
+                    v-if="
+                      order.status == 1 ||
+                      order.status == 4 ||
+                      order.status == 6
+                    "
+                  ></base-button>
+                  <base-button
+                    text="Hủy đơn"
+                    class="pl-6 pr-6"
+                    v-if="order.status == 5"
+                  ></base-button>
+                </div>
               </div>
             </div>
           </div>
