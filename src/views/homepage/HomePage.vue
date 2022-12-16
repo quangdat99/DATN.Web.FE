@@ -10,7 +10,7 @@
             style=""
           >
             <a :href="item.page" style="">
-              <img src="~@/assets/images/slide1.jpg" alt="" style="" />
+              <img :src="item.src" alt="" style="" />
             </a>
           </div>
         </template>

@@ -261,6 +261,7 @@ import { ref, getCurrentInstance, onMounted, nextTick, watch } from "vue";
 import commonFn from "@/commons/commonFunction.js";
 import axios from "axios";
 import baseDetail from "../baseDetail";
+import http from "@/apis/base/httpCommon.js";
 export default {
   name: "SignupPage",
   extends: baseDetail,
@@ -378,16 +379,27 @@ export default {
         model.value.avatar = "./images/loading-image.gif";
         var formdata = new FormData();
         formdata.append("file", file);
-        formdata.append("upload_preset", "zykutcrp");
+        // formdata.append("upload_preset", "zykutcrp");
 
         // var requestOptions = {
         //   method: "POST",
         //   body: formdata,
         // };
+        // debugger;
+        // axios
+        //   .post("/", formdata, {
+        //     header: {
+        //       "Content-Type": "multipart/form-data",
+        //     },
+        //   })
+        //   .then((res) => {
+        //     debugger;
+        //   });
 
-        // fetch("https://api.cloudinary.com/v1_1/mp32022/upload/", requestOptions)
+        // fetch("http://localhost:8080/images", requestOptions)
         //   .then((response) => response.json())
         //   .then((result) => {
+        //     debugger
         //     model.value.avatar = result.url;
         //     publicID.value = result.public_id;
         //     signature.value = result.signature;

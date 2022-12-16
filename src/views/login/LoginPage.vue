@@ -25,6 +25,7 @@
               v-model="model.password"
               :maxLength="50"
               :rules="[{ name: 'required' }]"
+              @baseKeyup="enterLogin"
             ></base-input>
           </div>
         </div>
@@ -93,7 +94,12 @@ export default {
       if (proxy.model) {
         let res = await proxy.$store.dispatch("moduleContext/login", model);
         if (res.statusCode == 200) {
-          proxy.$router.push("homepage");
+          if (proxy.$store.state["moduleContext"].Path) {
+            proxy.$router.push(proxy.$store.state["moduleContext"].Path);
+            proxy.$store.commit("moduleContext/updatePath", "");
+          } else {
+            proxy.$router.push("homepage");
+          }
         } else if (res.statusCode == 207) {
           proxy.$toast.error(res.userMessage);
           setTimeout(() => {
@@ -110,10 +116,17 @@ export default {
       }
       commonFn.unmask();
     };
+
+    const enterLogin = (e, value) => {{
+      if (e.keyCode == 13) {
+        login();
+      }
+    }}
     return {
       model,
       goToSignup,
       login,
+      enterLogin,
     };
   },
 };

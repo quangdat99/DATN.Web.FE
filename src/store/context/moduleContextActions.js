@@ -23,7 +23,7 @@ export default {
    */
   logout(context) {
     context.commit('updateLogout');
-    location.href = "login";
+    // location.href = "login";
   },
 
   /**
@@ -42,4 +42,5 @@ export default {
     }
     return res.data;
   },
+
 }

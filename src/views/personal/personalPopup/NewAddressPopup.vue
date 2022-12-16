@@ -104,9 +104,8 @@
         <div class="flex-row mt-4">
           <base-checkbox
             class="mt-1"
-            :modelValue="model.is_default"
+            v-model="model.is_default"
             label="Đặt làm địa chỉ mặc định"
-            disabled
           ></base-checkbox>
         </div>
         <div class="flex-row mt-4"></div>
@@ -148,6 +147,8 @@ import axios from "axios";
 import BaseTextarea from "@/components/textarea/BaseTextarea.vue";
 import BaseInput from "@/components/input/BaseInput.vue";
 import baseDetail from "@/views/baseDetail.js";
+import addressAPI from "@/apis/components/addressAPI";
+
 export default {
   name: "NewAddressPopup",
   extends: baseDetail,
@@ -174,6 +175,7 @@ export default {
       province: null,
       district: null,
       commune: null,
+      is_default: false,
     });
     onMounted(() => {});
     const changeProvince = async (obj) => {
@@ -181,6 +183,10 @@ export default {
       let res = await axios.get(`${BASE_API_URL}/p/${obj.code}?depth=2`);
       if (res && res.data) {
         dataDistricts.value = res.data.districts;
+        model.value.district_code = null;
+        model.value.district = null;
+        model.value.commune_code = null;
+        model.value.commune = null;
       }
 
       commonFn.unmask();
@@ -191,18 +197,48 @@ export default {
       let res = await axios.get(`${BASE_API_URL}/d/${obj.code}?depth=2`);
       if (res && res.data) {
         dataWards.value = res.data.wards;
+
+        model.value.commune_code = null;
+        model.value.commune = null;
       }
       commonFn.unmask();
     };
 
     const newAddress = () => {
       const me = proxy;
-
       if (!me.validateComponents()) {
         nextTick(() => {
           me.focusFirstError();
         });
         return;
+      }
+      commonFn.mask();
+      if (proxy._formParam?.mode == "Add") {
+        addressAPI
+          .createAddress(model.value)
+          .then(async () => {
+            proxy.$toast.success("Thêm mới địa chỉ thành công");
+            if (proxy._formParam.options) {
+              proxy._formParam.options.submit();
+            }
+            proxy.$vfm.hide("NewAddressPopup");
+          })
+          .finally(() => {
+            commonFn.unmask();
+          });
+      } else {
+        addressAPI
+          .updateAddress(model.value)
+          .then(async () => {
+            proxy.$toast.success("Cập nhật địa chỉ thành công");
+            if (proxy._formParam.options) {
+              proxy._formParam.options.submit();
+            }
+            proxy.$vfm.hide("NewAddressPopup");
+          })
+          .finally(() => {
+            commonFn.unmask();
+          });
       }
     };
 
@@ -211,23 +247,39 @@ export default {
       close();
     };
 
-    const beforeOpen = (e, close) => {
+    const beforeOpen = async (e, close) => {
       proxy.super("beforeOpen", baseDetail, e, close);
       window.proxy = proxy;
       proxy.resetValdiate();
+
+      // model.value = {
+      //   name: null,
+      //   phone: null,
+      //   province_code: null,
+      //   district_code: null,
+      //   commune_code: null,
+      //   province: null,
+      //   district: null,
+      //   commune: null,
+      // };
       if (proxy._formParam.data) {
-        model.value = proxy._formParam.data;
-      } else {
-        model.value = {
-          name: null,
-          phone: null,
-          province_code: null,
-          district_code: null,
-          commune_code: null,
-          province: null,
-          district: null,
-          commune: null,
-        };
+        Object.assign(model.value, proxy._formParam.data);
+        if (model.value.province_code) {
+          let res1 = await axios.get(
+            `${BASE_API_URL}/p/${model.value.province_code}?depth=2`
+          );
+          if (res1 && res1.data) {
+            dataDistricts.value = res1.data.districts;
+          }
+        }
+        if (model.value.district_code) {
+          let res2 = await axios.get(
+            `${BASE_API_URL}/d/${model.value.district_code}?depth=2`
+          );
+          if (res2 && res2.data) {
+            dataWards.value = res2.data.wards;
+          }
+        }
       }
       changeTitle();
       getProvinces();
@@ -241,22 +293,22 @@ export default {
       }
       commonFn.unmask();
     };
-    watch(
-      () => model.value.province_code,
-      (value) => {
-        model.value.district_code = null;
-        model.value.district = null;
-        model.value.commune_code = null;
-        model.value.commune = null;
-      }
-    );
-    watch(
-      () => model.value.district_code,
-      (value) => {
-        model.value.commune_code = null;
-        model.value.commune = null;
-      }
-    );
+    // watch(
+    //   () => model.value.province_code,
+    //   (value) => {
+    //     model.value.district_code = null;
+    //     model.value.district = null;
+    //     model.value.commune_code = null;
+    //     model.value.commune = null;
+    //   }
+    // );
+    // watch(
+    //   () => model.value.district_code,
+    //   (value) => {
+    //     model.value.commune_code = null;
+    //     model.value.commune = null;
+    //   }
+    // );
 
     const changeTitle = () => {
       if (proxy._formParam?.mode == "Add") {
@@ -285,8 +337,8 @@ export default {
   padding: 20px;
 }
 .title {
-    font-size: 22px;
-    font-weight: 600;
-    color: #262807;
-  }
+  font-size: 22px;
+  font-weight: 600;
+  color: #262807;
+}
 </style>

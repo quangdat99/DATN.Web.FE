@@ -10,12 +10,14 @@
         </div>
         <div class="address-detail">
           <div class="flex1 flex-row">
-            <div class="name">Quang Đạt</div>
-            <div class="phone ml-2">(+84) 868389674</div>
+            <div class="name">{{ address.name }}</div>
+            <div class="phone ml-2">({{ address.phone }})</div>
             <div class="detail ml-4">
-              Số 36 ngõ 348 Nguyễn Trãi, Phường Văn Quán, Quận Hà Đông, Hà Nội
+              {{
+                `${address.commune}, ${address.district}, ${address.province}`
+              }}
             </div>
-            <div class="default ml-4">Mặc định</div>
+            <div class="default ml-4" v-if="address.is_default">Mặc định</div>
           </div>
           <div class="change-address" @click="choseAddress()">Thay đổi</div>
         </div>
@@ -104,6 +106,10 @@ import BaseCombobox from "@/components/combobox/BaseCombobox.vue";
 import { useFormat } from "@/commons/format.js";
 import { ref, computed, getCurrentInstance, onMounted } from "vue";
 import ChoseAddressPopup from "./ChoseAddressPopup.vue";
+import addressAPI from "@/apis/components/addressAPI";
+import commonFn from "@/commons/commonFunction.js";
+import productCartAPI from "@/apis/components/productCartAPI";
+
 export default {
   components: {
     BaseCombobox,
@@ -113,15 +119,21 @@ export default {
     const { formatVND } = useFormat();
     const { proxy } = getCurrentInstance();
     const productList = ref([]);
+    const addresses = ref([]);
+    const address = ref({});
     const model = ref({
       method_payment: 1,
     });
 
     onMounted(async () => {
-      let data = await proxy.$store.dispatch("moduleCart/updateCart");
+      let data = await proxy.$store.state["moduleCart"].productCheckouts;
       if (data && data.length > 0) {
         productList.value = JSON.parse(JSON.stringify(data));
       }
+      commonFn.mask();
+      addresses.value = await addressAPI.getAddresses();
+      address.value = addresses.value.find((x) => x.is_default) || {};
+      commonFn.unmask();
     });
 
     const countProduct = computed(() => {
@@ -147,8 +159,41 @@ export default {
       }
     };
     const choseAddress = () => {
-      proxy.$vfm.show("ChoseAddressPopup", {});
+      proxy.$vfm.show("ChoseAddressPopup", {
+        options: {
+          submit: (_address) => {
+            changeAddress(_address);
+          },
+        },
+      });
     };
+    const changeAddress = (_address) => {
+      address.value = _address;
+    };
+
+    const checkout = () => {
+      let payload = {
+        address_id: address.value.address_id,
+        method_payment: model.value.method_payment,
+        listProduct: productList.value,
+      };
+
+      commonFn.mask();
+      productCartAPI
+        .checkout(payload)
+        .then((res) => {
+          if (res && res.data && res.data.data) {
+            proxy.$toast.success("Đặt hàng thành công");
+            proxy.$store.dispatch("moduleCart/updateCart");
+            proxy.$store.commit("moduleCart/updateCheckout", []);
+            proxy.$router.push("/personal/4");
+          }
+        })
+        .finally(() => {
+          commonFn.unmask();
+        });
+    };
+
     return {
       model,
       formatVND,
@@ -157,6 +202,8 @@ export default {
       moneyPayment,
       classifyProduct,
       choseAddress,
+      address,
+      checkout,
     };
   },
 };

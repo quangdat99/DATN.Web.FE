@@ -627,6 +627,7 @@ export default {
         let payload = {
           quantity: productQuantity.value,
           product_detail_id: productDetail.value.product_detail_id,
+          product_id: productDetail.value.product_id,
         };
         productCartAPI.addToCart(payload).then(() => {
           proxy.$toast.success("Sản phẩm đã được thêm vào Giỏ hàng");

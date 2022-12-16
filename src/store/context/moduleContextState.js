@@ -7,6 +7,7 @@ export const defaultConfigState = {
    * Cờ đang xử lý
    */
   Loading: false,
+  Path: "",
   Context: {
   }
 }

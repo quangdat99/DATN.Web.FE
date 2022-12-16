@@ -115,22 +115,22 @@
           <div class="profile-left">
             <div class="profile-item">
               <div class="label flex1">Họ</div>
-              <base-input class="flex2 ml-4" v-model="profile.first_name">
+              <base-input class="flex2 ml-4" v-model="userInfo.first_name">
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Tên</div>
-              <base-input class="flex2 ml-4" v-model="profile.last_name">
+              <base-input class="flex2 ml-4" v-model="userInfo.last_name">
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Địa chỉ Email</div>
-              <base-input class="flex2 ml-4" v-model="profile.email">
+              <base-input class="flex2 ml-4" v-model="userInfo.email">
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Số điện thoại</div>
-              <base-input class="flex2 ml-4" v-model="profile.phone">
+              <base-input class="flex2 ml-4" v-model="userInfo.phone">
               </base-input>
             </div>
 
@@ -141,7 +141,7 @@
                   name="genderX"
                   label="Nam"
                   :keyValue="1"
-                  v-model="profile.gender"
+                  v-model="userInfo.gender"
                 >
                 </base-radio>
                 <base-radio
@@ -149,7 +149,7 @@
                   class="ml-4"
                   label="Nữ"
                   :keyValue="2"
-                  v-model="profile.gender"
+                  v-model="userInfo.gender"
                 >
                 </base-radio>
                 <base-radio
@@ -157,7 +157,7 @@
                   class="ml-4"
                   label="Khác"
                   :keyValue="3"
-                  v-model="profile.gender"
+                  v-model="userInfo.gender"
                 >
                 </base-radio>
               </div>
@@ -170,12 +170,12 @@
                   class="flex1"
                   valueField="value"
                   displayField="value"
-                  :chosenValue="profile.day"
-                  :initText="profile.day"
+                  :chosenValue="userInfo.day"
+                  :initText="userInfo.day"
                   :data="days"
                   @update:modelValue="
                     (value, displayField) => {
-                      profile.day = value;
+                      userInfo.day = value;
                     }
                   "
                 ></base-combobox>
@@ -184,12 +184,12 @@
                   class="flex1 ml-2"
                   valueField="value"
                   displayField="value"
-                  :chosenValue="profile.month"
-                  :initText="profile.month"
+                  :chosenValue="userInfo.month"
+                  :initText="userInfo.month"
                   :data="months"
                   @update:modelValue="
                     (value, displayField) => {
-                      profile.month = value;
+                      userInfo.month = value;
                     }
                   "
                 ></base-combobox>
@@ -198,12 +198,12 @@
                   class="flex1 ml-2"
                   valueField="value"
                   displayField="value"
-                  :chosenValue="profile.year"
-                  :initText="profile.year"
+                  :chosenValue="userInfo.year"
+                  :initText="userInfo.year"
                   :data="years"
                   @update:modelValue="
                     (value, displayField) => {
-                      profile.year = value;
+                      userInfo.year = value;
                     }
                   "
                 ></base-combobox>
@@ -212,13 +212,24 @@
             <div class="profile-item mt-4">
               <div class="label flex1"></div>
               <div class="flex2 ml-4">
-                <base-button text="Lưu" @click="updateProfile()"> </base-button>
+                <base-button text="Lưu" @click="updateUserInfo()">
+                </base-button>
               </div>
             </div>
           </div>
           <div class="profile-right">
             <div class="profile-img">
-              <img src="~@/assets/images/profile-user.png" alt="" />
+              <img
+                v-if="!userInfo.avatar"
+                src="~@/assets/images/profile-user.png"
+                alt=""
+              />
+              <img
+                v-if="userInfo.avatar"
+                class="avatar"
+                :src="userInfo.avatar"
+                alt=""
+              />
             </div>
             <base-button
               type="secondary"
@@ -240,7 +251,7 @@
           </div>
         </div>
         <div class="address-list">
-          <div class="address-item" v-for="(address, i) in arrAddress" :key="i">
+          <div class="address-item" v-for="(address, i) in addresses" :key="i">
             <div class="item-left">
               <div class="left-title">
                 <div class="name">{{ address.name }}</div>
@@ -248,7 +259,9 @@
               </div>
               <div class="detail-address">{{ address.address_detail }}</div>
               <div class="address-commune">
-                {{ address.address_summary }}
+                {{
+                  `${address.commune}, ${address.district}, ${address.province}`
+                }}
               </div>
               <div class="default" v-if="address.is_default">Mặc định</div>
             </div>
@@ -260,7 +273,11 @@
                 >
                   Cập nhật
                 </div>
-                <div class="delete-address ml-2" v-if="!address.is_default">
+                <div
+                  class="delete-address ml-2"
+                  v-if="!address.is_default"
+                  @click="deleteAddress(address.address_id)"
+                >
                   Xóa
                 </div>
               </div>
@@ -268,6 +285,7 @@
                 <div
                   class="setting-default"
                   :class="{ disabled: address.is_default }"
+                  @click="settingDefault(address)"
                 >
                   Thiết lập mặc định
                 </div>
@@ -286,27 +304,40 @@
           <div class="rs-pw-item mt-4">
             <div class="label flex1">Mật Khẩu Hiện Tại</div>
             <base-input
+              title="Mật Khẩu Hiện Tại"
               type="password"
               class="flex2 ml-4"
-              v-model="password.current_password"
+              v-model="password.password"
+              :rules="[{ name: 'required' }, { name: 'password' }]"
             >
             </base-input>
           </div>
           <div class="rs-pw-item mt-4">
             <div class="label flex1">Mật Khẩu Mới</div>
             <base-input
+              title="Mật Khẩu Mới"
               type="password"
               class="flex2 ml-4"
               v-model="password.new_password"
+              :rules="[{ name: 'required' }, { name: 'password' }]"
             >
             </base-input>
           </div>
           <div class="rs-pw-item mt-4">
             <div class="label flex1">Xác Nhận Mật Khẩu</div>
             <base-input
+              title="Xác Nhận Mật Khẩu"
               type="password"
               class="flex2 ml-4"
               v-model="password.confirm_password"
+              :rules="[
+                { name: 'required' },
+                { name: 'password' },
+                {
+                  name: 'comparePassword',
+                  compareValue: password.new_password,
+                },
+              ]"
             >
             </base-input>
           </div>
@@ -316,7 +347,11 @@
               <base-button
                 text="Xác nhận"
                 @click="resetPassword()"
-                disabled
+                :disabled="
+                  !password.password ||
+                  !password.new_password ||
+                  !password.confirm_password
+                "
               ></base-button>
             </div>
           </div>
@@ -373,9 +408,15 @@
                   </div>
                   <div class="product-right">
                     <div class="sale-price-old mr-2">
-                      {{ formatVND(11000) }}
+                      {{
+                        product.product_amount_old
+                          ? formatVND(product.product_amount_old)
+                          : ""
+                      }}
                     </div>
-                    <div class="sale-price">{{ formatVND(10000) }}</div>
+                    <div class="sale-price">
+                      {{ formatVND(product.product_amount) }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -405,6 +446,11 @@
                   v-if="
                     order.status == 1 || order.status == 4 || order.status == 6
                   "
+                ></base-button>
+                <base-button
+                  text="Hủy đơn"
+                  class="pl-6 pr-6"
+                  v-if="order.status == 5"
                 ></base-button>
               </div>
             </div>
@@ -447,6 +493,9 @@ import popupUtil from "@/commons/popupUtil";
 import NewAddressPopup from "./personalPopup/NewAddressPopup.vue";
 import { useFormat } from "@/commons/format.js";
 import orderAPI from "@/apis/components/orderAPI";
+import userAPI from "@/apis/components/userAPI";
+import addressAPI from "@/apis/components/addressAPI";
+import baseDetail from "@/views/baseDetail.js";
 
 export default {
   components: {
@@ -457,6 +506,7 @@ export default {
     NewAddressPopup,
   },
   name: "PersonalPage",
+  extends: baseDetail,
   setup() {
     const { proxy } = getCurrentInstance();
     const route = useRoute();
@@ -464,9 +514,11 @@ export default {
     const expAccount = ref(true);
     const expOrder = ref(true);
     const activeTab = ref(null);
+    const userInfo = ref({});
+    const addresses = ref([]);
     const showNewAddress = ref(false);
     const password = ref({
-      current_password: null,
+      password: null,
       new_password: null,
       confirm_password: null,
     });
@@ -527,14 +579,23 @@ export default {
     };
     // watch(activeTab.value, (value) => {});
     const addAddress = (mode, data) => {
-      //   popupUtil.show("NewAddressPopup");
-      proxy.$vfm.show("NewAddressPopup", { mode: mode, data: data });
+      proxy.$vfm.show("NewAddressPopup", {
+        mode: mode,
+        data: data,
+        options: {
+          submit: () => {
+            getAddress();
+          },
+        },
+      });
     };
 
     const statusName = (status) => {
       switch (status) {
         case 1:
           return "Giao hàng thành công";
+        case 5:
+          return "Chờ xác nhận";
         default:
           return "";
       }
@@ -562,6 +623,12 @@ export default {
         let orders = [];
         commonFn.mask();
         switch (value) {
+          case 1:
+            userInfo.value = await userAPI.getUserInfo();
+            break;
+          case 2:
+            await getAddress();
+            break;
           case 4:
             orders = await orderAPI.getOrder(0);
             listOrder.value = orders;
@@ -599,6 +666,84 @@ export default {
       }
     );
 
+    const getAddress = async () => {
+      addresses.value = await addressAPI.getAddresses();
+    };
+
+    const updateUserInfo = async () => {
+      commonFn.mask();
+      if (userInfo.value.day && userInfo.value.month && userInfo.value.year) {
+        let stringDate = `${userInfo.value.month.split(" ")[1]}-${
+          userInfo.value.day
+        }-${userInfo.value.year}`;
+        userInfo.value.date_of_birth = new Date(stringDate);
+      } else {
+        userInfo.value.date_of_birth = null;
+      }
+      let data = await userAPI.updateUserInfo(userInfo.value);
+      if (data) {
+        userInfo.value = data;
+        proxy.$toast.success("Cập nhật hồ sơ thành công");
+      }
+      commonFn.unmask();
+    };
+
+    const settingDefault = async (address) => {
+      if (address.is_default) {
+        return;
+      }
+      commonFn.mask();
+      addressAPI
+        .settingDefault(address.address_id)
+        .then(async (res) => {
+          addresses.value = await addressAPI.getAddresses();
+          proxy.$toast.success("Thiết lập địa chỉ mặc định thành công");
+        })
+        .finally(() => {
+          commonFn.unmask();
+        });
+    };
+
+    const deleteAddress = (address_id) => {
+      commonFn.mask();
+      addressAPI
+        .deleteAddress(address_id)
+        .then(async (res) => {
+          addresses.value = await addressAPI.getAddresses();
+          proxy.$toast.success("Xóa địa chỉ thành công");
+        })
+        .finally(() => {
+          commonFn.unmask();
+        });
+    };
+
+    const resetPassword = () => {
+      const me = proxy;
+      if (!me.validateComponents()) {
+        nextTick(() => {
+          me.focusFirstError();
+        });
+        return;
+      }
+      commonFn.mask();
+      userAPI
+        .resetPassword(password.value)
+        .then((res) => {
+          if (res && res.data && res.data.data) {
+            proxy.$toast.success("Thay đổi mật khẩu thành công");
+            proxy.$store.dispatch("moduleContext/logout");
+            proxy.$router.push({ path: "/login" });
+          } else {
+            proxy.$toast.error(
+              "Mật khẩu không chính xác, vui lòng kiểm tra lại"
+            );
+          }
+        })
+        .finally(() => {
+          commonFn.unmask();
+        });
+    };
+
     return {
       expAccount,
       expOrder,
@@ -619,6 +764,12 @@ export default {
       productClassify,
       filterOrder,
       countOrder,
+      userInfo,
+      updateUserInfo,
+      addresses,
+      settingDefault,
+      deleteAddress,
+      resetPassword,
     };
   },
   // computed: {

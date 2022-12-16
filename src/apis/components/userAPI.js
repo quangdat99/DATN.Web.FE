@@ -12,6 +12,18 @@ class UserAPI extends BaseAPI {
         let res = await Http.axios().post(`${this.controllerName}/signup`, model);
         return res;
     }
+    async getUserInfo(){
+        let res = await Http.axios().get(`${this.controllerName}/info`);
+        return this.response(res);
+    }
+    async updateUserInfo(payload){
+        let res = await Http.axios().put(`${this.controllerName}/update`, payload);
+        return this.response(res);
+    }
+    async resetPassword(payload){
+        let res = await Http.axios().put(`${this.controllerName}/resetPassword`, payload);
+        return res;
+    }
 }
 
 export default new UserAPI();

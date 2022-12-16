@@ -177,6 +177,15 @@ export default defineComponent({
     });
 
     watch(
+      () => props.initText,
+      (newVal, oldVal) => {
+        if (newVal) {
+          internalText.value = newVal;
+        }
+      }
+    );
+
+    watch(
       () => isShow.value,
       (newVal, oldVal) => {
         if (newVal) {
@@ -195,7 +204,7 @@ export default defineComponent({
         if (obj) {
           emit("update:modelValue", newVal, obj[props.displayField]);
         } else {
-          emit("update:modelValue", newVal, null);
+          emit("update:modelValue", newVal, props.initText);
         }
       }
     );
@@ -204,15 +213,27 @@ export default defineComponent({
       () => props.chosenValue,
       (value) => {
         selectOption(value);
-      }
+      },
+      { deep: true }
     );
 
     const selectOption = (value) => {
       let obj = props.data.find((x) => x[props.valueField] == value);
       if (obj) {
-        evtMouseChoosingOption(obj);
+        internalText.value = obj[props.displayField];
+        modelValue.value = obj[props.valueField];
+        listData.value.forEach((item) => {
+          if (item[props.valueField] == obj[props.valueField]) {
+            item.isChosen = true;
+          } else {
+            item.isChosen = false;
+          }
+        });
+        isShow.value = false;
+        onBlur();
       } else {
-        internalText.value = null;
+        internalText.value = props.initText;
+        modelValue.value = props.chosenValue;
         listData.value.forEach((item) => {
           item.isChosen = false;
         });

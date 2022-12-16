@@ -18,7 +18,7 @@ const router = createRouter({
       name: 'Trang chủ',
       component: () => import('@/layouts/MainLayout/MainLayout.vue'),
       meta: {
-        anonymous: true
+        anonymous: false
       },
       children: [
         ...routerHomepage,
@@ -65,13 +65,11 @@ router.beforeEach((to, from, next) => {
   // khi chuyển router sẽ show maskLoading cho người dùng xử lý
 
   commonFn.mask();
-
   document.title = to.name;
   if (to.meta.anonymous) {
     next();
     return;
   }
-
   // kiểm tra authen --> redirect login
   if (!auth.isAuthenticated()) {
     auth.login(to.path);

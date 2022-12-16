@@ -1,7 +1,7 @@
 <template>
   <div class="cart-page">
     <div class="cart-title">Giỏ Hàng</div>
-    <div class="table-cart">
+    <div class="table-cart" v-if="countProduct > 0">
       <div class="table-header">
         <base-checkbox
           class="ml-4"
@@ -85,6 +85,15 @@
           ></base-button>
         </div>
       </div>
+    </div>
+    <div class="cart-empty" v-if="countProduct == 0">
+      <img src="@/assets/images/empty_cart.png" width="64" height="64" alt="" />
+      <div class="text fs-16 mt-4">Giỏ hàng của bạn còn trống</div>
+      <base-button
+        text="Mua ngay"
+        class="ml-4 mr-4 pl-6 pr-6 mt-4"
+        @click="$router.push('/homepage')"
+      ></base-button>
     </div>
   </div>
 </template>
@@ -216,6 +225,7 @@ export default {
     const checkout = () => {
       let selecteds = productList.value.filter((x) => x.selected);
       if (selecteds.length > 0) {
+        proxy.$store.commit("moduleCart/updateCheckout", selecteds);
         proxy.$router.push("/checkout");
       } else {
         proxy.$toast.warning("Vui lòng chọn sản phẩm cần thanh toán");

@@ -11,6 +11,10 @@ class ProductCartAPI extends BaseAPI {
         let res = await Http.axios().get(`${this.controllerName}/products`);
         return this.response(res);
     }
+    async checkout(payload){
+        let res = await Http.axios().post(`${this.controllerName}/checkout`, payload);
+        return res;
+    }
 }
 
 export default new ProductCartAPI();

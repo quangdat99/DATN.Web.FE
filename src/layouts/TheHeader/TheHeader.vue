@@ -21,7 +21,19 @@
         ></base-input>
       </div>
       <div class="row-action flex-between">
-        <v-menu>
+        <div
+          v-if="!token"
+          @click="goToLogin"
+          class="row-group cart-container flex-row flex-center cart"
+        >
+          <div class="icon24 shopping-cart mr-4"></div>
+
+          <!-- This will be the popover reference (for the events and position) -->
+          <div class="text text-white">
+            {{ cartContent }}
+          </div>
+        </div>
+        <v-menu v-if="token">
           <div
             class="row-group cart-container flex-row flex-center cart"
             @click="viewCart"
@@ -36,7 +48,11 @@
 
           <!-- This will be the content of the popover -->
           <template #popper>
-            <div class="product-cart-list" style="width: 400px">
+            <div
+              class="product-cart-list"
+              style="width: 400px"
+              v-if="countProduct > 0"
+            >
               <div class="product-list-content flex flex-column">
                 <div
                   class="product-detail-content flex flex-row"
@@ -77,7 +93,10 @@
                 </div>
               </div>
             </div>
-            <div class="product-cart-summary flex flex-row flex-between">
+            <div
+              class="product-cart-summary flex flex-row flex-between"
+              v-if="countProduct > 0"
+            >
               <div class="product-cart-total-product">
                 Có tổng số
                 <span class="color-primary">{{ countProduct }}</span> sản phẩm
@@ -89,7 +108,10 @@
                 }}</span>
               </div>
             </div>
-            <div class="product-cart-action flex flex-row flex-between">
+            <div
+              class="product-cart-action flex flex-row flex-between"
+              v-if="countProduct > 0"
+            >
               <div class="flex1"></div>
               <base-button
                 text="Xem Giỏ hàng"
@@ -97,6 +119,19 @@
                 @click="viewCart"
               >
               </base-button>
+            </div>
+            <div
+              class="product-cart-empty"
+              style="width: 320px; height: 200px;"
+              v-if="countProduct == 0"
+            >
+              <img
+                src="@/assets/images/empty_cart.png"
+                width="48"
+                height="48"
+                alt=""
+              />
+              <div class="text fs-12 mt-4">Giỏ hàng của bạn còn trống</div>
             </div>
           </template>
         </v-menu>
@@ -206,7 +241,11 @@ export default {
     const token = ref("");
     const { formatVND } = useFormat();
     const cartContent = computed(() => {
-      return "Giỏ hàng (" + proxy.countProduct + ")";
+      if (token.value) {
+        return "Giỏ hàng (" + proxy.countProduct + ")";
+      } else {
+        return "Giỏ hàng";
+      }
     });
     const listProductCard = computed(() => {
       return proxy.$store.state["moduleCart"].products;
@@ -283,7 +322,7 @@ export default {
     };
 
     const logout = () => {
-      proxy.$store.dispatch["moduleContext/logout"];
+      proxy.$store.dispatch("moduleContext/logout");
       proxy.$router.push("/login");
     };
 

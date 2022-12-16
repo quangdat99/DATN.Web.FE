@@ -15,5 +15,8 @@ export default {
     },
     updateLoading(state, payload){
         state.Loading = payload;
+    },
+    updatePath(state, path){
+        state.Path = path;
     }
 }

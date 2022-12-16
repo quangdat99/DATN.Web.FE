@@ -4,7 +4,11 @@ const state = {
   /**
    * Danh sách sản phẩm trong giỏ hàng
    */
-  products: [],
+  products: [],  
+  /**
+  * Danh sách sản phẩm cần thanh toán
+  */
+  productCheckouts: [],
 };
 const getters = {
   countProduct(state) {
@@ -25,6 +29,9 @@ const actions = {
 const mutations = {
   updateCart(state, products) {
     state.products = products;
+  },
+  updateCheckout(state, products) {
+    state.productCheckouts = products;
   },
 };
 

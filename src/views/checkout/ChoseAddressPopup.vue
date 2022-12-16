@@ -1,6 +1,6 @@
 <template>
   <dynamic-popup
-    :width="500"
+    :width="700"
     :height="500"
     title="Địa chỉ của tôi"
     class="chose-address-password"
@@ -13,7 +13,7 @@
     <template v-slot:content>
       <div class="flex-column h-100 popup-container">
         <div class="address-list">
-          <div class="address-item" v-for="(address, i) in arrAddress" :key="i">
+          <div class="address-item" v-for="(address, i) in addresses" :key="i">
             <base-radio
               name="choseAddress"
               :keyValue="i"
@@ -26,7 +26,9 @@
               </div>
               <div class="detail-address">{{ address.address_detail }}</div>
               <div class="address-commune">
-                {{ address.address_summary }}
+                {{
+                  `${address.commune}, ${address.district}, ${address.province}`
+                }}
               </div>
               <div class="default" v-if="address.is_default">Mặc định</div>
             </div>
@@ -91,6 +93,8 @@ import BaseTextarea from "@/components/textarea/BaseTextarea.vue";
 import BaseInput from "@/components/input/BaseInput.vue";
 import baseDetail from "@/views/baseDetail.js";
 import NewAddressPopup from "../personal/personalPopup/NewAddressPopup.vue";
+import addressAPI from "@/apis/components/addressAPI";
+
 export default {
   name: "ChoseAddressPopup",
   extends: baseDetail,
@@ -107,40 +111,15 @@ export default {
     const model = ref({
       chose_address: 0,
     });
-    const arrAddress = [
-      {
-        name: "Quang Đạt",
-        phone: "0868389674",
-        address_detail: "Số 36 ngõ 348 Nguyễn Trãi",
-        address_summary: "Phường Văn Quán, Quận Hà Đông, Hà Nội",
-        is_default: true,
-      },
-      {
-        name: "Trần Văn Thịnh",
-        phone: "0868389654",
-        address_detail: "Số 36 ngõ 348 Nguyễn Trãi",
-        address_summary: "Phường Văn Quán, Quận Hà Đông, Hà Nội",
-        is_default: false,
-      },
-      {
-        name: "Trần Thị Thúy",
-        phone: "0864259654",
-        address_detail: "Số 36 ngõ 348 Nguyễn Trãi",
-        address_summary: "Phường Văn Quán, Quận Hà Đông, Hà Nội",
-        is_default: false,
-      },
-    ];
+    const addresses = ref([]);
     onMounted(() => {});
 
     const choseAddress = () => {
-      const me = proxy;
-
-      if (!me.validateComponents()) {
-        nextTick(() => {
-          me.focusFirstError();
-        });
-        return;
+      let address = addresses.value[model.value.chose_address];
+      if (proxy._formParam.options) {
+        proxy._formParam.options.submit(address);
       }
+      proxy.$vfm.hide("ChoseAddressPopup");
     };
 
     const closePopup = (close) => {
@@ -149,15 +128,29 @@ export default {
     };
 
     const beforeOpen = async (e, close) => {
+      window.ChoseAddressPopup = proxy;
       await proxy.super("beforeOpen", baseDetail, e, close);
       commonFn.mask();
+      await getAddress();
       commonFn.unmask();
       window.proxy = proxy;
       proxy.resetValdiate();
     };
 
+    const getAddress = async () => {
+      addresses.value = await addressAPI.getAddresses();
+    };
+
     const addAddress = (mode, data) => {
-      proxy.$vfm.show("NewAddressPopup", { mode: mode, data: data });
+      proxy.$vfm.show("NewAddressPopup", {
+        mode: mode,
+        data: data,
+        options: {
+          submit: () => {
+            getAddress();
+          },
+        },
+      });
     };
 
     return {
@@ -165,7 +158,7 @@ export default {
       choseAddress,
       closePopup,
       beforeOpen,
-      arrAddress,
+      addresses,
       addAddress,
     };
   },
