@@ -138,7 +138,7 @@ export default {
      */
     const fetchProductHomePage = async () => {
       commonFn.mask();
-      let payload = Object.assign({}, model.value);
+      let payload = JSON.parse(JSON.stringify(model.value));
       payload.pageSize = paging.value.pageSize;
       let products = await proxy.$store.dispatch(
         "moduleHomePage/fetchHomePage",

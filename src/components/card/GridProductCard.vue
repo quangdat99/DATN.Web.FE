@@ -36,7 +36,7 @@
               { content: 'Giá: Cao đến thấp', id: 4 },
             ]"
             :chosenValue="model.sort"
-            @update:modelValue="updateSort"
+            @update:chosenObj="updateSort"
             :width="160"
           >
           </base-dropdown>

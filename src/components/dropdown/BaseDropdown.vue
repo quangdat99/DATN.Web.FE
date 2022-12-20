@@ -122,7 +122,7 @@ export default defineComponent({
         }
       });
       isShow.value = false;
-      emit("update:chosenObj", obj, props.displayField);
+      emit("update:chosenObj", obj[props.valueField], props.displayField);
     }
     onMounted(() => {
       listData.value = props.listDropdownData;
@@ -168,7 +168,16 @@ export default defineComponent({
         (x) => x[props.valueField] == value
       );
       if (obj) {
-        evtMouseChoosingOption(obj);
+        internalText.value = obj[props.displayField];
+        modelValue.value = obj[props.valueField];
+        listData.value.forEach((item) => {
+          if (item[props.valueField] == obj[props.valueField]) {
+            item.isChosen = true;
+          } else {
+            item.isChosen = false;
+          }
+        });
+        isShow.value = false;
       } else {
         internalText.value = null;
         listData.value.forEach((item) => {
