@@ -1,8 +1,9 @@
 import axios from "axios";
+import APIConfig from '@/apis/config/apiconfig.js';
 
 export default axios.create({
-  baseURL: "http://localhost:8080",
-  headers: {
-    "Content-type": "application/json"
-  }
+  baseURL: APIConfig,
+  header: {
+    "Content-Type": "multipart/form-data",
+  },
 });

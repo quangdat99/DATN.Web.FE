@@ -8,6 +8,10 @@ class UserAPI extends BaseAPI {
         let res = await Http.axios().post(`${this.controllerName}/login`, model);
         return res;
     }
+    async token(){
+        let res = await Http.axios().get(`${this.controllerName}/token`);
+        return res;
+    }
     async signup(model){
         let res = await Http.axios().post(`${this.controllerName}/signup`, model);
         return res;

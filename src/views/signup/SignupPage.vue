@@ -200,14 +200,13 @@
           <div class="signup-field-label">Ảnh đại diện</div>
           <div class="signup-field-input mt-1">
             <div className="complete-profile__upload-photo">
-              <label htmlFor="upload-photo" class="mr-4">
-                <!-- <Icon icon="carbon:cloud-upload" color="#373737" /> -->
+              <label htmlFor="upload-photo-avatar" class="mr-4">
                 <span>Tải ảnh lên</span>
               </label>
               <input
                 type="file"
                 name=""
-                id="upload-photo"
+                id="upload-photo-avatar"
                 @change="uploadPhotoHandler"
                 accept="image/gif, image/jpeg"
               />
@@ -261,7 +260,9 @@ import { ref, getCurrentInstance, onMounted, nextTick, watch } from "vue";
 import commonFn from "@/commons/commonFunction.js";
 import axios from "axios";
 import baseDetail from "../baseDetail";
-import http from "@/apis/base/httpCommon.js";
+// import http from "@/apis/base/httpCommon.js";
+import fileAPI from "@/apis/components/fileAPI";
+import commonFunction from "@/commons/commonFunction.js";
 export default {
   name: "SignupPage",
   extends: baseDetail,
@@ -345,6 +346,7 @@ export default {
       }
 
       commonFn.mask();
+      model.value.gender = 1; // Nam
       let res = await proxy.$store.dispatch(
         "moduleContext/signup",
         model.value
@@ -379,33 +381,14 @@ export default {
         model.value.avatar = "./images/loading-image.gif";
         var formdata = new FormData();
         formdata.append("file", file);
-        // formdata.append("upload_preset", "zykutcrp");
 
-        // var requestOptions = {
-        //   method: "POST",
-        //   body: formdata,
-        // };
-        // debugger;
-        // axios
-        //   .post("/", formdata, {
-        //     header: {
-        //       "Content-Type": "multipart/form-data",
-        //     },
-        //   })
-        //   .then((res) => {
-        //     debugger;
-        //   });
-
-        // fetch("http://localhost:8080/images", requestOptions)
-        //   .then((response) => response.json())
-        //   .then((result) => {
-        //     debugger
-        //     model.value.avatar = result.url;
-        //     publicID.value = result.public_id;
-        //     signature.value = result.signature;
-        //     timestamp.value = result.version;
-        //   })
-        //   .catch((error) => console.log("error", error));
+        let res = await fileAPI.upload(
+          "avatar_" + commonFunction.generateUUID(),
+          formdata
+        );
+        if (res) {
+          model.value.avatar = res.url;
+        }
       } catch (error) {
         console.log(error);
       }

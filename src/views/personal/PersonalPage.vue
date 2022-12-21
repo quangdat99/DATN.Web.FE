@@ -231,11 +231,21 @@
                 alt=""
               />
             </div>
-            <base-button
+            <label htmlFor="upload-avatar" class="mt-4">
+              <span>Chọn ảnh</span>
+            </label>
+            <input
+              type="file"
+              name=""
+              id="upload-avatar"
+              @change="uploadPhotoHandler"
+              accept="image/gif, image/jpeg"
+            />
+            <!-- <base-button
               type="secondary"
               class="mt-4"
               text="Chọn Ảnh"
-            ></base-button>
+            ></base-button> -->
           </div>
         </div>
       </div>
@@ -510,6 +520,7 @@ import orderAPI from "@/apis/components/orderAPI";
 import userAPI from "@/apis/components/userAPI";
 import addressAPI from "@/apis/components/addressAPI";
 import baseDetail from "@/views/baseDetail.js";
+import fileAPI from "@/apis/components/fileAPI";
 
 export default {
   components: {
@@ -694,10 +705,18 @@ export default {
       } else {
         userInfo.value.date_of_birth = null;
       }
-      let data = await userAPI.updateUserInfo(userInfo.value);
+
+      let user = Object.assign({}, userInfo.value);
+      let data = await userAPI.updateUserInfo(user);
       if (data) {
         userInfo.value = data;
         proxy.$toast.success("Cập nhật hồ sơ thành công");
+        userAPI.token().then((res) => {
+          if (res && res.data && res.data.statusCode == 200) {
+            proxy.$store.commit("moduleContext/updateToken", res.data.data);
+            proxy.$router.go();
+          }
+        });
       }
       commonFn.unmask();
     };
@@ -758,6 +777,25 @@ export default {
         });
     };
 
+    const uploadPhotoHandler = async (e) => {
+      const file = e.target.files[0];
+      try {
+        userInfo.value.avatar = "./images/loading-image.gif";
+        var formdata = new FormData();
+        formdata.append("file", file);
+
+        let res = await fileAPI.upload(
+          "avatar_" + commonFn.generateUUID(),
+          formdata
+        );
+        if (res) {
+          userInfo.value.avatar = res.url;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     return {
       expAccount,
       expOrder,
@@ -784,6 +822,7 @@ export default {
       settingDefault,
       deleteAddress,
       resetPassword,
+      uploadPhotoHandler,
     };
   },
   // computed: {
