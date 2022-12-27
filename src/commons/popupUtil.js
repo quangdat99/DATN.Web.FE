@@ -1,5 +1,4 @@
-import { $vfm } from "vue-final-modal";
-
+import { $vfm } from "@/lib/vueFinalModal"
 class PopupUtil {
   _component = {};
   _visible = {};

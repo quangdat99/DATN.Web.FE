@@ -148,6 +148,7 @@ import BaseTextarea from "@/components/textarea/BaseTextarea.vue";
 import BaseInput from "@/components/input/BaseInput.vue";
 import baseDetail from "@/views/baseDetail.js";
 import addressAPI from "@/apis/components/addressAPI";
+import popupUtil from '@/commons/popupUtil';
 
 export default {
   name: "NewAddressPopup",
@@ -221,7 +222,7 @@ export default {
             if (proxy._formParam.options) {
               proxy._formParam.options.submit();
             }
-            proxy.$vfm.hide("NewAddressPopup");
+            popupUtil.hide("NewAddressPopup");
           })
           .finally(() => {
             commonFn.unmask();
@@ -234,7 +235,7 @@ export default {
             if (proxy._formParam.options) {
               proxy._formParam.options.submit();
             }
-            proxy.$vfm.hide("NewAddressPopup");
+            popupUtil.hide("NewAddressPopup");
           })
           .finally(() => {
             commonFn.unmask();

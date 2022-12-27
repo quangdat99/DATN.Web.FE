@@ -9,33 +9,34 @@
         <div class="effect-1 effects"></div>
       </div>
     </div>
+    <modals-container></modals-container>
   </div>
 </template>
   
 <script>
-import Toast from 'primevue/toast';
-import Loading from '@/components/loading/Loading.vue';
-import { ref, computed, getCurrentInstance, onMounted } from 'vue';
+import Toast from "primevue/toast";
+import Loading from "@/components/loading/Loading.vue";
+import { ref, computed, getCurrentInstance, onMounted } from "vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Toast,
-    Loading
+    Loading,
   },
   setup() {
     const { proxy } = getCurrentInstance();
     const IsLoading = computed(() => {
       return proxy.$store.state.isLoading;
-    })
+    });
     return {
-      IsLoading
-    }
-  }
-}
+      IsLoading,
+    };
+  },
+};
 </script>
   
 <style lang="scss" scoped>
-#app{
+#app {
   height: 100vh;
 }
 </style>

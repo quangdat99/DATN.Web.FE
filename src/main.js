@@ -4,7 +4,7 @@ import router from '@/routers/router.js';
 import FloatingVue from 'floating-vue';
 import VueAgile from 'vue-agile';
 // import VTooltip from 'v-tooltip';
-import { vfmPlugin } from 'vue-final-modal';
+import { vfmPlugin } from "@/lib/vueFinalModal";
 import store from '@/store/store.js';
 import PrimeVue from 'primevue/config';
 import Dialog from 'primevue/dialog';

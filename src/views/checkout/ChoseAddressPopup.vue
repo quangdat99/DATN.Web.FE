@@ -53,7 +53,7 @@
           ></base-button>
         </div>
 
-        <new-address-popup></new-address-popup>
+        <!-- <new-address-popup></new-address-popup> -->
       </div>
     </template>
     <template v-slot:footer="{ close }">
@@ -92,8 +92,9 @@ import axios from "axios";
 import BaseTextarea from "@/components/textarea/BaseTextarea.vue";
 import BaseInput from "@/components/input/BaseInput.vue";
 import baseDetail from "@/views/baseDetail.js";
-import NewAddressPopup from "../personal/personalPopup/NewAddressPopup.vue";
+// import NewAddressPopup from "../personal/personalPopup/NewAddressPopup.vue";
 import addressAPI from "@/apis/components/addressAPI";
+import popupUtil from '@/commons/popupUtil';
 
 export default {
   name: "ChoseAddressPopup",
@@ -104,7 +105,7 @@ export default {
     BaseCombobox,
     BaseInput,
     BaseTextarea,
-    NewAddressPopup,
+    // NewAddressPopup,
   },
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
@@ -119,7 +120,7 @@ export default {
       if (proxy._formParam.options) {
         proxy._formParam.options.submit(address);
       }
-      proxy.$vfm.hide("ChoseAddressPopup");
+      popupUtil.hide("ChoseAddressPopup");
     };
 
     const closePopup = (close) => {
@@ -142,7 +143,7 @@ export default {
     };
 
     const addAddress = (mode, data) => {
-      proxy.$vfm.show("NewAddressPopup", {
+      popupUtil.show("NewAddressPopup", {
         mode: mode,
         data: data,
         options: {

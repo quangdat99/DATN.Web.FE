@@ -109,6 +109,7 @@ import ChoseAddressPopup from "./ChoseAddressPopup.vue";
 import addressAPI from "@/apis/components/addressAPI";
 import commonFn from "@/commons/commonFunction.js";
 import productCartAPI from "@/apis/components/productCartAPI";
+import popupUtil from '@/commons/popupUtil';
 
 export default {
   components: {
@@ -159,7 +160,7 @@ export default {
       }
     };
     const choseAddress = () => {
-      proxy.$vfm.show("ChoseAddressPopup", {
+      popupUtil.show("ChoseAddressPopup", {
         options: {
           submit: (_address) => {
             changeAddress(_address);

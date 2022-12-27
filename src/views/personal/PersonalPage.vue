@@ -492,7 +492,7 @@
       </div>
     </div>
 
-    <new-address-popup></new-address-popup>
+    <!-- <new-address-popup></new-address-popup> -->
   </div>
 </template>
 
@@ -604,7 +604,7 @@ export default {
     };
     // watch(activeTab.value, (value) => {});
     const addAddress = (mode, data) => {
-      proxy.$vfm.show("NewAddressPopup", {
+      popupUtil.show("NewAddressPopup", {
         mode: mode,
         data: data,
         options: {
