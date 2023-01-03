@@ -28,7 +28,6 @@ export default {
       this.api.dynamicModals.splice(index, 1)
     },
     async beforeOpen(e, modal, index) {
-      debugger
       e.ref.params.value = modal.params
       await this.$nextTick()
       await this.$nextTick()

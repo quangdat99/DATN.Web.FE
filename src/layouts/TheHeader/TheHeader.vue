@@ -164,7 +164,7 @@
                 class="option cursor"
                 @click="
                   () => {
-                    $router.push('/personal/1');
+                    $router.push('/personal');
                   }
                 "
               >

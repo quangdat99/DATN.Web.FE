@@ -10,6 +10,14 @@ class OrderAPI extends BaseAPI {
         let res = await Http.axios().get(`${this.controllerName}/orderList/${status}`);
         return this.response(res);
     }
+    async cancelOrder(id){
+        let res = await Http.axios().post(`${this.controllerName}/cancelOrder/${id}`);
+        return this.response(res);
+    }
+    async getOrderStatusCount(){
+        let res = await Http.axios().get(`${this.controllerName}/orderStatusCount`);
+        return this.response(res);
+    }
 }
 
 export default new OrderAPI();

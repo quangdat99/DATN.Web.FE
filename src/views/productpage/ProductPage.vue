@@ -1,5 +1,8 @@
 <template>
-  <div class="product-page flex flex-column">
+  <div
+    class="product-page flex flex-column"
+    v-if="product && product.product_id"
+  >
     <div class="product-navigation">
       <a :href="homepage">Trang chủ /</a> {{ product.product_name }}
     </div>
@@ -128,7 +131,7 @@
           </div>
           <div class="product-infor-quantity mb-4 flex flex-row flex-between">
             <div class="product-detail-title">Số lượng</div>
-            <div class="product-detail-content">
+            <div class="product-detail-content flex-row align-center">
               <vue-number-input
                 v-model="productQuantity"
                 :min="1"
@@ -136,8 +139,12 @@
                 size="small"
                 inline
                 controls
+                @change="changeQuantity()"
               >
               </vue-number-input>
+              <div class="product-detail-title ml-2">
+                {{ countQuantity }} sản phẩm có sẵn
+              </div>
             </div>
           </div>
           <div class="product-infor-placement flex flex-row">
@@ -337,6 +344,14 @@
       </div>
     </div> -->
   </div>
+  <div
+    class="product-page flex flex-column"
+    style="min-height: 500px; align-items: center; justify-content: center"
+    v-if="!product || !product.product_id"
+  >
+    <img src="@/assets/images/empty_cart.png" width="64" height="64" alt="" />
+    <div class="text fs-16 mt-4">Không tìm thấy sản phẩm</div>
+  </div>
 </template>
 
 <script>
@@ -424,11 +439,14 @@ export default {
       // let productId = proxy.$store.state["moduleProductPage"].productId;
       let query = route.query;
       let productId = query.id;
-
       const data = await proxy.$store.dispatch(
         "moduleProductPage/updateProduct",
         productId
       );
+      if (!data) {
+        // proxy.$router.push("/NotFound");
+        return;
+      }
       product.value = data;
       colors.value = handleOption(data.colors);
       sizes.value = handleOption(data.sizes);
@@ -578,6 +596,12 @@ export default {
       }
     });
 
+    const changeQuantity = () => {
+      if (!(productQuantity.value > 0)) {
+        productQuantity.value = 1;
+      }
+    };
+
     function commentCategory(color, size) {
       if (color) {
         if (size) {
@@ -626,6 +650,10 @@ export default {
         proxy.$router.push("/login");
         return;
       }
+      if (!(productQuantity.value > 0)) {
+        proxy.$toast.warning("Vui lòng chọn số lượng sản phẩm");
+        return;
+      }
       if (productDetail.value) {
         let payload = {
           quantity: productQuantity.value,
@@ -640,6 +668,22 @@ export default {
         proxy.$toast.warning("Vui lòng chọn phân loại sản phẩm");
       }
     };
+    const countQuantity = computed(() => {
+      if (productDetail.value) {
+        return productDetail.value.quantity;
+      } else {
+        let quantity = 0;
+        if (product.value && product.value.product_id) {
+          product.value.productDetails.forEach((item) => {
+            quantity += item.quantity;
+          });
+
+          return quantity;
+        } else {
+          return 0;
+        }
+      }
+    });
     return {
       homepage,
       listSlider,
@@ -673,6 +717,8 @@ export default {
       maxQuantity,
       productQuantity,
       addToCart,
+      countQuantity,
+      changeQuantity,
     };
   },
 };

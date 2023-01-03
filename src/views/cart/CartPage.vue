@@ -23,9 +23,15 @@
           ></base-checkbox>
           <div class="product-name">
             <div class="image">
-              <img :src="product.img_url" alt="" />
+              <img
+                :src="product.img_url"
+                alt=""
+                @click="clickToProduct(product.product_id)"
+              />
             </div>
-            <div class="name">{{ product.product_name }}</div>
+            <div class="name" @click="clickToProduct(product.product_id)">
+              {{ product.product_name }}
+            </div>
             <div class="classify">
               <span class="fs-12">Phân loại hàng:</span>
               <span class="detail">
@@ -51,6 +57,7 @@
               size="small"
               inline
               controls
+              @change="changeQuantity(product)"
             >
             </vue-number-input>
           </div>
@@ -58,7 +65,11 @@
             {{ formatVND(product.quantity * product.sale_price) }}
           </div>
           <div class="product-handle">
-            <base-button text="Xóa" type="white"></base-button>
+            <base-button
+              text="Xóa"
+              @click="deleteProductCart(product.product_cart_id)"
+              type="white"
+            ></base-button>
           </div>
         </div>
       </div>
@@ -110,6 +121,7 @@ import { usePrimeVue } from "primevue/config";
 import { mapActions, mapGetters, mapState } from "vuex";
 import { ref, getCurrentInstance, computed, onMounted, watch } from "vue";
 import commonFn from "@/commons/commonFunction.js";
+import productCartAPI from "@/apis/components/productCartAPI";
 
 export default {
   components: {
@@ -187,13 +199,18 @@ export default {
 
     onMounted(async () => {
       changeToVietnamese();
+
       commonFn.mask();
+      await fetchProductCarts();
+      commonFn.unmask();
+    });
+
+    const fetchProductCarts = async () => {
       let data = await proxy.$store.dispatch("moduleCart/updateCart");
       if (data && data.length > 0) {
         productList.value = JSON.parse(JSON.stringify(data));
       }
-      commonFn.unmask();
-    });
+    };
     const countSelected = computed(() => {
       return productList.value.filter((x) => x.selected).length;
     });
@@ -242,6 +259,41 @@ export default {
         return "";
       }
     };
+
+    const deleteProductCart = (id) => {
+      if (id) {
+        productCartAPI.deleteProductCart(id).then((res) => {
+          if (res) {
+            proxy.$toast.warning("Xóa sản phẩm trong giỏ hàng thành công");
+          }
+          fetchProductCarts();
+        });
+      }
+    };
+    const changeQuantity = (product) => {
+      if (!product.quantity) {
+        product.quantity = 1;
+      }
+      if (product.quantity <= product.quantity_max) {
+        productCartAPI
+          .updateQuantity({
+            product_cart_id: product.product_cart_id,
+            quantity: product.quantity,
+          })
+          .then((res) => {
+            fetchProductCarts();
+          });
+      }
+    };
+
+    const clickToProduct = (productId) => {
+      proxy.$router.push({
+        path: "/product",
+        query: { id: productId },
+      });
+      proxy.$store.dispatch("moduleProductPage/updateProductId", productId);
+    };
+
     return {
       productList,
       totalComputedMoney,
@@ -254,6 +306,9 @@ export default {
       changeSelectedAll,
       checkout,
       classifyProduct,
+      deleteProductCart,
+      changeQuantity,
+      clickToProduct,
     };
   },
 

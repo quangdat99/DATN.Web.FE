@@ -136,7 +136,9 @@
             <base-checkbox
               class="mt-1"
               :modelValue="category.selected"
-              :label="category.category_name"
+              :label="
+                category.category_name + ' (' + category.product_count + ')'
+              "
               @change="updateCategory(!category.selected, category.category_id)"
             ></base-checkbox>
           </div>
@@ -153,7 +155,11 @@
           :product="product"
         ></product-card>
       </div>
-      <div class="product-container-empty flex-column align-center w-100" style="margin-top: 150px;" v-if="countProduct == 0">
+      <div
+        class="product-container-empty flex-column align-center w-100"
+        style="margin-top: 150px"
+        v-if="countProduct == 0"
+      >
         <img src="@/assets/images/empty.png" width="100" height="100" alt="" />
         <div class="product-text-empty mt-4 fs-20">Không tìm thấy sản phẩm</div>
       </div>

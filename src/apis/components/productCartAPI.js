@@ -15,6 +15,14 @@ class ProductCartAPI extends BaseAPI {
         let res = await Http.axios().post(`${this.controllerName}/checkout`, payload);
         return res;
     }
+    async deleteProductCart(id){
+        let res = await Http.axios().delete(`${this.controllerName}/deleteProduct/${id}`);
+        return this.response(res);
+    }
+    async updateQuantity(payload){
+        let res = await Http.axios().put(`${this.controllerName}/updateQuantity`, payload);
+        return this.response(res);
+    }
 }
 
 export default new ProductCartAPI();

@@ -68,23 +68,7 @@ export default {
       pageSize: 20,
       totalPage: 15,
     });
-    const listCategory = ref([
-      // {
-      //   selected: false,
-      //   category_id: "A0001",
-      //   category_name: "Áo khoác",
-      // },
-      // {
-      //   selected: false,
-      //   category_id: "A0002",
-      //   category_name: "Áo hoodie",
-      // },
-      // {
-      //   selected: false,
-      //   category_id: "A0003",
-      //   category_name: "Quần jean",
-      // },
-    ]);
+    const listCategory = ref([]);
     const listSlider = ref([
       {
         src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide1.jpg",
@@ -196,7 +180,6 @@ export default {
     // watch(
     //   listCategory.value,
     //   (value) => {
-    //     debugger;
     //     let listChecked = value.filter((x) => x.selected == true);
     //     if (listChecked.length > 0) {
     //       model.value.category = listChecked

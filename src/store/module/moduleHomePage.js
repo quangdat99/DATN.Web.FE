@@ -30,7 +30,7 @@ const actions = {
     return res;
   },
   async fetchCategory(context){
-    var res = await categoryAPI.getAll();
+    var res = await categoryAPI.getCategory();
     // context.commit('updateCategory', res);
     if (res && res.length > 0) {
       res.forEach(x => x.selected = false);

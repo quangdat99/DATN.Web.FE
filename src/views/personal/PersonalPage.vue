@@ -52,6 +52,9 @@
           >
             <div class="icon24 order-all mr-2"></div>
             <div class="text-item">Tất cả</div>
+            <div class="order-count" v-if="orderStatusCount.all">
+              ({{ orderStatusCount.all }})
+            </div>
           </div>
           <div
             class="menu-item"
@@ -60,6 +63,9 @@
           >
             <div class="icon24 order-await mr-2"></div>
             <div class="text-item">Chờ xác nhận</div>
+            <div class="order-count" v-if="orderStatusCount.acceipt">
+              ({{ orderStatusCount.acceipt }})
+            </div>
           </div>
           <div
             class="menu-item"
@@ -68,6 +74,9 @@
           >
             <div class="icon24 order-await-2 mr-2"></div>
             <div class="text-item">Chờ lấy hàng</div>
+            <div class="order-count" v-if="orderStatusCount.pending">
+              ({{ orderStatusCount.pending }})
+            </div>
           </div>
           <div
             class="menu-item"
@@ -76,6 +85,9 @@
           >
             <div class="icon24 order-delivery mr-2"></div>
             <div class="text-item">Đang giao</div>
+            <div class="order-count" v-if="orderStatusCount.delivering">
+              ({{ orderStatusCount.delivering }})
+            </div>
           </div>
           <div
             class="menu-item"
@@ -84,6 +96,9 @@
           >
             <div class="icon24 order-delivery-2 mr-2"></div>
             <div class="text-item">Đã giao</div>
+            <div class="order-count" v-if="orderStatusCount.delivered">
+              ({{ orderStatusCount.delivered }})
+            </div>
           </div>
           <div
             class="menu-item"
@@ -92,6 +107,9 @@
           >
             <div class="icon24 order-cancel mr-2"></div>
             <div class="text-item">Đã Hủy</div>
+            <div class="order-count" v-if="orderStatusCount.cancelled">
+              ({{ orderStatusCount.cancelled }})
+            </div>
           </div>
           <div
             class="menu-item"
@@ -100,6 +118,9 @@
           >
             <div class="icon24 order-return mr-2"></div>
             <div class="text-item">Trả hàng/Hoàn tiền</div>
+            <div class="order-count" v-if="orderStatusCount.undelivered">
+              ({{ orderStatusCount.undelivered }})
+            </div>
           </div>
         </div>
       </div>
@@ -405,10 +426,19 @@
                   :key="p"
                 >
                   <div class="product-left">
-                    <img :src="product.url_img" alt="" />
+                    <img
+                      :src="product.url_img"
+                      alt=""
+                      @click="clickToProduct(product.product_id)"
+                    />
                   </div>
                   <div class="product-content">
-                    <div class="product-name">{{ product.product_name }}</div>
+                    <div
+                      class="product-name"
+                      @click="clickToProduct(product.product_id)"
+                    >
+                      {{ product.product_name }}
+                    </div>
                     <div class="product-classify">
                       {{
                         productClassify(product.color_name, product.size_name)
@@ -473,7 +503,8 @@
                   <base-button
                     text="Hủy đơn"
                     class="pl-6 pr-6"
-                    v-if="order.status == 5"
+                    v-if="order.status == 5 || order.status == 2"
+                    @click="cancelOrder(order.order_id)"
                   ></base-button>
                 </div>
               </div>
@@ -547,16 +578,7 @@ export default {
       new_password: null,
       confirm_password: null,
     });
-    const profile = ref({
-      first_name: "Đinh Quang",
-      last_name: "Đạt",
-      email: "dat123456@gmail.com",
-      phone: "0868389674",
-      gender: 1,
-      day: 7,
-      month: "Tháng 4",
-      year: 1999,
-    });
+    const orderStatusCount = ref({});
     const listOrder = ref([]);
     const filterOrder = ref(null);
     const countOrder = ref([]);
@@ -573,7 +595,14 @@ export default {
       )[0].scrollTop = 0;
       window.proxy = proxy;
       getActiveTabFromUrl();
+      getOrderStatusCount();
     });
+
+    const getOrderStatusCount = () => {
+      orderAPI.getOrderStatusCount().then((res) => {
+        orderStatusCount.value = res;
+      });
+    };
     const getActiveTabFromUrl = () => {
       let url = proxy.$router.currentRoute.value.fullPath;
       let arr = url.split("/");
@@ -581,7 +610,8 @@ export default {
         activeTab.value = parseInt(arr[2]);
       } else {
         activeTab.value = 1;
-        history.pushState({ prv: location.href }, "", url + "/1");
+        // proxy.$router.push(url + "/1");
+        // history.pushState({ prv: location.href }, "", url + "/1");
       }
     };
 
@@ -600,7 +630,8 @@ export default {
     const changeActiveTab = (value) => {
       activeTab.value = value;
       let url = route.matched[1].path.replace(":key?", value);
-      history.pushState({ prv: location.href }, "", url);
+      proxy.$router.push(url);
+      // history.pushState({ prv: location.href }, "", url);
     };
     // watch(activeTab.value, (value) => {});
     const addAddress = (mode, data) => {
@@ -621,6 +652,14 @@ export default {
           return "Giao hàng thành công";
         case 5:
           return "Chờ xác nhận";
+        case 2:
+          return "Chờ lấy hàng";
+        case 3:
+          return "Đang giao";
+        case 4:
+          return "Đã hủy đơn";
+        case 6:
+          return "Trả hàng/Hoàn tiền";
         default:
           return "";
       }
@@ -796,12 +835,26 @@ export default {
       }
     };
 
+    const clickToProduct = (productId) => {
+      proxy.$router.push({
+        path: "/product",
+        query: { id: productId },
+      });
+      proxy.$store.dispatch("moduleProductPage/updateProductId", productId);
+    };
+
+    const cancelOrder = (id) => {
+      orderAPI.cancelOrder(id).then((res) => {
+        activeTab.value = 9;
+      });
+    };
+
     return {
       expAccount,
       expOrder,
       expandAccount,
       expandOrder,
-      profile,
+      orderStatusCount,
       days,
       months,
       years,
@@ -823,6 +876,8 @@ export default {
       deleteAddress,
       resetPassword,
       uploadPhotoHandler,
+      clickToProduct,
+      cancelOrder,
     };
   },
   // computed: {
