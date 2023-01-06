@@ -5,9 +5,7 @@
     :class="{ 'ms-validate': isValidate, 'w-100': !width }"
   >
     <label class="label" v-if="label">{{ label }}</label>
-    <div
-      class="flex-row"
-    >
+    <div class="flex-row">
       <input
         class="base-input-item flex"
         :placeholder="placeholder"
@@ -30,7 +28,7 @@
         <div class="flex spin down" @click="less()"></div>
       </div>
     </div>
-    <div class="error-text mt-1 txt-error" v-if="errorMessage">
+    <div class="error-text mt-1 txt-error" v-if="errorMessage && !hideError">
       {{ errorMessage }}
     </div>
   </div>
@@ -62,6 +60,10 @@ export default defineComponent({
      */
     modelValue: {
       default: null,
+    },
+    hideError: {
+      default: false,
+      type: Boolean,
     },
     placeholder: {
       fault: null,
@@ -171,9 +173,10 @@ export default defineComponent({
     me.valid = false;
     me.autoNumneric = null;
 
-    const { errorMessage, validate, isValidate, clearValidate } = useValidateControl({
-      props,
-    });
+    const { errorMessage, validate, isValidate, clearValidate } =
+      useValidateControl({
+        props,
+      });
     const listeners = computed(() => {
       return {
         input: (e) => {

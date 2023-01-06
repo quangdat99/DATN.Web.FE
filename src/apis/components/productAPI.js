@@ -23,6 +23,10 @@ class ProductAPI extends BaseAPI {
         let res = await Http.axios().post(`${this.controllerName}/commentProduct`, payload);
         return this.response(res);
     }
+    async saveProduct(payload){
+        let res = await Http.axios().post(`${this.controllerName}/saveProduct`, payload);
+        return this.response(res);
+    }
 }
 
 export default new ProductAPI();

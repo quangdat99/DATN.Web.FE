@@ -846,6 +846,7 @@ export default {
     const cancelOrder = (id) => {
       orderAPI.cancelOrder(id).then((res) => {
         activeTab.value = 9;
+        getOrderStatusCount();
       });
     };
 

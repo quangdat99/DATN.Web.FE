@@ -1,6 +1,7 @@
 @import "@/assets/scss/base.scss";
 @import "@/assets/scss/flex/flex.scss";
 @import "@/assets/scss/components/BaseInput.scss";
+@import "@/assets/scss/_variables.scss";
 
 body {
   font-size: 12px;
@@ -25,6 +26,18 @@ div {
   .main-container-content {
     height: 100%;
     overflow: auto;
+  }
+}
+
+.txt-link {
+  cursor: pointer;
+  color: $blue;
+}
+
+.control-title {
+  label {
+    font-weight: bold;
+    font-size: 13px;
   }
 }
 
@@ -383,7 +396,7 @@ body {
 }
 
 .align-center {
-  align-items: center;
+  align-items: center !important;
 }
 
 .justify-between {
@@ -516,6 +529,14 @@ body {
     transform: rotate(360deg);
   }
 }
+
 .cursor {
   cursor: pointer;
+}
+.p-2 {
+  padding: 8px;
+}
+
+.d-none {
+  display: none;
 }

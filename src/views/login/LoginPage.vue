@@ -98,7 +98,12 @@ export default {
             proxy.$router.push(proxy.$store.state["moduleContext"].Path);
             proxy.$store.commit("moduleContext/updatePath", "");
           } else {
-            proxy.$router.push("homepage");
+            let context = res.data.Context;
+            if (context.role == 2) {
+              proxy.$router.push("admin");
+            } else {
+              proxy.$router.push("homepage");
+            }
           }
         } else if (res.statusCode == 207) {
           proxy.$toast.error(res.userMessage);
@@ -117,11 +122,13 @@ export default {
       commonFn.unmask();
     };
 
-    const enterLogin = (e, value) => {{
-      if (e.keyCode == 13) {
-        login();
+    const enterLogin = (e, value) => {
+      {
+        if (e.keyCode == 13) {
+          login();
+        }
       }
-    }}
+    };
     return {
       model,
       goToSignup,

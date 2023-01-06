@@ -11,7 +11,7 @@ export const validateCommon = {
         return res;
     },
     validateRequired(value){
-        if(value === undefined || value === null || (isNaN(value) && typeof value == 'number') || value == ''){
+        if(value === undefined || value === null || (isNaN(value) && typeof value == 'number') || value === ''){
             return false;
         }
         return true;

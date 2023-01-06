@@ -179,6 +179,33 @@
         background-position: -24px -256px;
     }
 
+    &.dashboard::before {
+        background-position: -288px -0;
+    }
+
+    &.product::before {
+        background-position: -288px -24px;
+    }
+
+    &.order-white::before {
+        background-position: -288px -48px;
+    }
+
+    &.size::before {
+        background-position: -288px -72px;
+    }
+
+    &.color::before {
+        background-position: -288px -96px;
+    }
+
+    &.category::before {
+        background-position: -288px -120px;
+    }
+
+    &.menu-black::before {
+        background-position: -288px -144px;
+    }
 }
 
 .icon16 {

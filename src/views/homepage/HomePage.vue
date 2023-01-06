@@ -124,6 +124,9 @@ export default {
       commonFn.mask();
       let payload = JSON.parse(JSON.stringify(model.value));
       payload.pageSize = paging.value.pageSize;
+      if (payload.category) {
+        payload.category = payload.category.split("%").join(",");
+      }
       let products = await proxy.$store.dispatch(
         "moduleHomePage/fetchHomePage",
         payload

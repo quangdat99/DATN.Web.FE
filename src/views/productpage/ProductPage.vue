@@ -95,7 +95,10 @@
               </div>
             </div>
           </div>
-          <div class="product-infor-type flex flex-row flex-between">
+          <div
+            class="product-infor-type flex flex-row flex-between"
+            v-if="colors.length > 0"
+          >
             <div class="product-detail-title">Màu sắc</div>
             <div class="product-detail-content">
               <div
@@ -112,7 +115,10 @@
               </div>
             </div>
           </div>
-          <div class="product-infor-type flex flex-row flex-between">
+          <div
+            class="product-infor-type flex flex-row flex-between"
+            v-if="sizes.length > 0"
+          >
             <div class="product-detail-title">Size</div>
             <div class="product-detail-content">
               <div
@@ -450,6 +456,9 @@ export default {
       product.value = data;
       colors.value = handleOption(data.colors);
       sizes.value = handleOption(data.sizes);
+      if (colors.value.length == 0 && sizes.value.length == 0) {
+        productDetail.value = product.value.productDetails[0];
+      }
       attributes.value = data.attributes;
       homepage.value = "/";
       // Gán ảnh cho sản phẩm

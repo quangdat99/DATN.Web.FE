@@ -6,6 +6,7 @@ import routerCart from "./routerCart.js";
 import routerCheckout from "./routerCheckout.js";
 import routerProfile from './routerProfile.js';
 import routerPersonal from './routerPersonal.js';
+import routerAdmin from "./routerAdmin.js";
 import commonFn from '@/commons/commonFunction.js';
 import auth from '@/commons/authService.js';
 
@@ -57,7 +58,8 @@ const router = createRouter({
       meta: {
         anonymous: true
       }
-    }
+    },
+    ...routerAdmin
   ],
 });
 

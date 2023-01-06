@@ -5,4 +5,7 @@ export default {
     User(state){
         return state.User;
     },
+    Context(state){
+        return state.Context;
+    },
 }

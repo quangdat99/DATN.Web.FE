@@ -8,6 +8,7 @@ export default {
   },
   mounted() {
     const me = this;
+    window.detail = me;
     me.addObserveControl();
   },
   methods: {

@@ -108,10 +108,11 @@ const styles = computed(() => {
   flex: 1;
 }
 .modal__title {
-  padding: 13px 16px 4px 22px;
+  padding: 13px 16px 10px 22px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.09);
   &:hover {
     cursor: move;
   }

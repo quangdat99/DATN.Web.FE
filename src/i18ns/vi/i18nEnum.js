@@ -6,5 +6,5 @@ export default {
     Female: 'Nữ',
     Male: 'Nam',
     Other: 'Khác'
-  }
+  },
 }
