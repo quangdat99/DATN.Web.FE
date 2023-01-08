@@ -1,7 +1,7 @@
 <template>
   <dynamic-popup
     :width="960"
-    :height="600"
+    :height="700"
     class="product-detail"
     :title="title"
     @beforeOpen="beforeOpen($event, close)"
@@ -178,6 +178,7 @@
                   :rules="[{ name: 'required' }]"
                   :hideError="true"
                   v-model="p.quantity"
+                  isNullable
                 ></base-number>
               </div>
               <div class="detail-item purchase_price">
@@ -186,6 +187,7 @@
                   :rules="[{ name: 'required' }]"
                   hideError
                   v-model="p.purchase_price"
+                  isNullable
                 ></base-number>
               </div>
               <div class="detail-item product_discount">
@@ -210,6 +212,7 @@
                   :rules="[{ name: 'required' }]"
                   hideError
                   v-model="p.sale_price"
+                  isNullable
                 ></base-number>
               </div>
             </div>
@@ -279,6 +282,7 @@ export default {
       ProductDetails: [],
       product_code: null,
       product_name: null,
+      Attributes: [],
       description: "",
       summary: null,
       status: 1,
@@ -360,12 +364,12 @@ export default {
           (item.product_detail_id =
             item.product_detail_id || commonFn.generateUUID()),
             (item.product_id = model.value.product_id);
-          item.quantity = item.quantity || 0;
+          item.quantity = item.quantity || null;
           item.img_url = item.img_url || null;
-          item.purchase_price = item.purchase_price || 0;
-          item.product_discount = item.product_discount || 0;
-          item.sale_price_old = item.sale_price_old || 0;
-          item.sale_price = item.sale_price || 0;
+          item.purchase_price = item.purchase_price || null;
+          item.product_discount = item.product_discount || null;
+          item.sale_price_old = item.sale_price_old || null;
+          item.sale_price = item.sale_price || null;
         });
 
         model.value.ProductDetails = data;
@@ -391,6 +395,7 @@ export default {
     onMounted(() => {
       getColors();
       getSizes();
+      model.value.Attributes = [];
     });
 
     const getColors = () => {
@@ -411,18 +416,21 @@ export default {
 
     const saveProduct = () => {
       const me = proxy;
+      me.resetValdiate();
+      me.addObserveControl();
       if (!me.validateComponents()) {
         nextTick(() => {
           me.focusFirstError();
         });
         return;
       }
+      debugger;
       // commonFn.mask();
       if (proxy._formParam?.mode == "Add") {
-        productAPI.saveProduct(model.value).then((res) => {
-          proxy.$toast.success("Thêm sản phẩm thành công");
-          popupUtil.hideAll();
-        });
+        // productAPI.saveProduct(model.value).then((res) => {
+        //   proxy.$toast.success("Thêm sản phẩm thành công");
+        //   popupUtil.hideAll();
+        // });
       } else {
       }
     };
@@ -496,7 +504,6 @@ export default {
     };
 
     const uploadPhotoHandler = async (e, p) => {
-      debugger;
       const file = e.target.files[0];
       try {
         var formdata = new FormData();

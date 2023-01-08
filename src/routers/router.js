@@ -65,7 +65,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   // khi chuyển router sẽ show maskLoading cho người dùng xử lý
-
   commonFn.mask();
   document.title = to.name;
   if (to.meta.anonymous) {
@@ -73,8 +72,8 @@ router.beforeEach((to, from, next) => {
     return;
   }
   // kiểm tra authen --> redirect login
-  if (!auth.isAuthenticated()) {
-    auth.login(to.path);
+  if (!auth.isAuthenticated(to)) {
+    auth.login(to);
     return;
   }
   next();

@@ -8,6 +8,7 @@ export const defaultConfigState = {
    */
   Loading: false,
   Path: "",
+  To: {},
   Context: {
   }
 }

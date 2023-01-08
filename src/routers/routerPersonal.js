@@ -2,7 +2,9 @@ export default [
   {
       path: '/personal/:key?',
       component: () => import("@/views/personal/PersonalPage.vue"),
-      meta: {},
+      meta: {
+        role: 1
+    },
       name: 'Trang cá nhân',
   }
 ]

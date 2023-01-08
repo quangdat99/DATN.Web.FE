@@ -94,12 +94,13 @@ export default {
       if (proxy.model) {
         let res = await proxy.$store.dispatch("moduleContext/login", model);
         if (res.statusCode == 200) {
-          if (proxy.$store.state["moduleContext"].Path) {
-            proxy.$router.push(proxy.$store.state["moduleContext"].Path);
+          let data = res.data.Context;
+          let context = proxy.$store.state["moduleContext"];
+          if (context.Path && context.To.meta.role == data.role) {
+            proxy.$router.push(context.Path);
             proxy.$store.commit("moduleContext/updatePath", "");
           } else {
-            let context = res.data.Context;
-            if (context.role == 2) {
+            if (data.role == 2) {
               proxy.$router.push("admin");
             } else {
               proxy.$router.push("homepage");

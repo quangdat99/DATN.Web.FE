@@ -14,7 +14,18 @@
           </div>
         </div>
         <div class="card-image">
-          <img :src="productImg" alt="" style="width: 100%; height: 100%" />
+          <img
+            v-if="productImg"
+            :src="productImg"
+            alt=""
+            style="width: 100%; height: 100%"
+          />
+          <img
+            v-if="!productImg"
+            src="~@/assets/images/product_empty.png"
+            alt=""
+            style="width: 100%; height: 100%"
+          />
         </div>
       </div>
       <div class="card-bottom">

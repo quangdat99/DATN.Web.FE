@@ -5,7 +5,8 @@ class AuthService extends EventEmiter {
   /**
    * Kiểm tra xem còn session đăng nhập không
    */
-  isAuthenticated() {
+  isAuthenticated(to) {
+    store.commit("moduleContext/updateTo", to);
     const context = store.state["moduleContext"];
     if (context.Token) {
       let expired = context.Context.tokenExpired;
@@ -15,9 +16,9 @@ class AuthService extends EventEmiter {
     }
     return false;
   }
-  login(path) {
+  login(to) {
     store.commit("moduleContext/updateLogout");
-    store.commit("moduleContext/updatePath", path);
+    store.commit("moduleContext/updatePath", to.path);
     location.href = location.origin + "/login";
   }
 }

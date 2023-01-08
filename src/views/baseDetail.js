@@ -14,16 +14,17 @@ export default {
   methods: {
     addObserveControl() {
       if (!this._observeControl) {
-        this._observeControl = [];
-        const $el = this.$el;
-        const $controls = $el.querySelectorAll('.ms-validate');
-        if ($controls && $controls.length > 0) {
-          $controls.forEach(item => {
-            if (typeof item.getVueInstance === 'function') {
-              this._observeControl.push(item.getVueInstance());
-            }
-          });
-        }
+
+      }
+      this._observeControl = [];
+      const $el = this.$el;
+      const $controls = $el.querySelectorAll('.ms-validate');
+      if ($controls && $controls.length > 0) {
+        $controls.forEach(item => {
+          if (typeof item.getVueInstance === 'function') {
+            this._observeControl.push(item.getVueInstance());
+          }
+        });
       }
     },
     /**

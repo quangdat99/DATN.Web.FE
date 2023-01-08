@@ -18,5 +18,8 @@ export default {
     },
     updatePath(state, path){
         state.Path = path;
+    },
+    updateTo(state, to){
+        state.To = to;
     }
 }

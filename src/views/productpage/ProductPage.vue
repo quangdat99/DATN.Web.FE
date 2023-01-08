@@ -9,8 +9,17 @@
     <div class="product-page-content flex flex-row">
       <div class="product-page-image-container flex-column">
         <div class="list-product-image">
-          <base-thumbnail-slider :listSlider="listSlider">
+          <base-thumbnail-slider
+            v-if="listSlider.length > 0"
+            :listSlider="listSlider"
+          >
           </base-thumbnail-slider>
+          <img
+            class="product_empty"
+            v-if="listSlider.length == 0"
+            src="~@/assets/images/product_empty.png"
+            alt=""
+          />
         </div>
       </div>
       <div class="product-page-infor flex flex-column">
@@ -178,10 +187,10 @@
                 class="flex flex-row list-information-item fs-16 mb-4"
               >
                 <div class="flex1 txt-grey-2">
-                  {{ attr.attribute_title }}
+                  {{ attr.attribute_name }}
                 </div>
                 <div class="flex4">
-                  {{ attr.attribute_value }}
+                  {{ attr.value }}
                 </div>
               </div>
             </div>
@@ -655,7 +664,7 @@ export default {
 
     const addToCart = () => {
       let data = proxy.$store.state["moduleContext"];
-      if (!data.Token) {
+      if (!data.Token || data.Context.role != 1) {
         proxy.$router.push("/login");
         return;
       }

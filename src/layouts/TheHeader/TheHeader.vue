@@ -22,7 +22,7 @@
       </div>
       <div class="row-action flex-between">
         <div
-          v-if="!token"
+          v-if="!token || role != 1"
           @click="goToLogin"
           class="row-group cart-container flex-row flex-center cart"
         >
@@ -33,7 +33,7 @@
             {{ cartContent }}
           </div>
         </div>
-        <v-menu v-if="token">
+        <v-menu v-if="token && role == 1">
           <div
             class="row-group cart-container flex-row flex-center cart"
             @click="viewCart"
@@ -122,7 +122,7 @@
             </div>
             <div
               class="product-cart-empty"
-              style="width: 320px; height: 200px;"
+              style="width: 320px; height: 200px"
               v-if="countProduct == 0"
             >
               <img
@@ -136,7 +136,7 @@
           </template>
         </v-menu>
         <div
-          v-if="!token"
+          v-if="!token || role != 1"
           class="row-group account flex-row flex-center cursor-pointer"
           @click="goToLogin"
         >
@@ -145,7 +145,7 @@
             {{ accountName }}
           </div>
         </div>
-        <v-menu v-if="token">
+        <v-menu v-if="token && role == 1">
           <div
             class="row-group account flex-row flex-center cursor-pointer"
             @click="goToLogin"
@@ -239,6 +239,7 @@ export default {
     const { proxy } = getCurrentInstance();
     const context = ref({});
     const token = ref("");
+    const role = ref(null);
     const { formatVND } = useFormat();
     const cartContent = computed(() => {
       if (token.value) {
@@ -291,6 +292,7 @@ export default {
       let data = proxy.$store.state["moduleContext"];
       if (data.Token) {
         token.value = data.Token;
+        role.value = data.Context.role;
         context.value = data.Context;
       }
       if (route.path == "/homepage") {
@@ -342,6 +344,7 @@ export default {
       token,
       sourceAvatar,
       logout,
+      role,
     };
   },
   computed: {
