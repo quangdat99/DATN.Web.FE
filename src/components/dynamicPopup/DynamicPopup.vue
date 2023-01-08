@@ -8,7 +8,6 @@
     :min-height="200"
     :content-style="styles"
     v-bind="$attrs"
-    v-model="show"
     :drag="true"
     :click-to-close="false"
     drag-selector=".modal__title"
@@ -70,10 +69,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  show: {
-    type: Boolean,
-    default: false,
-  },
+  // show: {
+  //   type: Boolean,
+  //   default: false,
+  // },
 });
 const styles = computed(() => {
   let style = {};
