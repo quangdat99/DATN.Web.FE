@@ -5,7 +5,10 @@ export const useProductManage = () => {
   const { proxy } = getCurrentInstance();
 
   const headers = reactive([
-    { text: "Mã sản phẩm", value: "product_code", width: 200 },
+    {
+      text: "Mã sản phẩm", value: "product_code",
+      sortable: true, width: 180
+    },
     {
       text: "Tên sản phẩm",
       value: "product_name",
@@ -21,11 +24,18 @@ export const useProductManage = () => {
       text: "Số lượng",
       value: "quantity",
       sortable: true,
-      width: 200,
+      width: 120,
     },
+    {
+      text: "Trạng thái",
+      value: "status",
+      sortable: true,
+      width: 120,
+    },
+    { text: "Tùy chọn", value: "operation" }
   ]);
 
   return {
-    headers
+    headers,
   }
 }

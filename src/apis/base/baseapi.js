@@ -1,18 +1,19 @@
 import Http from '@/apis/base/httpConfig.js';
 import APIConfig from '@/apis/config/apiconfig.js';
 import store from '@/store/store.js';
+import commonF from '@/commons/commonFunction.js';
 export default class BaseApi {
     controllerName = '';
     baseUrl = '';
     apiName = '';
 
-    initAPI(){
+    initAPI() {
         if (this.apiName) {
             this.baseUrl = APIConfig + this.controllerName;
         }
     }
 
-    getAPIUrl(){
+    getAPIUrl() {
         if (this.baseUrl == '') {
             this.initAPI();
         }
@@ -102,5 +103,28 @@ export default class BaseApi {
         return await Http.axios().post(url, data, {
             headers
         });
+    }
+
+    /**
+     * Lấy dữ liệu combobox load paging
+     */
+    async getComboboxPaging(payload) {
+        let param = { ...payload };
+        //xử lý tham số trước khi request load dữ liệu
+        if (param.filter) {
+            param.filter = JSON.stringify(param.filter);
+        }
+        // commonF.processComboboxParamRequest(param);
+
+        let res = await Http.axios().post(`${this.controllerName}/combobox`, param);
+        return this.response(res);
+    }
+
+    /**
+     * Lấy dữ liệu bảng
+     */
+    async getDataTable(payload) {
+        let res = await Http.axios().post(`${this.controllerName}/dataTable`, payload);
+        return res;
     }
 }

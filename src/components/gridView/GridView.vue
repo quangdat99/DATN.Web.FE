@@ -9,13 +9,22 @@
     :loading="loading"
     v-model:server-options="serverOptions"
     multi-sort
-    :theme-color="'#009879'"
+    :theme-color="'#C20000'"
     table-class-name="customize-table"
-    header-text-direction="left"
+    header-text-direction="center"
     body-text-direction="left"
+    border-cell
+    :current-pagination-number="20"
+    rowsOfPageSeparatorMessage="của"
+    rowsPerPageMessage="Số dòng"
+    :serverItemsLength="totalRecord"
   >
     <template #loading>
       <loading></loading>
+    </template>
+
+    <template #item-operation="item">
+      <slot name="item-operation" :item="item"> </slot>
     </template>
   </easy-data-table>
 </template>
@@ -34,7 +43,7 @@ export default {
     },
     alternating: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     buttonsPagination: {
       type: Boolean,
@@ -42,7 +51,7 @@ export default {
     },
     multiple: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     api: {
       type: Object,
@@ -52,36 +61,18 @@ export default {
       type: Array,
       default: [],
     },
+    fields: {
+      type: Array,
+      default: null,
+    },
   },
-  emits: ["rowClick"],
+  emits: ["rowClick", "hasSort"],
 
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
     const itemsSelected = ref(props.multiple ? [] : null);
     const loading = ref(true);
-    // const headers = [
-    //   { text: "ProductCode", value: "productCode", width: 200 },
-    //   { text: "ProductName", value: "productName" },
-    //   {
-    //     text: "ProductPrice",
-    //     value: "productPrice",
-    //     sortable: true,
-    //     width: 200,
-    //   },
-    //   {
-    //     text: "ProductDiscount",
-    //     value: "productDiscount",
-    //     sortable: true,
-    //     width: 200,
-    //   },
-    //   {
-    //     text: "ProductQuantity",
-    //     value: "productQuantity",
-    //     sortable: true,
-    //     width: 200,
-    //   },
-    //   { text: "ProductStatus", value: "productStatus", width: 200 },
-    // ];
+    const totalRecord = ref(0);
     const serverOptions = ref({
       page: 1,
       rowsPerPage: 25,
@@ -104,7 +95,9 @@ export default {
     };
 
     onMounted(async () => {
-      await loadData();
+      serverOptions.value.fields = props.fields;
+      // await loadData();
+      window.grid = proxy;
     });
     function cloneDeep(obj) {
       return JSON.parse(JSON.stringify(obj));
@@ -117,8 +110,9 @@ export default {
         payload.size = payload.rowsPerPage;
         try {
           let res = await api.getDataTable(payload);
-          if (res && res.data) {
+          if (res && res.status == 200) {
             items.value = res.data.data;
+            totalRecord.value = res.data.totalRecord;
           }
         } catch (e) {
           console.log(e);
@@ -129,14 +123,33 @@ export default {
     };
 
     watch(
-      serverOptions,
+      serverOptions.value,
       async () => {
         await loadData();
       },
       { deep: true }
     );
 
-    return { items, rowClick, itemsSelected, loading, serverOptions };
+    watch(
+      serverOptions.value.sortBy,
+      (value) => {
+        if (value.length > 0) {
+          emit("hasSort", true);
+        } else {
+          emit("hasSort", false);
+        }
+      },
+      { deep: true }
+    );
+
+    return {
+      items,
+      rowClick,
+      itemsSelected,
+      loading,
+      serverOptions,
+      totalRecord,
+    };
   },
 };
 </script>

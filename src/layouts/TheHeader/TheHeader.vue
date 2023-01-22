@@ -141,9 +141,7 @@
           @click="goToLogin"
         >
           <div class="icon24 account ml-2 mr-2"></div>
-          <div class="text text-white">
-            {{ accountName }}
-          </div>
+          <div class="text text-white">Tài khoản</div>
         </div>
         <v-menu v-if="token && role == 1">
           <div
@@ -266,7 +264,7 @@ export default {
     };
 
     const goToLogin = () => {
-      if (!token.value) {
+      if (!token.value || role.value != 1) {
         proxy.$router.push("/login");
       } else {
         proxy.$router.push("/personal");
@@ -300,7 +298,9 @@ export default {
       } else {
         search.value = proxy.$store.state["moduleHomePage"].searchText;
       }
-      getProductCart();
+      if (role.value) {
+        getProductCart();
+      }
     });
 
     const accountName = computed(() => {

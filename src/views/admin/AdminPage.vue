@@ -25,7 +25,7 @@
       class="main-content-admin"
       :class="{ 'toggle-navbar': !toggleNavbarValue }"
     >
-      <div class="header">
+      <div class="header-admin">
         <div class="header-left">
           <div
             class="icon24 menu-black cursor-pointer"
