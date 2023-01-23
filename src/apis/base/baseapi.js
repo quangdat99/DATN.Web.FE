@@ -59,7 +59,9 @@ export default class BaseApi {
      * @param {Guid} id id của đối tượng
      */
     async getById(id) {
+        commonF.mask();
         let res = await Http.axios().get(`${this.controllerName}/${id}`);
+        commonF.unmask();
         return this.response(res);
     }
     /**
@@ -125,6 +127,14 @@ export default class BaseApi {
      */
     async getDataTable(payload) {
         let res = await Http.axios().post(`${this.controllerName}/dataTable`, payload);
+        return res;
+    }
+
+    /**
+     * Lưu dữ liệu
+     */
+    async saveData(payload, mode) {
+        let res = await Http.axios().post(`${this.controllerName}/saveData/${mode}`, payload);
         return res;
     }
 }

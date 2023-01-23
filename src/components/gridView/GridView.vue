@@ -14,7 +14,7 @@
     header-text-direction="center"
     body-text-direction="left"
     border-cell
-    :current-pagination-number="20"
+    :current-pagination-number="25"
     rowsOfPageSeparatorMessage="của"
     rowsPerPageMessage="Số dòng"
     :serverItemsLength="totalRecord"
@@ -68,7 +68,7 @@ export default {
   },
   emits: ["rowClick", "hasSort"],
 
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const { proxy } = getCurrentInstance();
     const itemsSelected = ref(props.multiple ? [] : null);
     const loading = ref(true);
@@ -83,7 +83,6 @@ export default {
 
     /**
      * Sự kiện click row
-     * tbngoc 19.11.2022
      */
     const rowClick = (item) => {
       emit("rowClick", item);
@@ -96,7 +95,6 @@ export default {
 
     onMounted(async () => {
       serverOptions.value.fields = props.fields;
-      // await loadData();
       window.grid = proxy;
     });
     function cloneDeep(obj) {
@@ -108,6 +106,7 @@ export default {
       if (api) {
         let payload = getPayload();
         payload.size = payload.rowsPerPage;
+        payload.fields = props.fields;
         try {
           let res = await api.getDataTable(payload);
           if (res && res.status == 200) {
@@ -121,9 +120,10 @@ export default {
         }
       }
     };
+    expose({ loadData });
 
     watch(
-      serverOptions.value,
+      serverOptions,
       async () => {
         await loadData();
       },

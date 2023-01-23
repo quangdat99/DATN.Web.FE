@@ -1,8 +1,8 @@
 <template>
-  <div class="order-manage">
+  <div class="attribute-manage">
     <div class="toolbar">
       <div class="toolbar-left">
-        <div class="toolbar-title">Danh sách đơn hàng</div>
+        <div class="toolbar-title">Danh sách nhóm thuộc tính</div>
       </div>
       <div class="toolbar-right">
         <base-button
@@ -11,14 +11,14 @@
           @click="clearSort()"
         >
         </base-button>
-        <!-- <base-button text="Thêm mới" @click="add()"> </base-button> -->
+        <base-button text="Thêm mới" @click="add()"> </base-button>
       </div>
     </div>
     <div class="container-grid">
       <grid-view
         ref="gridView"
-        :api="orderAPI"
-        :fields="['order_id', 'order_code']"
+        :api="attributeAPI"
+        :fields="['attribute_id', 'attribute_name']"
         :headers="headers"
         @hasSort="hasSort"
       >
@@ -29,6 +29,11 @@
               title="Sửa"
               @click="editRow(item)"
             ></div>
+            <div
+              class="icon24 edit cursor-pointer ml-1"
+              title="Xóa"
+              @click="deleteRow(item)"
+            ></div>
           </div>
         </template>
       </grid-view>
@@ -38,8 +43,8 @@
 
 <script>
 import gridView from "@/components/gridView/GridView.vue";
-import { useOrderManage } from "./OrderManage.js";
-import orderAPI from "@/apis/components/orderAPI.js";
+import { useAttributeManage } from "../attribute/AttributeManage.js";
+import attributeAPI from "@/apis/components/attributeAPI.js";
 import popupUtil from "@/commons/popupUtil";
 import {
   ref,
@@ -53,7 +58,7 @@ export default {
   components: { gridView },
   setup() {
     const { proxy } = getCurrentInstance();
-    const { headers } = useOrderManage();
+    const { headers } = useAttributeManage();
     const showClearSort = ref(false);
     onMounted(() => {
       window.proxy = proxy;
@@ -75,7 +80,7 @@ export default {
     }
     return {
       headers,
-      orderAPI,
+      attributeAPI,
       add,
       showClearSort,
       clearSort,
@@ -86,5 +91,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./OrderManage.scss";
+@import "./AttributeManage.scss";
 </style>

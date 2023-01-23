@@ -30,6 +30,12 @@ export const useAdminPage = () => {
       key: 'category',
       isSelected: false
     }, {
+      iconClass: 'icon24 attribute',
+      content: 'Nhóm thuộc tính',
+      route: '/admin/attribute',
+      key: 'attribute',
+      isSelected: false
+    }, {
       iconClass: 'icon24 color',
       content: 'Màu sắc',
       route: '/admin/color',

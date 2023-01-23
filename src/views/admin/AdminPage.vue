@@ -88,6 +88,8 @@ export default {
         menuItemClick("color");
       } else if (path.includes("size")) {
         menuItemClick("size");
+      } else if (path.includes("attribute")) {
+        menuItemClick("attribute");
       } else {
         menuItemClick("dashboard");
       }

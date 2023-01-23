@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="the-header">
     <div class="flex-between container">
       <div class="logo-container flex-between">
         <a href="/">

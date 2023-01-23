@@ -34,6 +34,15 @@ export default [{
         anonymous: false,
         role: 2
       }
+    },
+    {
+      path: 'attribute',
+      component: () => import("@/views/admin/attribute/AttributeManage.vue"),
+      name: 'Nhóm thuộc tính',
+      meta: {
+        anonymous: false,
+        role: 2
+      }
     }, {
       path: 'order',
       component: () => import("@/views/admin/order/OrderManage.vue"),

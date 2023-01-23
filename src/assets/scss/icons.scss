@@ -203,6 +203,10 @@
         background-position: -288px -120px;
     }
 
+    &.attribute::before {
+        background-position: -0 -304px;
+    }
+
     &.menu-black::before {
         background-position: -288px -144px;
     }

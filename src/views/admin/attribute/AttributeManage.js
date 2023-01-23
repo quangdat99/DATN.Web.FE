@@ -1,0 +1,28 @@
+import { reactive } from 'vue';
+import { getCurrentInstance, onMounted, ref } from 'vue';
+
+export const useAttributeManage = () => {
+  const { proxy } = getCurrentInstance();
+
+  const headers = reactive([
+    {
+      text: "Tên thuộc tính",
+      value: "attribute_name",
+      sortable: true,
+    },
+    {
+      text: "Trạng thái",
+      value: "status_name",
+      sortable: true,
+      width: 200,
+    },
+    {
+      text: "Tùy chọn", value: "operation",
+      width: 80,
+    }
+  ]);
+
+  return {
+    headers,
+  }
+}

@@ -3,7 +3,7 @@ export default {
   name: 'BaseDetail',
   data() {
     return {
-
+      mode: null, 
     }
   },
   mounted() {
