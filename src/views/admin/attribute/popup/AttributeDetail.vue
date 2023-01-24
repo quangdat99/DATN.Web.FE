@@ -14,13 +14,13 @@
         <div class="flex-row">
           <div class="flex1">
             <div class="control-title">
-              <label>Tên màu sắc</label>
+              <label>Tên nhóm thuộc tính</label>
             </div>
             <base-input
               ref="refFocus"
-              title="Tên màu sắc"
+              title="Tên nhóm thuộc tính"
               class="mt-1"
-              v-model="model.color_name"
+              v-model="model.attribute_name"
               :maxLength="255"
               :rules="[{ name: 'required' }]"
             ></base-input>
@@ -67,11 +67,11 @@ import DynamicPopup from "@/components/dynamicPopup/DynamicPopup.vue";
 import commonFn from "@/commons/commonFunction.js";
 import axios from "axios";
 import baseDetail from "@/views/baseDetail.js";
-import colorAPI from "@/apis/components/colorAPI";
+import attributeAPI from "@/apis/components/attributeAPI";
 import popupUtil from "@/commons/popupUtil";
 
 export default {
-  name: "ColorDetail",
+  name: "AttributeDetail",
   extends: baseDetail,
   components: {
     DynamicPopup,
@@ -80,7 +80,7 @@ export default {
     const { proxy } = getCurrentInstance();
     const title = ref("");
     const model = ref({
-      color_name: null,
+      attribute_name: null,
       status: true,
     });
 
@@ -99,30 +99,8 @@ export default {
         return;
       }
       if (proxy._formParam?.mode == "Add") {
-        colorAPI
+        attributeAPI
           .saveData(model.value, 1)
-          .then((res) => {
-            if (res && res.status == 200 && res.data.statusCode == 209) {
-              proxy.$confirm.require({
-                message: res.data.userMessage,
-                header: "Thông báo",
-                accept: () => {
-                  proxy.$refs.refFocus.$el.querySelector("input").focus();
-                },
-                rejectClass: "d-none",
-              });
-            } else {
-              proxy.$toast.success("Thêm màu sắc thành công");
-              if (proxy._formParam.options) {
-                proxy._formParam.options.submit();
-              }
-              popupUtil.hideAll();
-            }
-          })
-          .finally(() => {});
-      } else if (proxy._formParam?.mode == "Edit") {
-        colorAPI
-          .saveData(model.value, 2)
           .then((res) => {
             if (res && res.status == 200 && res.data.statusCode == 209) {
               proxy.$confirm.require({
@@ -137,7 +115,29 @@ export default {
               });
               // proxy.$toast.warning(res.data.userMessage);
             } else {
-              proxy.$toast.success("Cập nhật màu sắc thành công");
+              proxy.$toast.success("Thêm nhóm thuộc tính thành công");
+              if (proxy._formParam.options) {
+                proxy._formParam.options.submit();
+              }
+              popupUtil.hideAll();
+            }
+          })
+          .finally(() => {});
+      } else if (proxy._formParam?.mode == "Edit") {
+        attributeAPI
+          .saveData(model.value, 2)
+          .then((res) => {
+            if (res && res.status == 200 && res.data.statusCode == 209) {
+              proxy.$confirm.require({
+                message: res.data.userMessage,
+                header: "Thông báo",
+                accept: () => {
+                  proxy.$refs.refFocus.$el.querySelector("input").focus();
+                },
+                rejectClass: "d-none",
+              });
+            } else {
+              proxy.$toast.success("Cập nhật nhóm thuộc tính thành công");
               if (proxy._formParam.options) {
                 proxy._formParam.options.submit();
               }
@@ -153,10 +153,11 @@ export default {
       window.proxy = proxy;
       proxy.mode = proxy._formParam?.mode;
       if (proxy.mode == "Edit") {
-        // model.value = JSON.parse(JSON.stringify(proxy._formParam.data));
-        model.value = await colorAPI.getById(proxy._formParam.data.color_id);
+        model.value = await attributeAPI.getById(
+          proxy._formParam.data.attribute_id
+        );
       } else if (proxy.mode == "Add") {
-        colorAPI.newCode().then((res) => {
+        attributeAPI.newCode().then((res) => {
           model.value = res;
         });
       }
@@ -165,11 +166,10 @@ export default {
 
     const changeTitle = () => {
       if (proxy._formParam?.mode == "Add") {
-        title.value = "Thêm mới màu sắc";
-        model.value.color_name = "";
-        // model.value.color_id = commonFn.generateUUID();
+        title.value = "Thêm mới nhóm thuộc tính";
+        model.value.attribute_name = "";
       } else {
-        title.value = "Sửa màu sắc";
+        title.value = "Sửa nhóm thuộc tính";
       }
     };
 
@@ -183,5 +183,4 @@ export default {
 };
 </script>
 <style lang="scss">
-// @import "./ProductDetail.scss";
 </style>

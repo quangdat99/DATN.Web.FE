@@ -5,11 +5,7 @@
         <div class="toolbar-title">Danh sách kích cỡ</div>
       </div>
       <div class="toolbar-right">
-        <base-button
-          type="transparent"
-          text="Xóa sắp xếp"
-          @click="clearSort()"
-        >
+        <base-button type="transparent" text="Xóa sắp xếp" @click="clearSort()">
         </base-button>
         <base-button text="Thêm mới" @click="add()"> </base-button>
       </div>
@@ -64,8 +60,13 @@ export default {
       window.proxy = proxy;
     });
     const add = () => {
-      popupUtil.show("ProductDetail", {
+      popupUtil.show("SizeDetail", {
         mode: "Add",
+        options: {
+          submit: () => {
+            proxy.$refs.gridView.loadData();
+          },
+        },
       });
     };
 
@@ -73,11 +74,36 @@ export default {
       showClearSort.value = value;
     };
 
-    const clearSort = () =>{
+    const clearSort = () => {
       proxy.$refs.gridView.serverOptions.sortBy = [];
       proxy.$refs.gridView.serverOptions.sortType = [];
       showClearSort.value = false;
-    }
+    };
+    const editRow = (item) => {
+      popupUtil.show("SizeDetail", {
+        mode: "Edit",
+        data: item,
+        options: {
+          submit: () => {
+            proxy.$refs.gridView.loadData();
+          },
+        },
+      });
+    };
+
+    const deleteRow = (item) => {
+      proxy.$confirm.require({
+        message: `Bạn có chắc chắn muốn xóa kích cỡ < ${item.size_name} > không?`,
+        header: "Xóa",
+        accept: () => {
+          sizeAPI.delete(item, item.size_id).then((res) => {
+            proxy.$toast.success(`Xóa kích cỡ < ${item.size_name} > thành công`);
+            proxy.$refs.gridView.loadData();
+          });
+        },
+        reject: () => {},
+      });
+    };
     return {
       headers,
       sizeAPI,
@@ -85,6 +111,8 @@ export default {
       showClearSort,
       clearSort,
       hasSort,
+      editRow,
+      deleteRow,
     };
   },
 };

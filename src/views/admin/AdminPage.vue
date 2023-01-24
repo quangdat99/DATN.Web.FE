@@ -58,6 +58,8 @@
         <router-view />
       </div>
     </div>
+
+    <confirm-dialog></confirm-dialog>
   </div>
 </template>
 
@@ -67,15 +69,24 @@ import { useAdminPage } from "./AdminPage.js";
 import { getCurrentInstance, onMounted, ref, watch } from "vue";
 import { mapGetters } from "vuex";
 import { useRoute } from "vue-router";
+import ConfirmDialog from "primevue/confirmdialog";
+import { usePrimeVue } from "primevue/config";
 export default {
   components: {
     MainMenuItem,
+    ConfirmDialog,
   },
   setup() {
     const { proxy } = getCurrentInstance();
     const { menuList } = useAdminPage();
+    const changeToVietnamese = () => {
+      const primevue = usePrimeVue();
+      primevue.config.locale.accept = "Đồng ý";
+      primevue.config.locale.reject = "Không";
+    };
     const toggleNavbarValue = ref(true);
     onMounted(() => {
+      changeToVietnamese();
       window.admin = proxy;
       let path = history.state.current;
       if (path.includes("productmanage")) {

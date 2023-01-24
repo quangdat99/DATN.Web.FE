@@ -533,10 +533,49 @@ body {
 .cursor {
   cursor: pointer;
 }
+
 .p-2 {
   padding: 8px;
 }
 
 .d-none {
-  display: none;
+  display: none !important;
+}
+
+.p-dialog {
+  max-width: 800px;
+}
+.p-dialog-header {
+  padding: 8px 8px 16px 16px !important;
+}
+
+.p-dialog-footer {
+  padding: 0 8px 8px 8px;
+}
+
+.p-link:focus,
+.p-button:focus {
+  box-shadow: unset !important;
+}
+
+.p-dialog-header-close-icon {
+
+  &:focus {
+    box-shadow: unset !important;
+  }
+
+  height: 24px;
+  width: 24px;
+  position: relative;
+
+  &::before {
+    content: '' !important;
+    position: absolute;
+    background: transparent url($image-sprite) no-repeat;
+    height: 24px;
+    width: 24px;
+    top: 0;
+    left: 0;
+    background-position: -240px -0;
+  }
 }

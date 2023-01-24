@@ -14,13 +14,13 @@
         <div class="flex-row">
           <div class="flex1">
             <div class="control-title">
-              <label>Tên màu sắc</label>
+              <label>Tên kích cỡ</label>
             </div>
             <base-input
               ref="refFocus"
-              title="Tên màu sắc"
+              title="Tên kích cỡ"
               class="mt-1"
-              v-model="model.color_name"
+              v-model="model.size_name"
               :maxLength="255"
               :rules="[{ name: 'required' }]"
             ></base-input>
@@ -67,11 +67,11 @@ import DynamicPopup from "@/components/dynamicPopup/DynamicPopup.vue";
 import commonFn from "@/commons/commonFunction.js";
 import axios from "axios";
 import baseDetail from "@/views/baseDetail.js";
-import colorAPI from "@/apis/components/colorAPI";
+import sizeAPI from "@/apis/components/sizeAPI";
 import popupUtil from "@/commons/popupUtil";
 
 export default {
-  name: "ColorDetail",
+  name: "SizeDetail",
   extends: baseDetail,
   components: {
     DynamicPopup,
@@ -80,7 +80,7 @@ export default {
     const { proxy } = getCurrentInstance();
     const title = ref("");
     const model = ref({
-      color_name: null,
+      size_name: null,
       status: true,
     });
 
@@ -99,7 +99,7 @@ export default {
         return;
       }
       if (proxy._formParam?.mode == "Add") {
-        colorAPI
+        sizeAPI
           .saveData(model.value, 1)
           .then((res) => {
             if (res && res.status == 200 && res.data.statusCode == 209) {
@@ -112,7 +112,7 @@ export default {
                 rejectClass: "d-none",
               });
             } else {
-              proxy.$toast.success("Thêm màu sắc thành công");
+              proxy.$toast.success("Thêm kích cỡ thành công");
               if (proxy._formParam.options) {
                 proxy._formParam.options.submit();
               }
@@ -121,7 +121,7 @@ export default {
           })
           .finally(() => {});
       } else if (proxy._formParam?.mode == "Edit") {
-        colorAPI
+        sizeAPI
           .saveData(model.value, 2)
           .then((res) => {
             if (res && res.status == 200 && res.data.statusCode == 209) {
@@ -137,7 +137,7 @@ export default {
               });
               // proxy.$toast.warning(res.data.userMessage);
             } else {
-              proxy.$toast.success("Cập nhật màu sắc thành công");
+              proxy.$toast.success("Cập nhật kích cỡ thành công");
               if (proxy._formParam.options) {
                 proxy._formParam.options.submit();
               }
@@ -154,9 +154,9 @@ export default {
       proxy.mode = proxy._formParam?.mode;
       if (proxy.mode == "Edit") {
         // model.value = JSON.parse(JSON.stringify(proxy._formParam.data));
-        model.value = await colorAPI.getById(proxy._formParam.data.color_id);
+        model.value = await sizeAPI.getById(proxy._formParam.data.size_id);
       } else if (proxy.mode == "Add") {
-        colorAPI.newCode().then((res) => {
+        sizeAPI.newCode().then((res) => {
           model.value = res;
         });
       }
@@ -165,11 +165,11 @@ export default {
 
     const changeTitle = () => {
       if (proxy._formParam?.mode == "Add") {
-        title.value = "Thêm mới màu sắc";
-        model.value.color_name = "";
-        // model.value.color_id = commonFn.generateUUID();
+        title.value = "Thêm mới kích cỡ";
+        model.value.size_name = "";
+        // model.value.size_id = commonFn.generateUUID();
       } else {
-        title.value = "Sửa màu sắc";
+        title.value = "Sửa kích cỡ";
       }
     };
 
@@ -183,5 +183,4 @@ export default {
 };
 </script>
 <style lang="scss">
-// @import "./ProductDetail.scss";
 </style>

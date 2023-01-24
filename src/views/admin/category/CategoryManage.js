@@ -6,7 +6,7 @@ export const useCategoryManage = () => {
 
   const headers = reactive([
     {
-      text: "Tên kích cỡ",
+      text: "Tên loại sản phẩm",
       value: "category_name",
       sortable: true,
     },

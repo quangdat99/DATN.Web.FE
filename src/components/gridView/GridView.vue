@@ -120,7 +120,7 @@ export default {
         }
       }
     };
-    expose({ loadData });
+    expose({ loadData, serverOptions });
 
     watch(
       serverOptions,

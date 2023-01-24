@@ -43,16 +43,16 @@ export default class BaseApi {
      */
     async update(id, param) {
         let res = await Http.axios().put(`${this.controllerName}${id}`, param)
-        return response(res);
+        return this.response(res);
     }
     /**
      * Phương thức xóa dữ liệu
      * @param {Guid} id  id của đối tượng
      * @returns 
      */
-    async delete(id) {
-        let res = await Http.axios().delete(`${this.controllerName}${id}`);
-        return response(res);
+    async delete(model, id) {
+        let res = await Http.axios().post(`${this.controllerName}/delete/${id}`, model);
+        return res;
     }
     /**
      * Phương thức lấy dữ liệu theo mã định danh
@@ -136,5 +136,13 @@ export default class BaseApi {
     async saveData(payload, mode) {
         let res = await Http.axios().post(`${this.controllerName}/saveData/${mode}`, payload);
         return res;
+    }
+    
+    /**
+     * Lấy dữ liệu khởi tạo
+     */
+    async newCode() {
+        let res = await Http.axios().get(`${this.controllerName}/newCode`);
+        return this.response(res);
     }
 }

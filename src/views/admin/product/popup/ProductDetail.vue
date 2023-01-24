@@ -1,6 +1,6 @@
 <template>
   <dynamic-popup
-    :width="1100"
+    :width="960"
     :height="700"
     class="product-detail"
     :title="title"
@@ -539,8 +539,17 @@ export default {
     const beforeOpen = async (e, close) => {
       proxy.super("beforeOpen", baseDetail, e, close);
       window.proxy = proxy;
+      proxy.mode = proxy._formParam?.mode;
 
-      if (proxy._formParam.data) {
+      if (proxy.mode == "Edit") {
+        debugger
+        let p = await productAPI.getById(
+          proxy._formParam.data.product_id
+        );
+      } else if (proxy.mode == "Add") {
+        attributeAPI.newCode().then((res) => {
+          model.value = res;
+        });
       }
       changeTitle();
     };

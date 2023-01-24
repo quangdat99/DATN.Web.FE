@@ -5,11 +5,7 @@
         <div class="toolbar-title">Danh sách sản phẩm</div>
       </div>
       <div class="toolbar-right">
-        <base-button
-          type="transparent"
-          text="Xóa sắp xếp"
-          @click="clearSort()"
-        >
+        <base-button type="transparent" text="Xóa sắp xếp" @click="clearSort()">
         </base-button>
         <base-button text="Thêm mới" @click="add()"> </base-button>
       </div>
@@ -66,6 +62,11 @@ export default {
     const add = () => {
       popupUtil.show("ProductDetail", {
         mode: "Add",
+        options: {
+          submit: () => {
+            proxy.$refs.gridView.loadData();
+          },
+        },
       });
     };
 
@@ -73,11 +74,50 @@ export default {
       showClearSort.value = value;
     };
 
-    const clearSort = () =>{
+    const clearSort = () => {
       proxy.$refs.gridView.serverOptions.sortBy = [];
       proxy.$refs.gridView.serverOptions.sortType = [];
       showClearSort.value = false;
-    }
+    };
+
+    const editRow = (item) => {
+      popupUtil.show("ProductDetail", {
+        mode: "Edit",
+        data: item,
+        options: {
+          submit: () => {
+            proxy.$refs.gridView.loadData();
+          },
+        },
+      });
+    };
+
+    const deleteRow = (item) => {
+      item.status = item.status ? true : false;
+      proxy.$confirm.require({
+        message: `Bạn có chắc chắn muốn xóa nhóm thuộc tính < ${item.product_name} > không?`,
+        header: "Xóa",
+        accept: () => {
+          productAPI.delete(item, item.product_id).then((res) => {
+            if (res && res.status == 200) {
+              if (res.data.statusCode == 200) {
+                proxy.$toast.success(
+                  `Xóa nhóm thuộc tính < ${item.product_name} > thành công`
+                );
+              } else if (res.data.statusCode == 210) {
+                proxy.$confirm.require({
+                  message: res.data.userMessage,
+                  header: "Thông báo",
+                  rejectClass: "d-none",
+                });
+              }
+            }
+            proxy.$refs.gridView.loadData();
+          });
+        },
+        reject: () => {},
+      });
+    };
     return {
       headers,
       productAPI,
@@ -85,6 +125,8 @@ export default {
       showClearSort,
       clearSort,
       hasSort,
+      editRow,
+      deleteRow,
     };
   },
 };

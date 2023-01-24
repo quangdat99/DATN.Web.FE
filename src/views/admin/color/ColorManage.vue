@@ -5,11 +5,7 @@
         <div class="toolbar-title">Danh sách màu sắc</div>
       </div>
       <div class="toolbar-right">
-        <base-button
-          type="transparent"
-          text="Xóa sắp xếp"
-          @click="clearSort()"
-        >
+        <base-button type="transparent" text="Xóa sắp xếp" @click="clearSort()">
         </base-button>
         <base-button text="Thêm mới" @click="add()"> </base-button>
       </div>
@@ -50,11 +46,12 @@ import {
   ref,
   onMounted,
   getCurrentInstance,
+  defineComponent,
   reactive,
   watch,
   computed,
 } from "vue";
-export default {
+export default defineComponent({
   components: { gridView },
   setup() {
     const { proxy } = getCurrentInstance();
@@ -78,11 +75,11 @@ export default {
       showClearSort.value = value;
     };
 
-    const clearSort = () =>{
+    const clearSort = () => {
       proxy.$refs.gridView.serverOptions.sortBy = [];
       proxy.$refs.gridView.serverOptions.sortType = [];
       showClearSort.value = false;
-    }
+    };
     const editRow = (item) => {
       popupUtil.show("ColorDetail", {
         mode: "Edit",
@@ -93,7 +90,21 @@ export default {
           },
         },
       });
-    }
+    };
+
+    const deleteRow = (item) => {
+      proxy.$confirm.require({
+        message: `Bạn có chắc chắn muốn xóa màu < ${item.color_name} > không?`,
+        header: "Xóa",
+        accept: () => {
+          colorAPI.delete(item, item.color_id).then((res) => {
+            proxy.$toast.success(`Xóa màu < ${item.color_name} > thành công`);
+            proxy.$refs.gridView.loadData();
+          });
+        },
+        reject: () => {},
+      });
+    };
     return {
       headers,
       colorAPI,
@@ -102,9 +113,10 @@ export default {
       clearSort,
       hasSort,
       editRow,
+      deleteRow,
     };
   },
-};
+});
 </script>
 
 <style lang="scss">
