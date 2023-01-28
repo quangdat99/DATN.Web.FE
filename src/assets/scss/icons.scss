@@ -231,6 +231,16 @@
             background-position: -312px -0;
         }
     }
+
+    &.loading {
+        &::before {
+            background-position: -336px -24px;
+        }
+
+        &:hover::before {
+            background-position: -336px -0;
+        }
+    }
 }
 
 .icon16 {

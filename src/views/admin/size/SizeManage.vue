@@ -5,8 +5,11 @@
         <div class="toolbar-title">Danh sách kích cỡ</div>
       </div>
       <div class="toolbar-right">
-        <base-button type="transparent" text="Xóa sắp xếp" @click="clearSort()">
-        </base-button>
+        <div
+          class="icon24 loading cursor-pointer mr-4"
+          title="Lấy lại dữ liệu"
+          @click="clearSort()"
+        ></div>
         <base-button text="Thêm mới" @click="add()"> </base-button>
       </div>
     </div>

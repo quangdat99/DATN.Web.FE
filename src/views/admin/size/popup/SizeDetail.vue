@@ -2,7 +2,7 @@
   <dynamic-popup
     :width="500"
     :height="300"
-    class="product-detail"
+    class="size-detail"
     :title="title"
     @beforeOpen="beforeOpen($event, close)"
   >
@@ -182,5 +182,8 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+.popup-container {
+  padding: 16px;
+}
 </style>

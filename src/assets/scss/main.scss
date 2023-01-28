@@ -545,6 +545,7 @@ body {
 .p-dialog {
   max-width: 800px;
 }
+
 .p-dialog-header {
   padding: 8px 8px 16px 16px !important;
 }
@@ -578,4 +579,27 @@ body {
     left: 0;
     background-position: -240px -0;
   }
+}
+
+.list-tab {
+  display: flex;
+
+  .tab-option {
+    padding: 8px 16px;
+    background-color: #efefef;
+    border-bottom: 2px solid #bbbbbb;
+    cursor: pointer;
+
+    &.active {
+      font-weight: bold;
+      border-bottom: 3px solid $primary;
+      background-color: #e3e3e3;
+      color: $primary;
+    }
+  }
+}
+
+.hr-line {
+  width: 100%;
+  border-bottom: 1px solid #d7d7d7;
 }

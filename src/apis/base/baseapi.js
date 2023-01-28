@@ -142,7 +142,9 @@ export default class BaseApi {
      * Lấy dữ liệu khởi tạo
      */
     async newCode() {
+        commonF.mask();
         let res = await Http.axios().get(`${this.controllerName}/newCode`);
+        commonF.unmask();
         return this.response(res);
     }
 }

@@ -5,8 +5,11 @@
         <div class="toolbar-title">Danh sách sản phẩm</div>
       </div>
       <div class="toolbar-right">
-        <base-button type="transparent" text="Xóa sắp xếp" @click="clearSort()">
-        </base-button>
+        <div
+          class="icon24 loading cursor-pointer mr-4"
+          title="Lấy lại dữ liệu"
+          @click="clearSort()"
+        ></div>
         <base-button text="Thêm mới" @click="add()"> </base-button>
       </div>
     </div>
@@ -95,14 +98,14 @@ export default {
     const deleteRow = (item) => {
       item.status = item.status ? true : false;
       proxy.$confirm.require({
-        message: `Bạn có chắc chắn muốn xóa nhóm thuộc tính < ${item.product_name} > không?`,
+        message: `Bạn có chắc chắn muốn xóa sản phẩm < ${item.product_name} > không?`,
         header: "Xóa",
         accept: () => {
           productAPI.delete(item, item.product_id).then((res) => {
             if (res && res.status == 200) {
               if (res.data.statusCode == 200) {
                 proxy.$toast.success(
-                  `Xóa nhóm thuộc tính < ${item.product_name} > thành công`
+                  `Xóa sản phẩm < ${item.product_name} > thành công`
                 );
               } else if (res.data.statusCode == 210) {
                 proxy.$confirm.require({
