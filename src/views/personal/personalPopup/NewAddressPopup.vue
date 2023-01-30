@@ -252,6 +252,8 @@ export default {
       proxy.super("beforeOpen", baseDetail, e, close);
       window.proxy = proxy;
       proxy.resetValdiate();
+      changeTitle();
+      getProvinces();
 
       // model.value = {
       //   name: null,
@@ -282,8 +284,6 @@ export default {
           }
         }
       }
-      changeTitle();
-      getProvinces();
     };
 
     const getProvinces = async () => {

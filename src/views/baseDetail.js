@@ -3,7 +3,7 @@ export default {
   name: 'BaseDetail',
   data() {
     return {
-      mode: null, 
+      mode: null,
     }
   },
   mounted() {
@@ -106,6 +106,15 @@ export default {
       }
 
       return null;
+    },
+
+    hide() {
+      const me = this;
+      me._popup.value = false;
+
+      me.$nextTick(() => {
+        delete me._popup;
+      })
     }
   },
 }

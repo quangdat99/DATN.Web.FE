@@ -116,7 +116,7 @@ export default {
               if (proxy._formParam.options) {
                 proxy._formParam.options.submit();
               }
-              popupUtil.hideAll();
+              proxy.hide();
             }
           })
           .finally(() => {});
@@ -132,7 +132,7 @@ export default {
                   proxy.$refs.refFocus.$el.querySelector("input").focus();
                 },
                 reject: () => {
-                  popupUtil.hideAll();
+                  proxy.hide();
                 },
               });
             } else {
@@ -140,7 +140,7 @@ export default {
               if (proxy._formParam.options) {
                 proxy._formParam.options.submit();
               }
-              popupUtil.hideAll();
+              proxy.hide();
             }
           })
           .finally(() => {});
@@ -149,6 +149,8 @@ export default {
 
     const beforeOpen = async (e, close) => {
       proxy.super("beforeOpen", baseDetail, e, close);
+      proxy._popup =
+        proxy.$vfm.dynamicModals[proxy.$vfm.dynamicModals.length - 1];
       window.proxy = proxy;
       proxy.mode = proxy._formParam?.mode;
       if (proxy.mode == "Edit") {

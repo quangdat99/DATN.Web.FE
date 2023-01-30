@@ -6,7 +6,7 @@
       </div>
       <div class="toolbar-right">
         <div
-          class="icon24 loading cursor-pointer mr-4"
+          class="icon24 reload cursor-pointer mr-4"
           title="Lấy lại dữ liệu"
           @click="clearSort()"
         ></div>

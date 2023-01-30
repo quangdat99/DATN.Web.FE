@@ -108,7 +108,9 @@
                         }
                       "
                     ></base-combobox>
-                    <div class="txt-link ml-2">Thêm nhanh màu sắc</div>
+                    <div class="txt-link ml-2" @click="addColor()">
+                      Thêm nhanh màu sắc
+                    </div>
                     <div class="flex3"></div>
                   </div>
                 </div>
@@ -150,7 +152,9 @@
                         }
                       "
                     ></base-combobox>
-                    <div class="txt-link ml-2">Thêm nhanh kích cỡ</div>
+                    <div class="txt-link ml-2" @click="addSize()">
+                      Thêm nhanh kích cỡ
+                    </div>
                     <div class="flex3"></div>
                   </div>
                 </div>
@@ -307,7 +311,9 @@
                           }
                         "
                       ></base-combobox>
-                      <div class="txt-link ml-2">Thêm nhanh thuộc tính</div>
+                      <div class="txt-link ml-2" @click="addAttribute()">
+                        Thêm nhanh thuộc tính
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -363,7 +369,9 @@
                           }
                         "
                       ></base-combobox>
-                      <div class="txt-link ml-2">Thêm nhanh loại sản phẩm</div>
+                      <div class="txt-link ml-2" @click="addCategory()">
+                        Thêm nhanh loại sản phẩm
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -776,7 +784,7 @@ export default {
             if (proxy._formParam.options) {
               proxy._formParam.options.submit();
             }
-            popupUtil.hideAll();
+            proxy.hide();
           }
         });
       } else {
@@ -796,7 +804,7 @@ export default {
             if (proxy._formParam.options) {
               proxy._formParam.options.submit();
             }
-            popupUtil.hideAll();
+            proxy.hide();
           }
         });
       }
@@ -809,6 +817,8 @@ export default {
 
     const beforeOpen = async (e, close) => {
       proxy.super("beforeOpen", baseDetail, e, close);
+      proxy._popup =
+        proxy.$vfm.dynamicModals[proxy.$vfm.dynamicModals.length - 1];
       window.proxy = proxy;
       proxy.mode = proxy._formParam?.mode;
 
@@ -992,6 +1002,47 @@ export default {
       tabActive.value = tab;
     };
 
+    const addColor = () => {
+      popupUtil.show("ColorDetail", {
+        mode: "Add",
+        options: {
+          submit: () => {
+            getColors();
+          },
+        },
+      });
+    };
+    const addSize = () => {
+      popupUtil.show("SizeDetail", {
+        mode: "Add",
+        options: {
+          submit: () => {
+            getSizes();
+          },
+        },
+      });
+    };
+    const addAttribute = () => {
+      popupUtil.show("AttributeDetail", {
+        mode: "Add",
+        options: {
+          submit: () => {
+            getAttribute();
+          },
+        },
+      });
+    };
+    const addCategory = () => {
+      popupUtil.show("CategoryDetail", {
+        mode: "Add",
+        options: {
+          submit: () => {
+            getCategory();
+          },
+        },
+      });
+    };
+
     return {
       model,
       title,
@@ -1019,6 +1070,10 @@ export default {
       deleteCategory,
       clickTabActive,
       getDefault,
+      addColor,
+      addSize,
+      addAttribute,
+      addCategory,
     };
   },
 };

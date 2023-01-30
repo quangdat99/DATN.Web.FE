@@ -5,13 +5,11 @@
         <div class="toolbar-title">Danh sách đơn hàng</div>
       </div>
       <div class="toolbar-right">
-        <base-button
-          type="transparent"
-          text="Xóa sắp xếp"
+        <div
+          class="icon24 reload cursor-pointer mr-4"
+          title="Lấy lại dữ liệu"
           @click="clearSort()"
-        >
-        </base-button>
-        <!-- <base-button text="Thêm mới" @click="add()"> </base-button> -->
+        ></div>
       </div>
     </div>
     <div class="container-grid">
@@ -68,11 +66,11 @@ export default {
       showClearSort.value = value;
     };
 
-    const clearSort = () =>{
+    const clearSort = () => {
       proxy.$refs.gridView.serverOptions.sortBy = [];
       proxy.$refs.gridView.serverOptions.sortType = [];
       showClearSort.value = false;
-    }
+    };
     return {
       headers,
       orderAPI,
