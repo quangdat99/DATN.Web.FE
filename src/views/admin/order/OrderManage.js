@@ -15,7 +15,6 @@ export const useOrderManage = () => {
       text: "Mô tả",
       value: "description",
       sortable: true,
-      width: 300,
     },
     {
       text: "Người mua",

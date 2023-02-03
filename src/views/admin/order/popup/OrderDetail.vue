@@ -204,6 +204,7 @@
           class="transparent"
           type="secondary"
           text="Xóa đơn hàng"
+          @click="deleteOrder(model)"
         >
         </base-button>
         <div class="flex1 flex-end">
@@ -331,12 +332,44 @@ export default {
         }
       });
     };
+
+    const deleteOrder = (item) => {
+      proxy.$confirm.require({
+        message: `Bạn có chắc chắn muốn xóa đơn hàng < ${item.order_code} > không?`,
+        header: "Xóa",
+        accept: () => {
+          orderAPI.delete(item, item.order_id).then((res) => {
+            if (res && res.status == 200) {
+              if (res.data.statusCode == 200) {
+                proxy.$toast.success(
+                  `Xóa đơn hàng < ${item.order_code} > thành công`
+                );
+              } else if (res.data.statusCode == 210) {
+                proxy.$confirm.require({
+                  message: res.data.userMessage,
+                  header: "Thông báo",
+                  rejectClass: "d-none",
+                });
+              }
+
+              if (proxy._formParam.options) {
+                proxy._formParam.options.submit();
+              }
+              proxy.hide();
+            }
+          });
+        },
+        reject: () => {},
+      });
+    };
+
     return {
       model,
       beforeOpen,
       formatVND,
       productClassify,
       changeStatus,
+      deleteOrder,
     };
   },
 };

@@ -6,6 +6,7 @@
       selected: menuItemObject.isSelected,
       'toggle-navbar': !toggleNavbarValue,
     }"
+    :title="menuItemObject.content"
   >
     <div
       class="logo"
