@@ -320,7 +320,7 @@
         </div>
         <div
           class="product-page-relation mt-4 mb-4"
-          v-if="listProductRelationCount > 0"
+          v-if="listProductRelation.length > 0"
         >
           <div class="product-page-relation-title">
             <div>SẢN PHẨM LIÊN QUAN</div>
@@ -336,7 +336,7 @@
       </div>
       <div
         class="ml-4 mt-4 flex-column relation-content-sell"
-        v-if="listProductRelationSellCount > 0"
+        v-if="listProductRelationSell.length > 0"
       >
         <div class="title-relation-sell txt-grey-2 fs-14">
           Top Sản Phẩm Bán Chạy
@@ -421,9 +421,7 @@ export default {
     const rating = ref(0);
 
     const listProductRelation = ref([]);
-    const listProductRelationCount = ref(0);
     const listProductRelationSell = ref([]);
-    const listProductRelationSellCount = ref(0);
     const listRateOption = ref([]);
     const listCommentProduct = ref([]);
     const activeCommentCode = ref("All");
@@ -527,13 +525,12 @@ export default {
     }
 
     /**
-     * Sp liên quan sắp xếp theo mới nhất đến cũ
+     * Sp liên quan theo đơn hàng
      */
     async function getProductRelation(productId) {
-      const dataRelation = await ProductAPI.getProductRelation(productId, 1);
+      const dataRelation = await ProductAPI.getProductRelationOrder(productId);
       if (dataRelation) {
         listProductRelation.value = dataRelation;
-        listProductRelationCount.value = listProductRelation.value.length;
       }
     }
 
@@ -548,8 +545,6 @@ export default {
       // Gán sản phẩm liên quan
       if (dataRelationSell) {
         listProductRelationSell.value = dataRelationSell;
-        listProductRelationSellCount.value =
-          listProductRelationSell.value.length;
       }
     }
 
@@ -709,8 +704,6 @@ export default {
       rating,
       listProductRelation,
       listProductRelationSell,
-      listProductRelationCount,
-      listProductRelationSellCount,
       product,
       attributes,
       countAttributes,

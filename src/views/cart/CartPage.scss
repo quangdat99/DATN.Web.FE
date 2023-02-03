@@ -11,7 +11,7 @@
     box-shadow: 0 1px 1px 0 rgb(0 0 0 / 5%);
     background-color: $white;
     margin: 8px 0;
-  
+
   }
 
   .table-cart {
@@ -181,6 +181,7 @@
       }
     }
   }
+
   .cart-empty {
     background-color: $white;
     box-shadow: 0 1px 1px 0 rgb(0 0 0 / 5%);
@@ -190,5 +191,23 @@
     align-items: center;
     justify-content: center;
 
+  }
+
+  .product-page-relation {
+    background-color: $white;
+
+    .product-page-relation-title {
+      font-size: 18px;
+      padding: 14px;
+    }
+
+    .relation-content {
+
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      width: fit-content;
+      padding: 16px;
+    }
   }
 }

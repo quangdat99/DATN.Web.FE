@@ -106,6 +106,22 @@
         @click="$router.push('/homepage')"
       ></base-button>
     </div>
+
+    <div
+      class="product-page-relation mt-4 mb-4"
+      v-if="listProductRelation.length > 0"
+    >
+      <div class="product-page-relation-title">
+        <div>SẢN PHẨM LIÊN QUAN</div>
+      </div>
+      <div class="relation-content">
+        <product-card
+          v-for="(relation, index) in listProductRelation"
+          :key="index"
+          :product="relation"
+        ></product-card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -122,6 +138,8 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import { ref, getCurrentInstance, computed, onMounted, watch } from "vue";
 import commonFn from "@/commons/commonFunction.js";
 import productCartAPI from "@/apis/components/productCartAPI";
+import ProductAPI from "@/apis/components/productAPI";
+import ProductCard from "@/components/card/ProductCard.vue";
 
 export default {
   components: {
@@ -129,6 +147,7 @@ export default {
     BaseButton,
     VueNumberInput,
     ConfirmDialog,
+    ProductCard,
   },
   props: {},
   setup(props, { emit }) {
@@ -138,11 +157,23 @@ export default {
     const confirm = useConfirm();
     const selectedAll = ref(false);
     const productList = ref([]);
+    const listProductRelation = ref([]);
     const changeToVietnamese = () => {
       const primevue = usePrimeVue();
       primevue.config.locale.accept = "Có";
       primevue.config.locale.reject = "Không";
     };
+    /**
+     * Sp liên quan theo đơn hàng
+     */
+    async function getProductRelation(listProductId) {
+      const dataRelation = await ProductAPI.getProductRelationOrder(
+        listProductId
+      );
+      if (dataRelation) {
+        listProductRelation.value = dataRelation;
+      }
+    }
     const confirmDeleteAll = () => {
       confirm.require({
         message:
@@ -209,7 +240,10 @@ export default {
       let data = await proxy.$store.dispatch("moduleCart/updateCart");
       if (data && data.length > 0) {
         productList.value = JSON.parse(JSON.stringify(data));
+      } else {
+        productList.value = [];
       }
+      getProductRelation(productList.value.map((x) => x.product_id).join(","));
     };
     const countSelected = computed(() => {
       return productList.value.filter((x) => x.selected).length;
@@ -309,6 +343,7 @@ export default {
       deleteProductCart,
       changeQuantity,
       clickToProduct,
+      listProductRelation,
     };
   },
 

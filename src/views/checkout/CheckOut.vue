@@ -59,7 +59,7 @@
         </div>
         <div class="table-footer">
           <div class="footer-left">
-            <div class="label-checkbox color-primary">
+            <!-- <div class="label-checkbox color-primary">
               Hình thức thanh toán:
             </div>
             <div class="label-checkbox">
@@ -79,7 +79,7 @@
                 v-model="model.method_payment"
               >
               </base-radio>
-            </div>
+            </div> -->
           </div>
           <div class="footer-right">
             <div class="label-payment">
@@ -97,7 +97,22 @@
         </div>
       </div>
     </div>
-    <chose-address-popup></chose-address-popup>
+
+    <div
+      class="product-page-relation mt-4 mb-4"
+      v-if="listProductRelation.length > 0"
+    >
+      <div class="product-page-relation-title">
+        <div>SẢN PHẨM LIÊN QUAN</div>
+      </div>
+      <div class="relation-content">
+        <product-card
+          v-for="(relation, index) in listProductRelation"
+          :key="index"
+          :product="relation"
+        ></product-card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -105,16 +120,17 @@
 import BaseCombobox from "@/components/combobox/BaseCombobox.vue";
 import { useFormat } from "@/commons/format.js";
 import { ref, computed, getCurrentInstance, onMounted } from "vue";
-import ChoseAddressPopup from "./ChoseAddressPopup.vue";
 import addressAPI from "@/apis/components/addressAPI";
 import commonFn from "@/commons/commonFunction.js";
 import productCartAPI from "@/apis/components/productCartAPI";
-import popupUtil from '@/commons/popupUtil';
+import popupUtil from "@/commons/popupUtil";
+import ProductCard from "@/components/card/ProductCard.vue";
+import ProductAPI from "@/apis/components/productAPI";
 
 export default {
   components: {
     BaseCombobox,
-    ChoseAddressPopup,
+    ProductCard,
   },
   setup() {
     const { formatVND } = useFormat();
@@ -125,12 +141,27 @@ export default {
     const model = ref({
       method_payment: 1,
     });
-
+    const listProductRelation = ref([]);
+    /**
+     * Sp liên quan theo đơn hàng
+     */
+    async function getProductRelation(listProductId) {
+      const dataRelation = await ProductAPI.getProductRelationOrder(
+        listProductId
+      );
+      if (dataRelation) {
+        listProductRelation.value = dataRelation;
+      }
+    }
     onMounted(async () => {
       let data = await proxy.$store.state["moduleCart"].productCheckouts;
       if (data && data.length > 0) {
         productList.value = JSON.parse(JSON.stringify(data));
+      } else {
+        productList.value = [];
       }
+
+      getProductRelation(productList.value.map((x) => x.product_id).join(","));
       commonFn.mask();
       addresses.value = await addressAPI.getAddresses();
       address.value = addresses.value.find((x) => x.is_default) || {};
@@ -205,6 +236,7 @@ export default {
       choseAddress,
       address,
       checkout,
+      listProductRelation,
     };
   },
 };

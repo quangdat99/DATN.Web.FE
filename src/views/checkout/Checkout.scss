@@ -198,4 +198,22 @@
       }
     }
   }
+
+  .product-page-relation {
+    background-color: $white;
+
+    .product-page-relation-title {
+      font-size: 18px;
+      padding: 14px;
+    }
+
+    .relation-content {
+
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      width: fit-content;
+      padding: 16px;
+    }
+  }
 }
