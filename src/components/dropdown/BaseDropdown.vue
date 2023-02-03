@@ -35,7 +35,7 @@
             class="option-content none-pointer"
             :style="{ textAlign: textAlign }"
           >
-            {{ option.content }}
+            {{ option[displayField] }}
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 @import "@/assets/scss/_variables.scss";
 
-.order-manage {
+.user-manage {
   height: 100%;
   padding: 20px;
   display: flex;
@@ -40,12 +40,5 @@
     flex: 1;
     overflow: hidden;
     margin-bottom: 30px;
-  }
-
-  .icon24.delete{
-    &.disabled {
-      opacity: 0.3;
-      pointer-events: none;
-    }
   }
 }

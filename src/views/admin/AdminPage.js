@@ -12,6 +12,12 @@ export const useAdminPage = () => {
       key: 'dashboard',
       isSelected: true
     }, {
+      iconClass: 'icon24 user-white',
+      content: 'Khách hàng',
+      route: '/admin/user',
+      key: 'user',
+      isSelected: false
+    }, {
       iconClass: 'icon24 order-white',
       content: 'Đơn hàng',
       route: '/admin/order',

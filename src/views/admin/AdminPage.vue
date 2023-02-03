@@ -101,6 +101,8 @@ export default {
         menuItemClick("size");
       } else if (path.includes("attribute")) {
         menuItemClick("attribute");
+      } else if (path.includes("user")) {
+        menuItemClick("user");
       } else {
         menuItemClick("dashboard");
       }

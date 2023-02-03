@@ -66,6 +66,14 @@ export default [{
         anonymous: false,
         role: 2
       }
+    }, {
+      path: 'user',
+      component: () => import("@/views/admin/user/UserManage.vue"),
+      name: 'Khách hàng',
+      meta: {
+        anonymous: false,
+        role: 2
+      }
     }
   ]
 }]

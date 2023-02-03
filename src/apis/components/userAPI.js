@@ -28,6 +28,14 @@ class UserAPI extends BaseAPI {
         let res = await Http.axios().put(`${this.controllerName}/resetPassword`, payload);
         return res;
     }
+    async updateStatus(status){
+        let res = await Http.axios().put(`${this.controllerName}/updateStatus`, status);
+        return this.response(res);
+    }
+    async getUser(userId){
+        let res = await Http.axios().get(`${this.controllerName}/getUser/${userId}`);
+        return this.response(res);
+    }
 }
 
 export default new UserAPI();

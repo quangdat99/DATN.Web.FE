@@ -24,12 +24,12 @@
         <template v-slot:item-operation="{ item }">
           <div class="d-flex flex-center">
             <div
-              class="icon24 delete cursor-pointer"
+              class="icon24 edit cursor-pointer"
               title="Sửa"
               @click="editRow(item)"
             ></div>
             <div
-              class="icon24 edit cursor-pointer ml-1"
+              class="icon24 delete cursor-pointer ml-1"
               title="Xóa"
               @click="deleteRow(item)"
             ></div>
@@ -84,8 +84,7 @@ export default defineComponent({
       showClearSort.value = false;
     };
     const editRow = (item) => {
-      popupUtil.show("ColorDetail", {
-        mode: "Edit",
+      popupUtil.show("OrderDetail", {
         data: item,
         options: {
           submit: () => {

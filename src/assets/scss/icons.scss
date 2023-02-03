@@ -190,6 +190,9 @@
     &.order-white::before {
         background-position: -288px -48px;
     }
+    &.user-white::before {
+        background-position: -0 -328px;
+    }
 
     &.size::before {
         background-position: -288px -72px;
@@ -211,7 +214,7 @@
         background-position: -288px -144px;
     }
 
-    &.delete {
+    &.edit {
         &::before {
             background-position: -0 -280px;
         }
@@ -222,7 +225,7 @@
 
     }
 
-    &.edit {
+    &.delete {
         &::before {
             background-position: -24px -280px;
         }

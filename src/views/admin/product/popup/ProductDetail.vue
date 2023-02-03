@@ -317,7 +317,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="hr-line mt-4"></div>
+                <div class="hr-line-bottom mt-4"></div>
                 <div class="list-attribute mt-4">
                   <div
                     class="attribute-item"
@@ -375,7 +375,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="hr-line mt-4"></div>
+                <div class="hr-line-bottom mt-4"></div>
                 <div class="list-attribute mt-2">
                   <div
                     class="attribute-item"

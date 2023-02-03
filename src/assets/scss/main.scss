@@ -599,7 +599,11 @@ body {
   }
 }
 
-.hr-line {
+.hr-line-bottom {
   width: 100%;
   border-bottom: 1px solid #d7d7d7;
+}
+.hr-line-left {
+  height: 100%;
+  border-left: 1px solid #d7d7d7;
 }

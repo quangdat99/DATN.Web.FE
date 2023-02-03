@@ -65,6 +65,10 @@ export default {
       type: Array,
       default: null,
     },
+    filters: {
+      type: String,
+      default: '',
+    },
   },
   emits: ["rowClick", "hasSort"],
 
@@ -107,6 +111,7 @@ export default {
         let payload = getPayload();
         payload.size = payload.rowsPerPage;
         payload.fields = props.fields;
+        payload.filter = props.filters;
         try {
           let res = await api.getDataTable(payload);
           if (res && res.status == 200) {
