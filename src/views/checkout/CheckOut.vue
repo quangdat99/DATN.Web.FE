@@ -37,9 +37,15 @@
           >
             <div class="product-name">
               <div class="image">
-                <img :src="product.img_url" alt="" />
+                <img
+                  :src="product.img_url"
+                  alt=""
+                  @click="clickToProduct(product.product_id)"
+                />
               </div>
-              <div class="name">{{ product.product_name }}</div>
+              <div class="name" @click="clickToProduct(product.product_id)">
+                {{ product.product_name }}
+              </div>
               <div class="classify">
                 <span class="detail">{{
                   classifyProduct(product.color_name, product.size_name)
@@ -113,6 +119,7 @@
         ></product-card>
       </div>
     </div>
+    <confirm-dialog></confirm-dialog>
   </div>
 </template>
 
@@ -126,11 +133,13 @@ import productCartAPI from "@/apis/components/productCartAPI";
 import popupUtil from "@/commons/popupUtil";
 import ProductCard from "@/components/card/ProductCard.vue";
 import ProductAPI from "@/apis/components/productAPI";
-
+import ConfirmDialog from "primevue/confirmdialog";
+import { usePrimeVue } from "primevue/config";
 export default {
   components: {
     BaseCombobox,
     ProductCard,
+    ConfirmDialog,
   },
   setup() {
     const { formatVND } = useFormat();
@@ -142,6 +151,11 @@ export default {
       method_payment: 1,
     });
     const listProductRelation = ref([]);
+    const changeToVietnamese = () => {
+      const primevue = usePrimeVue();
+      primevue.config.locale.accept = "Đồng ý";
+      primevue.config.locale.reject = "Không";
+    };
     /**
      * Sp liên quan theo đơn hàng
      */
@@ -154,6 +168,7 @@ export default {
       }
     }
     onMounted(async () => {
+      changeToVietnamese();
       let data = await proxy.$store.state["moduleCart"].productCheckouts;
       if (data && data.length > 0) {
         productList.value = JSON.parse(JSON.stringify(data));
@@ -214,18 +229,32 @@ export default {
       productCartAPI
         .checkout(payload)
         .then((res) => {
-          if (res && res.data && res.data.data) {
+          if (res && res.status == 200 && res.data.statusCode == 200) {
             proxy.$toast.success("Đặt hàng thành công");
             proxy.$store.dispatch("moduleCart/updateCart");
             proxy.$store.commit("moduleCart/updateCheckout", []);
             proxy.$router.push("/personal/4");
+          }
+          if (res && res.status == 200 && res.data.statusCode == 400) {
+            proxy.$confirm.require({
+              message: res.data.userMessage,
+              header: "Thông báo",
+              accept: () => {},
+              rejectClass: "d-none",
+            });
           }
         })
         .finally(() => {
           commonFn.unmask();
         });
     };
-
+    const clickToProduct = (productId) => {
+      proxy.$router.push({
+        path: "/product",
+        query: { id: productId },
+      });
+      proxy.$store.dispatch("moduleProductPage/updateProductId", productId);
+    };
     return {
       model,
       formatVND,
@@ -237,6 +266,7 @@ export default {
       address,
       checkout,
       listProductRelation,
+      clickToProduct,
     };
   },
 };

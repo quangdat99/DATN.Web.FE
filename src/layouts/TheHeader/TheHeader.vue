@@ -10,7 +10,7 @@
       <div class="search flex-row flex-center">
         <base-input
           class="input-filter-product"
-          placeholder="Nhập tên sản phẩm, mã sản phẩm, từ khóa cần tìm..."
+          placeholder="Nhập tên sản phẩm..."
           :width="450"
           rightIcon="search-red"
           @onClickRightIcon="updateSearch"

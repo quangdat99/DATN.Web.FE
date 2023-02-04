@@ -155,7 +155,20 @@
                     <div class="txt-link ml-2" @click="addSize()">
                       Thêm nhanh kích cỡ
                     </div>
-                    <div class="flex3"></div>
+                    <div class="flex3">
+                      <div class="select-image">
+                        <label htmlFor="upload-avatar" class="mt-4">
+                          <span>Chọn ảnh</span>
+                        </label>
+                        <input
+                          type="file"
+                          name=""
+                          id="upload-avatar"
+                          @change="uploadPhotoHandlerAll"
+                          accept="image/gif, image/jpeg"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -268,6 +281,8 @@
                       model.outstanding = rate;
                     }
                   "
+                  border-color="#000000"
+                  :border-width="1"
                   :increment="1"
                   :star-size="20"
                   :show-rating="true"
@@ -956,6 +971,26 @@ export default {
       }
     };
 
+    const uploadPhotoHandlerAll = async (e) => {
+      const file = e.target.files[0];
+      try {
+        var formdata = new FormData();
+        formdata.append("file", file);
+
+        let res = await fileAPI.upload(
+          "img_url_" + commonFn.generateUUID(),
+          formdata
+        );
+        if (res) {
+          model.value.productDetails.forEach((item) => {
+            item.img_url = res.url;
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     const attributes = computed(() => {
       return model.value.attributes
         .filter((x) => x.state !== 3)
@@ -1074,6 +1109,7 @@ export default {
       addSize,
       addAttribute,
       addCategory,
+      uploadPhotoHandlerAll,
     };
   },
 };

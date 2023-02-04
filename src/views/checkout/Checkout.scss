@@ -119,6 +119,7 @@
               img {
                 width: 60px;
                 height: 60px;
+                cursor: pointer;
               }
             }
 
@@ -130,6 +131,7 @@
               -webkit-box-orient: vertical;
               display: -webkit-box;
               overflow: hidden;
+              cursor: pointer;
             }
 
             .classify {

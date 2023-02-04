@@ -185,4 +185,34 @@
       overflow: auto;
     }
   }
+
+  .select-image {
+    width: 100px;
+    margin-left: auto;
+    input {
+      display: none;
+    }
+
+    label {
+      border: 1px solid var(--main-black-color);
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: $black;
+      background-color: $secondary;
+      padding: 5px 10px;
+
+      &:hover {
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0px 3px 5px -2px var(--secondary-black-color);
+      }
+    }
+
+    svg {
+      transform: translateY(1px);
+    }
+  }
 }

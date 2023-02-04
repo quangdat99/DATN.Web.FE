@@ -35,6 +35,12 @@ class OrderAPI extends BaseAPI {
         commonF.unmask();
         return this.response(res);
     }
+    async commentProduct(payload) {
+        commonF.mask();
+        let res = await Http.axios().post(`${this.controllerName}/commentProduct`, payload);
+        commonF.unmask();
+        return res;
+    }
 }
 
 export default new OrderAPI();

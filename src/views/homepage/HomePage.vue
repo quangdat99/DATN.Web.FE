@@ -82,10 +82,10 @@ export default {
         src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide3.jpg",
         page: "",
       },
-      {
-        src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide4.jpg",
-        page: "",
-      },
+      // {
+      //   src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide4.jpg",
+      //   page: "",
+      // },
     ]);
     const gridList = ref([]);
     onMounted(() => {

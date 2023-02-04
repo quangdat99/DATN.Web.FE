@@ -167,7 +167,7 @@
               <div class="icon24 add-to-cart mr-3"></div>
               <div class="add-to-cart-text">Thêm Vào Giỏ Hàng</div>
             </div>
-            <div class="buy-now">Mua Ngay</div>
+            <div class="buy-now" @click="clickBuy()">Mua Ngay</div>
           </div>
         </div>
       </div>
@@ -460,6 +460,9 @@ export default {
         // proxy.$router.push("/NotFound");
         return;
       }
+      if (data.rate > 0) {
+        data.rate = data.rate.toFixed(2);
+      }
       product.value = data;
       colors.value = handleOption(data.colors);
       sizes.value = handleOption(data.sizes);
@@ -697,6 +700,37 @@ export default {
         }
       }
     });
+
+    const clickBuy = () => {
+      let data = proxy.$store.state["moduleContext"];
+      if (!data.Token || data.Context.role != 1) {
+        proxy.$router.push("/login");
+        return;
+      }
+      if (!(productQuantity.value > 0)) {
+        proxy.$toast.warning("Vui lòng chọn số lượng sản phẩm");
+        return;
+      }
+      if (productDetail.value) {
+        let products = [
+          {
+            quantity: productQuantity.value,
+            product_detail_id: productDetail.value.product_detail_id,
+            product_id: productDetail.value.product_id,
+            product_name: product.value.product_name,
+            size_name: productDetail.value.size_name,
+            color_name: productDetail.value.color_name,
+            img_url: productDetail.value.img_url,
+            sale_price: productDetail.value.sale_price,
+            sale_price_old: productDetail.value.sale_price_old,
+          },
+        ];
+        proxy.$store.commit("moduleCart/updateCheckout", products);
+        proxy.$router.push("/checkout");
+      } else {
+        proxy.$toast.warning("Vui lòng chọn phân loại sản phẩm");
+      }
+    };
     return {
       homepage,
       listSlider,
@@ -730,6 +764,7 @@ export default {
       addToCart,
       countQuantity,
       changeQuantity,
+      clickBuy,
     };
   },
 };

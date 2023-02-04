@@ -136,22 +136,30 @@
           <div class="profile-left">
             <div class="profile-item">
               <div class="label flex1">Họ</div>
-              <base-input class="flex2 ml-4" v-model="userInfo.first_name">
+              <base-input
+                ref="refFirstName"
+                class="flex2 ml-4"
+                v-model="userInfo.first_name"
+              >
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Tên</div>
-              <base-input class="flex2 ml-4" v-model="userInfo.last_name">
+              <base-input
+                ref="refLastName"
+                class="flex2 ml-4"
+                v-model="userInfo.last_name"
+              >
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Địa chỉ Email</div>
-              <base-input class="flex2 ml-4" v-model="userInfo.email">
+              <base-input class="flex2 ml-4" v-model="userInfo.email" disabled>
               </base-input>
             </div>
             <div class="profile-item mt-4">
               <div class="label flex1">Số điện thoại</div>
-              <base-input class="flex2 ml-4" v-model="userInfo.phone">
+              <base-input class="flex2 ml-4" v-model="userInfo.phone" disabled>
               </base-input>
             </div>
 
@@ -487,7 +495,8 @@
                   <base-button
                     text="Đánh Giá"
                     class="mr-2 pl-6 pr-6"
-                    v-if="order.status == 1"
+                    v-if="order.status == 1 && !order.is_comment"
+                    @click="commentProduct(order)"
                   ></base-button>
                   <base-button
                     text="Mua Lại"
@@ -497,8 +506,9 @@
                     v-if="
                       order.status == 1 ||
                       order.status == 4 ||
-                      order.status == 6
+                      order.status == 7
                     "
+                    @click="clickBuy(order)"
                   ></base-button>
                   <base-button
                     text="Hủy đơn"
@@ -523,6 +533,7 @@
       </div>
     </div>
 
+    <confirm-dialog></confirm-dialog>
     <!-- <new-address-popup></new-address-popup> -->
   </div>
 </template>
@@ -552,6 +563,8 @@ import userAPI from "@/apis/components/userAPI";
 import addressAPI from "@/apis/components/addressAPI";
 import baseDetail from "@/views/baseDetail.js";
 import fileAPI from "@/apis/components/fileAPI";
+import ConfirmDialog from "primevue/confirmdialog";
+import { usePrimeVue } from "primevue/config";
 
 export default {
   components: {
@@ -560,6 +573,7 @@ export default {
     BaseRadio,
     BaseCombobox,
     NewAddressPopup,
+    ConfirmDialog,
   },
   name: "PersonalPage",
   extends: baseDetail,
@@ -578,6 +592,11 @@ export default {
       new_password: null,
       confirm_password: null,
     });
+    const changeToVietnamese = () => {
+      const primevue = usePrimeVue();
+      primevue.config.locale.accept = "Đồng ý";
+      primevue.config.locale.reject = "Không";
+    };
     const orderStatusCount = ref({});
     const listOrder = ref([]);
     const filterOrder = ref(null);
@@ -590,6 +609,7 @@ export default {
       // listOrder
     } = usePersonalPageData();
     onMounted(() => {
+      changeToVietnamese();
       document.getElementsByClassName(
         "main-container-content"
       )[0].scrollTop = 0;
@@ -658,7 +678,7 @@ export default {
           return "Đang giao";
         case 4:
           return "Đã hủy đơn";
-        case 6:
+        case 7:
           return "Trả hàng/Hoàn tiền";
         default:
           return "";
@@ -718,7 +738,7 @@ export default {
             listOrder.value = orders;
             break;
           case 10:
-            orders = await orderAPI.getOrder(6);
+            orders = await orderAPI.getOrder(7);
             listOrder.value = orders;
             break;
 
@@ -735,7 +755,6 @@ export default {
     };
 
     const updateUserInfo = async () => {
-      commonFn.mask();
       if (userInfo.value.day && userInfo.value.month && userInfo.value.year) {
         let stringDate = `${userInfo.value.month.split(" ")[1]}-${
           userInfo.value.day
@@ -745,7 +764,30 @@ export default {
         userInfo.value.date_of_birth = null;
       }
 
+      if (!userInfo.value.first_name) {
+        proxy.$confirm.require({
+          message: "Thông tin <Họ> không được để trống",
+          header: "Thông báo",
+          accept: () => {
+            proxy.$refs.refFirstName.$el.querySelector("input").focus();
+          },
+          rejectClass: "d-none",
+        });
+        return;
+      }
+      if (!userInfo.value.last_name) {
+        proxy.$confirm.require({
+          message: "Thông tin <Tên> không được để trống",
+          header: "Thông báo",
+          accept: () => {
+            proxy.$refs.refLastName.$el.querySelector("input").focus();
+          },
+          rejectClass: "d-none",
+        });
+        return;
+      }
       let user = Object.assign({}, userInfo.value);
+      commonFn.mask();
       let data = await userAPI.updateUserInfo(user);
       if (data) {
         userInfo.value = data;
@@ -850,6 +892,41 @@ export default {
       });
     };
 
+    const clickBuy = (order) => {
+      let data = proxy.$store.state["moduleContext"];
+      if (!data.Token || data.Context.role != 1) {
+        proxy.$router.push("/login");
+        return;
+      }
+      let products = [];
+      order.products.forEach((item) => {
+        products.push({
+          quantity: item.quantity,
+          product_detail_id: item.product_detail_id,
+          product_id: item.product_id,
+          product_name: item.product_name,
+          size_name: item.size_name,
+          color_name: item.color_name,
+          img_url: item.url_img,
+          sale_price: item.product_amount,
+          sale_price_old: item.product_amount_old,
+        });
+      });
+      proxy.$store.commit("moduleCart/updateCheckout", products);
+      proxy.$router.push("/checkout");
+    };
+
+    const commentProduct = (order) => {
+      popupUtil.show("CommentProductDetail", {
+        data: order,
+        options: {
+          submit: async () => {
+            listOrder.value = await orderAPI.getOrder(1);
+          },
+        },
+      });
+    };
+
     return {
       expAccount,
       expOrder,
@@ -879,6 +956,8 @@ export default {
       uploadPhotoHandler,
       clickToProduct,
       cancelOrder,
+      clickBuy,
+      commentProduct,
     };
   },
   // computed: {
