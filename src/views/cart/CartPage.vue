@@ -277,6 +277,7 @@ export default {
       let selecteds = productList.value.filter((x) => x.selected);
       if (selecteds.length > 0) {
         proxy.$store.commit("moduleCart/updateCheckout", selecteds);
+        proxy.$store.commit("moduleCart/updateMode", 1);
         proxy.$router.push("/checkout");
       } else {
         proxy.$toast.warning("Vui lòng chọn sản phẩm cần thanh toán");

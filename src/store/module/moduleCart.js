@@ -9,6 +9,10 @@ const state = {
   * Danh sách sản phẩm cần thanh toán
   */
   productCheckouts: [],
+  /**
+   * mode = 1-mua từ giỏ hầng, =0- mua nhanh
+   */
+  mode: 0,
 };
 const getters = {
   countProduct(state) {
@@ -32,6 +36,9 @@ const mutations = {
   },
   updateCheckout(state, products) {
     state.productCheckouts = products;
+  },
+  updateMode(state, mode) {
+    state.mode = mode;
   },
 };
 

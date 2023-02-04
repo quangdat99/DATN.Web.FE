@@ -223,6 +223,7 @@ export default {
         address_id: address.value.address_id,
         method_payment: model.value.method_payment,
         listProduct: productList.value,
+        mode: proxy.$store.state["moduleCart"].mode,
       };
 
       commonFn.mask();
@@ -233,6 +234,7 @@ export default {
             proxy.$toast.success("Đặt hàng thành công");
             proxy.$store.dispatch("moduleCart/updateCart");
             proxy.$store.commit("moduleCart/updateCheckout", []);
+            proxy.$store.commit("moduleCart/updateMode", 0);
             proxy.$router.push("/personal/4");
           }
           if (res && res.status == 200 && res.data.statusCode == 400) {
