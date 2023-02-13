@@ -186,6 +186,7 @@ div {
 .mb-8 {
   margin-bottom: 32px;
 }
+
 .mb-15px {
   margin-bottom: 15px;
 }
@@ -606,7 +607,17 @@ body {
   width: 100%;
   border-bottom: 1px solid #d7d7d7;
 }
+
 .hr-line-left {
   height: 100%;
   border-left: 1px solid #d7d7d7;
 }
+
+.bold {
+  font-weight: 600;
+}
+
+.color-blue {
+  color: $blue;
+}
+

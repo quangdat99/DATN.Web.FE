@@ -1,0 +1,113 @@
+@import "@/assets/scss/_variables.scss";
+
+.compare-product-detail {
+  .popup-container {
+    padding: 16px;
+    overflow: auto;
+
+    .label {
+      font-weight: 600;
+      font-size: 13px;
+      color: $color-grey;
+    }
+    .product_empty {
+      width: 200px;
+    }
+
+    .rate-text {
+      border-bottom: 1px solid $primary;
+    }
+
+    .product-price {
+      color: $primary;
+      font-size: 16px;
+    }
+
+    .list-product-image {
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .chosen-image {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+          height: 120px;
+          width: 120px;
+        }
+      }
+    }
+
+    .product-detail-content {
+      flex: 4;
+      font-size: 14px;
+      color: $color-grey;
+      font-weight: 500;
+
+      .option-item {
+        width: fit-content;
+        border: 1px solid $color-grey;
+        padding: 5px 12px;
+        height: 34px;
+        line-height: 23px;
+        border-radius: 2px;
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+        cursor: pointer;
+        margin: 0 8px 8px 0;
+        position: relative;
+
+        &:hover {
+          border: 1px solid $primary;
+        }
+
+        &.active {
+          border: 1px solid $primary;
+
+          &::before {
+            content: "";
+            width: 0;
+            height: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            border-color: transparent $primary;
+            border-style: solid;
+            border-width: 18px 18px 0px 0px;
+          }
+
+          .icon-stick {
+            background: url('~@/assets/images/sprites.png') no-repeat 3px -118px;
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+          }
+        }
+      }
+    }
+
+    .bg-grey {
+      background-color: $bg-grey-2;
+    }
+
+    .row-detail {
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      .left-label {
+        width: 180px;
+      }
+    }
+  }
+}

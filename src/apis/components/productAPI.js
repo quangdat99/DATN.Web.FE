@@ -41,6 +41,10 @@ class ProductAPI extends BaseAPI {
         commonF.unmask();
         return this.response(res);
     }
+    async listProductCompare(id){
+        let res = await Http.axios().get(`${this.controllerName}/listProductCompare/${id}`);
+        return this.response(res);
+    }
 }
 
 export default new ProductAPI();

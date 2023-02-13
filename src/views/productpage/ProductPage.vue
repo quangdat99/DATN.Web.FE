@@ -162,12 +162,19 @@
               </div>
             </div>
           </div>
-          <div class="product-infor-placement flex flex-row">
+          <div class="product-infor-placement flex flex-row align-center">
             <div class="btn-add-to-cart mr-4" @click="addToCart()">
               <div class="icon24 add-to-cart mr-3"></div>
               <div class="add-to-cart-text">Thêm Vào Giỏ Hàng</div>
             </div>
             <div class="buy-now" @click="clickBuy()">Mua Ngay</div>
+            <div
+              class="compare-product ml-4"
+              @click="clickCompare()"
+              title="So sánh với các sản phẩm cùng loại"
+            >
+              So sánh với sản phẩm khác
+            </div>
           </div>
         </div>
       </div>
@@ -336,7 +343,7 @@
       </div>
       <div
         class="ml-4 mt-4 flex-column relation-content-sell"
-        v-if="listProductRelationSell.length > 0"
+        v-if="listProductRelationSell.length > 0 && false"
       >
         <div class="title-relation-sell txt-grey-2 fs-14">
           Top Sản Phẩm Bán Chạy
@@ -387,6 +394,7 @@ import moment from "moment";
 import commonFn from "@/commons/commonFunction.js";
 import GridProductPaging from "@/components/card/GridProductPaging.vue";
 import productCartAPI from "@/apis/components/productCartAPI";
+import popupUtil from "@/commons/popupUtil";
 
 export default {
   components: {
@@ -731,6 +739,13 @@ export default {
         proxy.$toast.warning("Vui lòng chọn phân loại sản phẩm");
       }
     };
+
+    const clickCompare = () => {
+      popupUtil.show("CompareProductDetail", {
+        data: product.value,
+        attributes: attributes.value
+      });
+    };
     return {
       homepage,
       listSlider,
@@ -765,6 +780,7 @@ export default {
       countQuantity,
       changeQuantity,
       clickBuy,
+      clickCompare,
     };
   },
 };

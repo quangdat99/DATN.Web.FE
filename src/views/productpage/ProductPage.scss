@@ -60,6 +60,7 @@
         padding: 6px;
         border-radius: 4px;
         background-color: $sub-primary;
+        width: 66px;
       }
 
       .rate-text {
@@ -152,6 +153,12 @@
           &:hover {
             background-color: #c00a0a;
           }
+        }
+
+        .compare-product {
+          color: $blue;
+          cursor: pointer;
+          font-size: 13px;
         }
 
       }

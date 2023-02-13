@@ -37,7 +37,7 @@ export default {
   components: {},
   props: {
     listSlider: {
-      type: new Array(),
+      type: Array,
       default: [],
     },
   },

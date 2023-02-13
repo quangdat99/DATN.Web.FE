@@ -9,6 +9,7 @@ import CategoryDetail from '@/views/admin/category/popup/CategoryDetail.vue';
 import OrderDetail from '@/views/admin/order/popup/OrderDetail.vue';
 import UserDetail from '@/views/admin/user/popup/UserDetail.vue';
 import CommentProductDetail from '@/views/personal/personalPopup/CommentProductDetail.vue';
+import CompareProductDetail from '@/views/productpage/CompareProductDetail.vue';
 
 export function register(app) {
   app.component('NewAddressPopup', NewAddressPopup);
@@ -21,4 +22,5 @@ export function register(app) {
   app.component('OrderDetail', OrderDetail);
   app.component('UserDetail', UserDetail);
   app.component('CommentProductDetail', CommentProductDetail);
+  app.component('CompareProductDetail', CompareProductDetail);
 }
