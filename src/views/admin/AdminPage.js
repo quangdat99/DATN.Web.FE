@@ -7,7 +7,7 @@ export const useAdminPage = () => {
   const menuList = reactive([
     {
       iconClass: 'icon24 dashboard',
-      content: 'Tổng quan',
+      content: 'Thống kê',
       route: '/admin/dashboard',
       key: 'dashboard',
       isSelected: true

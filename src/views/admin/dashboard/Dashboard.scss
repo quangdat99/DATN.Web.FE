@@ -1,0 +1,63 @@
+@import "@/assets/scss/_variables.scss";
+
+.dashboard-manage {
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .toolbar-left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+
+      .toolbar-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: $black-3;
+      }
+    }
+
+    .toolbar-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+
+  .ck-editor {
+    width: 100%;
+  }
+
+  .container-grid {
+    flex: 1;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+
+  .list-tab-content {
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid rgb(208, 208, 208);
+    margin-bottom: 30px;
+
+    .tab-content {
+      padding: 16px 20px;
+      height: 100%;
+      overflow: auto;
+    }
+  }
+
+  .amount-info {
+    // font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+}
