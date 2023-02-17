@@ -130,6 +130,9 @@ div {
 .ml-4 {
   margin-left: 16px;
 }
+.ml-8 {
+  margin-left: 32px;
+}
 
 .mt-auto {
   margin-top: auto !important;
@@ -621,3 +624,26 @@ body {
   color: $blue;
 }
 
+.dp__menu {
+  font-size: 13px;
+
+  .dp__preset_ranges {
+    width: 200px;
+    max-height: 376px;
+    overflow: auto;
+    &::-webkit-scrollbar{
+      width: 6px !important;
+    }
+  }
+
+}
+
+.dp__action_row {
+  .dp__selection_preview {
+    width: 100%;
+  }
+}
+
+.dp__button {
+  height: 100px;
+}

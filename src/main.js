@@ -21,6 +21,8 @@ import BaseButton from '@/components/button/BaseButton.vue';
 import BaseTextarea from '@/components/textarea/BaseTextarea.vue';
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import CKEditor from '@ckeditor/ckeditor5-vue';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 const app = createApp(App);
 
 import { register } from '@/commons/globalPopup.js';
@@ -73,6 +75,7 @@ app.component('BaseRadio', BaseRadio);
 app.component('BaseButton', BaseButton);
 app.component('BaseTextarea', BaseTextarea);
 app.component('EasyDataTable', Vue3EasyDataTable);
+app.component('Datepicker', Datepicker);
 
 app.mixin({
   mounted() {

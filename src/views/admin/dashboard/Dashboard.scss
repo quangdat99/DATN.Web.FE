@@ -9,7 +9,7 @@
   .toolbar {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 
     .toolbar-left {
       flex: 1;
@@ -29,6 +29,12 @@
       align-items: center;
       flex-direction: row;
       justify-content: flex-end;
+
+      .labe-range {
+        font-weight: 600;
+        color: $primary;
+        margin-right: 16px;
+      }
     }
   }
 
