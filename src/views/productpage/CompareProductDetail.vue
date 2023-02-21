@@ -425,7 +425,7 @@ export default {
           value2: null,
         });
       });
-      if (model2.value) {
+      if (model2.value && model2.value?.attributes?.length > 0) {
         model2.value.attributes.forEach((item) => {
           let exist = attributes.value.find(
             (x) => x.attribute_name == item.attribute_name
@@ -514,22 +514,18 @@ export default {
       productDetail.value = null;
       let color = colors.value.find((x) => x.active == true);
       let size = sizes.value.find((x) => x.active == true);
-      if (model.value.count_detail == 1) {
-        if (color) {
-          productDetail.value = model.value.productDetails.find(
-            (x) => x.color_name == color.option
-          );
-        } else if (size) {
-          productDetail.value = model.value.productDetails.find(
-            (x) => x.size_name == size.option
-          );
-        }
-      } else if (model.value.count_detail > 1) {
-        if (color && size) {
-          productDetail.value = model.value.productDetails.find(
-            (x) => x.color_name == color.option && x.size_name == size.option
-          );
-        }
+      if (color && !size) {
+        productDetail.value = model.value.productDetails.find(
+          (x) => x.color_name == color.option
+        );
+      } else if (size && !color) {
+        productDetail.value = model.value.productDetails.find(
+          (x) => x.size_name == size.option
+        );
+      } else if (color && size) {
+        productDetail.value = model.value.productDetails.find(
+          (x) => x.color_name == color.option && x.size_name == size.option
+        );
       }
     }
 
@@ -537,22 +533,18 @@ export default {
       productDetail2.value = null;
       let color = colors2.value.find((x) => x.active == true);
       let size = sizes2.value.find((x) => x.active == true);
-      if (model2.value.count_detail == 1) {
-        if (color) {
-          productDetail2.value = model2.value.productDetails.find(
-            (x) => x.color_name == color.option
-          );
-        } else if (size) {
-          productDetail2.value = model2.value.productDetails.find(
-            (x) => x.size_name == size.option
-          );
-        }
-      } else if (model2.value.count_detail > 1) {
-        if (color && size) {
-          productDetail2.value = model2.value.productDetails.find(
-            (x) => x.color_name == color.option && x.size_name == size.option
-          );
-        }
+      if (color && !size) {
+        productDetail2.value = model2.value.productDetails.find(
+          (x) => x.color_name == color.option
+        );
+      } else if (size && !color) {
+        productDetail2.value = model2.value.productDetails.find(
+          (x) => x.size_name == size.option
+        );
+      } else if (color && size) {
+        productDetail2.value = model2.value.productDetails.find(
+          (x) => x.color_name == color.option && x.size_name == size.option
+        );
       }
     }
     const selectProduct = async (value, displayField) => {
@@ -604,6 +596,9 @@ export default {
         query: { id: productId },
       });
       proxy.$store.dispatch("moduleProductPage/updateProductId", productId);
+      setTimeout(() => {
+        proxy.$router.go();
+      }, 200);
     };
 
     return {
