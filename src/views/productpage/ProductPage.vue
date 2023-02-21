@@ -581,22 +581,18 @@ export default {
       productDetail.value = null;
       let color = colors.value.find((x) => x.active == true);
       let size = sizes.value.find((x) => x.active == true);
-      if (product.value.count_detail == 1) {
-        if (color) {
-          productDetail.value = product.value.productDetails.find(
-            (x) => x.color_name == color.option
-          );
-        } else if (size) {
-          productDetail.value = product.value.productDetails.find(
-            (x) => x.size_name == size.option
-          );
-        }
-      } else if (product.value.count_detail > 1) {
-        if (color && size) {
-          productDetail.value = product.value.productDetails.find(
-            (x) => x.color_name == color.option && x.size_name == size.option
-          );
-        }
+      if (color && !size) {
+        productDetail.value = product.value.productDetails.find(
+          (x) => x.color_name == color.option
+        );
+      } else if (size && !color) {
+        productDetail.value = product.value.productDetails.find(
+          (x) => x.size_name == size.option
+        );
+      } else if (color && size) {
+        productDetail.value = product.value.productDetails.find(
+          (x) => x.color_name == color.option && x.size_name == size.option
+        );
       }
     }
 
@@ -743,7 +739,7 @@ export default {
     const clickCompare = () => {
       popupUtil.show("CompareProductDetail", {
         data: product.value,
-        attributes: attributes.value
+        attributes: attributes.value,
       });
     };
     return {

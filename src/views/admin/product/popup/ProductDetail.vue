@@ -241,6 +241,7 @@
                       hideError
                       v-model="p.product_discount"
                       keepZero
+                      @update:modelValue="changeSalePriceOldAmount(value, p)"
                     ></base-number>
                   </div>
                   <div class="detail-item sale_price_old">
@@ -250,6 +251,7 @@
                       hideError
                       v-model="p.sale_price_old"
                       keepZero
+                      @update:modelValue="changeSalePriceOldAmount(value, p)"
                     ></base-number>
                   </div>
                   <div class="detail-item sale_price">
@@ -260,6 +262,7 @@
                       v-model="p.sale_price"
                       isNullable
                       keepZero
+                      @update:modelValue="changeSalePriceAmount(value, p)"
                     ></base-number>
                   </div>
                 </div>
@@ -1078,6 +1081,18 @@ export default {
       });
     };
 
+    const changeSalePriceOldAmount = (value, p) => {
+      if (p.sale_price_old != null && p.product_discount != null) {
+        p.sale_price = (p.sale_price_old * (100 - p.product_discount)) / 100;
+      }
+    };
+
+    const changeSalePriceAmount = (value, p) => {
+      if (p.sale_price != null && p.sale_price_old != null && p.sale_price_old != 0) {
+        p.product_discount = 100 - (p.sale_price * 100) / p.sale_price_old;
+      }
+    };
+
     return {
       model,
       title,
@@ -1110,6 +1125,8 @@ export default {
       addAttribute,
       addCategory,
       uploadPhotoHandlerAll,
+      changeSalePriceOldAmount,
+      changeSalePriceAmount,
     };
   },
 };

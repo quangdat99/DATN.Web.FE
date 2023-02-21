@@ -71,15 +71,15 @@ export default {
     const listCategory = ref([]);
     const listSlider = ref([
       {
-        src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide1.jpg",
+        src: "images/slide1.jpg",
         page: "",
       },
       {
-        src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide2.jpg",
+        src: "images/slide2.jpg",
         page: "",
       },
       {
-        src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide3.jpg",
+        src: "images/slide3.jpg",
         page: "",
       },
       // {

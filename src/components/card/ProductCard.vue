@@ -32,31 +32,31 @@
         <div class="card-name">
           {{ product.product_name }}
         </div>
-        <div class="card-detail-information" v-if="product.count_detail == 1">
-          <div
+        <div class="card-detail-information row-amount" v-if="product.count_detail == 1">
+          <span
             class="product-detail product-old-price mr-2"
             v-if="product.sale_price_old > 0"
           >
             {{ formatVND(product.sale_price_old) }}
-          </div>
-          <div
+          </span>
+          <span
             class="product-detail product-price"
             v-if="product.sale_price_min"
           >
             {{ formatVND(product.sale_price_min) }}
-          </div>
+          </span>
         </div>
-        <div class="card-detail-information" v-if="product.count_detail > 1">
-          <div
-            class="product-detail product-old-price mr-2"
+        <div class="card-detail-information row-amount" v-if="product.count_detail > 1">
+          <span
+            class="product-detail product-price product-old-price mr-2"
             v-if="
               product.sale_price_old > 0 &&
               product.sale_price_min == product.sale_price_max
             "
           >
             {{ formatVND(product.sale_price_old) }}
-          </div>
-          <div
+          </span>
+          <span
             class="product-detail product-price"
             v-if="
               product.sale_price_min == product.sale_price_max &&
@@ -64,21 +64,21 @@
             "
           >
             {{ formatVND(product.sale_price_min) }}
-          </div>
+          </span>
           <div
-            class="d-flex"
+            class="d-flex row-amount"
             v-if="
               product.sale_price_min != product.sale_price_max &&
               product.sale_price_min > 0
             "
           >
-            <div class="product-detail product-price">
+            <span class="product-detail product-price">
               {{ formatVND(product.sale_price_min) }}
-            </div>
-            <div class="product-detail product-price">&nbsp;-&nbsp;</div>
-            <div class="product-detail product-price">
+            </span>
+            <span class="product-detail product-price">&nbsp;-&nbsp;</span>
+            <span class="product-detail product-price">
               {{ formatVND(product.sale_price_max) }}
-            </div>
+            </span>
           </div>
         </div>
         <div class="d-flex">
