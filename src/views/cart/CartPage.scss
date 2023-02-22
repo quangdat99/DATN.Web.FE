@@ -1,7 +1,7 @@
 @import "@/assets/scss/_variables.scss";
 
 .cart-page {
-  width: $width-container;
+  width: $width-container + 32px;
   min-height: 400px;
 
   .cart-title {
@@ -204,7 +204,7 @@
     .relation-content {
 
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 5px;
       width: fit-content;
       padding: 16px;
