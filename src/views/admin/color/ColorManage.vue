@@ -84,7 +84,8 @@ export default defineComponent({
       showClearSort.value = false;
     };
     const editRow = (item) => {
-      popupUtil.show("OrderDetail", {
+      popupUtil.show("ColorDetail", {
+        mode: "Edit",
         data: item,
         options: {
           submit: () => {

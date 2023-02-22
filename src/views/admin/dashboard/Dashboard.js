@@ -121,22 +121,25 @@ export const useDashboard = () => {
   ]);
 
   const format = (dateRange) => {
-    const fromDate = dateRange[0];
-    const toDate = dateRange[1];
+    if (dateRange && dateRange.length == 2) {
 
-    const day = fromDate.getDate();
-    const month = fromDate.getMonth() + 1;
-    const year = fromDate.getFullYear();
-    const hour = fromDate.getHours();
-    const minute = fromDate.getMinutes();
+      const fromDate = dateRange[0];
+      const toDate = dateRange[1];
 
-    const day2 = toDate.getDate();
-    const month2 = toDate.getMonth() + 1;
-    const year2 = toDate.getFullYear();
-    const hour2 = toDate.getHours();
-    const minute2 = toDate.getMinutes();
+      const day = fromDate.getDate();
+      const month = fromDate.getMonth() + 1;
+      const year = fromDate.getFullYear();
+      const hour = fromDate.getHours();
+      const minute = fromDate.getMinutes();
 
-    return `${day}/${month}/${year} ${hour} giờ ${minute} phút - ${day2}/${month2}/${year2} ${hour2} giờ ${minute2} phút`;
+      const day2 = toDate.getDate();
+      const month2 = toDate.getMonth() + 1;
+      const year2 = toDate.getFullYear();
+      const hour2 = toDate.getHours();
+      const minute2 = toDate.getMinutes();
+
+      return `${day}/${month}/${year} ${hour} giờ ${minute} phút - ${day2}/${month2}/${year2} ${hour2} giờ ${minute2} phút`;
+    }
   }
 
   return {

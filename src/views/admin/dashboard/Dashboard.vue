@@ -147,6 +147,7 @@ import {
 } from "vue";
 import DashboardOrderAPI from "@/apis/components/dashboardOrderAPI.js";
 import { endOfMonth, startOfMonth } from "date-fns";
+import { datetime } from "@intlify/core-base";
 
 export default {
   components: { gridView },
@@ -221,12 +222,12 @@ export default {
           {
             Field: "success_date",
             Operator: ">=",
-            Value: fromDate,
+            Value: addHours(fromDate, 7),
           },
           {
             Field: "success_date",
             Operator: "<=",
-            Value: toDate,
+            Value: addHours(toDate, 7),
           },
         ];
       } else {
@@ -243,6 +244,13 @@ export default {
         proxy.$refs.gridView2.loadData();
       }, 50);
     };
+
+    function addHours(date, hours) {
+      let dataDate = new Date(date);
+      dataDate.setHours(dataDate.getHours() + hours);
+
+      return dataDate;
+    }
 
     return {
       headers,

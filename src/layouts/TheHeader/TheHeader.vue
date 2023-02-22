@@ -273,11 +273,13 @@ export default {
 
     const updateSearch = () => {
       if (route.path != "/search") {
-        proxy.$router.push("/search");
+        proxy.$router.push({
+          path: "/search",
+          query: { keyword: search.value },
+        });
       }
-      setTimeout(() => {
-        proxy.$store.commit("moduleHomePage/updateSearch", search.value);
-      }, 100);
+
+      proxy.$store.commit("moduleHomePage/updateSearch", search.value);
     };
 
     const enterSearch = (e, value) => {
