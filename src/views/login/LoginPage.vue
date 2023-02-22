@@ -116,6 +116,11 @@ export default {
           setTimeout(() => {
             proxy.$refs.password.$el.querySelector("input").focus();
           }, 100);
+        } else if (res.statusCode == 209) {
+          proxy.$toast.error(res.userMessage);
+          setTimeout(() => {
+            proxy.$refs.password.$el.querySelector("input").focus();
+          }, 100);
         } else {
           proxy.$toast.error(`Đã xảy ra lỗi`);
         }
