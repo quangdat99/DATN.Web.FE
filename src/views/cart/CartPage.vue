@@ -57,7 +57,9 @@
               size="small"
               inline
               controls
-              @change="changeQuantity(product)"
+              @update:model-value="
+                (...args) => changeQuantityProduct(product, ...args)
+              "
             >
             </vue-number-input>
           </div>
@@ -305,21 +307,6 @@ export default {
         });
       }
     };
-    const changeQuantity = (product) => {
-      if (!product.quantity) {
-        product.quantity = 1;
-      }
-      if (product.quantity <= product.quantity_max) {
-        productCartAPI
-          .updateQuantity({
-            product_cart_id: product.product_cart_id,
-            quantity: product.quantity,
-          })
-          .then((res) => {
-            fetchProductCarts();
-          });
-      }
-    };
 
     const clickToProduct = (productId) => {
       proxy.$router.push({
@@ -329,7 +316,26 @@ export default {
       proxy.$store.dispatch("moduleProductPage/updateProductId", productId);
     };
 
+    const changeQuantityProduct = (product, newValue, oldValue) => {
+      if (oldValue) {
+        if (!product.quantity) {
+          product.quantity = 1;
+        }
+        if (product.quantity <= product.quantity_max) {
+          productCartAPI
+            .updateQuantity({
+              product_cart_id: product.product_cart_id,
+              quantity: product.quantity,
+            })
+            .then((res) => {
+              fetchProductCarts();
+            });
+        }
+      }
+    };
+
     return {
+      changeQuantityProduct,
       productList,
       totalComputedMoney,
       formatVND,
@@ -342,7 +348,6 @@ export default {
       checkout,
       classifyProduct,
       deleteProductCart,
-      changeQuantity,
       clickToProduct,
       listProductRelation,
     };
