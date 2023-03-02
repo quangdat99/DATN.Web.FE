@@ -108,11 +108,7 @@ export default {
                   `Xóa nhóm thuộc tính < ${item.attribute_name} > thành công`
                 );
               } else if (res.data.statusCode == 210) {
-                proxy.$confirm.require({
-                  message: res.data.userMessage,
-                  header: "Thông báo",
-                  rejectClass: "d-none",
-                });
+                proxy.$toast.warning(res.data.userMessage);
               }
             }
             proxy.$refs.gridView.loadData();

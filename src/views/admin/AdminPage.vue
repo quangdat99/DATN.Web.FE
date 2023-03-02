@@ -49,6 +49,9 @@
               </div>
             </div>
             <template #popper>
+              <div class="option cursor p-2" @click="updateRelation()">
+                Cập nhật sản phẩm mua kèm
+              </div>
               <div class="option cursor p-2" @click="logout()">Đăng Xuất</div>
             </template>
           </v-menu>
@@ -71,6 +74,7 @@ import { mapGetters } from "vuex";
 import { useRoute } from "vue-router";
 import ConfirmDialog from "primevue/confirmdialog";
 import { usePrimeVue } from "primevue/config";
+import popupUtil from "@/commons/popupUtil";
 export default {
   components: {
     MainMenuItem,
@@ -131,12 +135,17 @@ export default {
       proxy.$router.push("/login");
     };
 
+    const updateRelation = () => {
+      popupUtil.show("UpdateRelationDetail", {});
+    };
+
     return {
       menuList,
       menuItemClick,
       toggleNavbar,
       toggleNavbarValue,
       logout,
+      updateRelation,
     };
   },
 

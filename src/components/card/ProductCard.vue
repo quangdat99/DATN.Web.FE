@@ -8,7 +8,7 @@
             <div class="dis-text">GIẢM</div>
           </div>
         </div>
-        <div class="card-sub-outstanding" v-if="product.outstanding > 5">
+        <div class="card-sub-outstanding" v-if="product.outstanding >= 8">
           <div class="info-outstanding">
             <div class="product-outstanding">Nổi bật</div>
           </div>

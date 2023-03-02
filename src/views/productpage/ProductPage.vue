@@ -500,7 +500,6 @@ export default {
       }
 
       getProductRelation(data.product_id);
-      getProductRelationSell(data.product_id);
       getRateOption(data.product_id);
       getCommentProduct(data.product_id);
     });
@@ -545,19 +544,6 @@ export default {
       }
     }
 
-    /**
-     * Sp liên quan sắp xếp theo bán chạy
-     */
-    async function getProductRelationSell(productId) {
-      const dataRelationSell = await ProductAPI.getProductRelation(
-        productId,
-        2
-      );
-      // Gán sản phẩm liên quan
-      if (dataRelationSell) {
-        listProductRelationSell.value = dataRelationSell;
-      }
-    }
 
     function chooseColor(value, active) {
       colors.value.forEach((x) => (x.active = false));
