@@ -315,7 +315,7 @@
                 <div
                   class="delete-address ml-2"
                   v-if="!address.is_default"
-                  @click="deleteAddress(address.address_id)"
+                  @click="deleteRow(address)"
                 >
                   Xóa
                 </div>
@@ -347,7 +347,7 @@
               type="password"
               class="flex2 ml-4"
               v-model="password.password"
-              :rules="[{ name: 'required' }, { name: 'password' }]"
+              :rules="[{ name: 'required' }]"
             >
             </base-input>
           </div>
@@ -389,7 +389,8 @@
                 :disabled="
                   !password.password ||
                   !password.new_password ||
-                  !password.confirm_password
+                  !password.confirm_password ||
+                  password.new_password != password.confirm_password
                 "
               ></base-button>
             </div>
@@ -831,6 +832,17 @@ export default {
         });
     };
 
+    const deleteRow = (address) => {
+      proxy.$confirm.require({
+        message: `Bạn có chắc chắn muốn xóa địa chỉ < ${address.name} - ${address.phone} > không?`,
+        header: "Xóa",
+        accept: () => {
+          deleteAddress(address.address_id);
+        },
+        reject: () => {},
+      });
+    };
+
     const resetPassword = () => {
       const me = proxy;
       if (!me.validateComponents()) {
@@ -952,6 +964,7 @@ export default {
       addresses,
       settingDefault,
       deleteAddress,
+      deleteRow,
       resetPassword,
       uploadPhotoHandler,
       clickToProduct,

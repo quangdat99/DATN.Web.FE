@@ -52,14 +52,14 @@ export const validateText = {
             return 'Mật khẩu phải dài ít nhất 8 kí tự'
         }
 
-        if (!(/[^A-Z]/g.test(value))) {
+        if (!(/[A-Z]/g.test(value))) {
             return 'Mật khẩu phải có ít nhất một chữ cái viết hoa';
         }
-        if (!(/[^a-z]/g.test(value))) {
+        if (!(/[a-z]/g.test(value))) {
             return 'Mật khẩu phải có ít nhất một chữ cái viết thường';
         }
 
-        if (!(/[^0-9]/g.test(value))) {
+        if (!(/[0-9]/g.test(value))) {
             return 'Mật khẩu phải có ít nhất một chữ số';
         }
         return '';
