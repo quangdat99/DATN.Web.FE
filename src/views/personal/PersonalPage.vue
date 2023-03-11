@@ -652,6 +652,7 @@ export default {
       activeTab.value = value;
       let url = route.matched[1].path.replace(":key?", value);
       proxy.$router.push(url);
+      getOrderStatusCount();
       // history.pushState({ prv: location.href }, "", url);
     };
     // watch(activeTab.value, (value) => {});

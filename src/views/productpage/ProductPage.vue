@@ -544,7 +544,6 @@ export default {
       }
     }
 
-
     function chooseColor(value, active) {
       colors.value.forEach((x) => (x.active = false));
       let item = colors.value.find((x) => x.option == value);
@@ -666,9 +665,13 @@ export default {
           product_detail_id: productDetail.value.product_detail_id,
           product_id: productDetail.value.product_id,
         };
-        productCartAPI.addToCart(payload).then(() => {
-          proxy.$toast.success("Sản phẩm đã được thêm vào Giỏ hàng");
-          proxy.$store.dispatch("moduleCart/updateCart");
+        productCartAPI.addToCart(payload).then((res) => {
+          if (res && res.status == 200 && res.data.statusCode == 200) {
+            proxy.$toast.success("Sản phẩm đã được thêm vào Giỏ hàng");
+            proxy.$store.dispatch("moduleCart/updateCart");
+          } else {
+            proxy.$toast.warning(res.data.userMessage);
+          }
         });
       } else {
         proxy.$toast.warning("Vui lòng chọn phân loại sản phẩm");

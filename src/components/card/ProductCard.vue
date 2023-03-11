@@ -32,7 +32,10 @@
         <div class="card-name">
           {{ product.product_name }}
         </div>
-        <div class="card-detail-information row-amount" v-if="product.count_detail == 1">
+        <div
+          class="card-detail-information row-amount"
+          v-if="product.count_detail == 1"
+        >
           <span
             class="product-detail product-old-price mr-2"
             v-if="product.sale_price_old > 0"
@@ -46,7 +49,10 @@
             {{ formatVND(product.sale_price_min) }}
           </span>
         </div>
-        <div class="card-detail-information row-amount" v-if="product.count_detail > 1">
+        <div
+          class="card-detail-information row-amount"
+          v-if="product.count_detail > 1"
+        >
           <span
             class="product-detail product-price product-old-price mr-2"
             v-if="
@@ -137,8 +143,10 @@ export default {
 
     watch(
       () => proxy.$router.currentRoute.value.fullPath,
-      (value) => {
-        proxy.$router.go();
+      (newVal, oldVal) => {
+        if (newVal != oldVal && newVal && newVal.includes("/product")) {
+          proxy.$router.go();
+        }
       }
     );
 

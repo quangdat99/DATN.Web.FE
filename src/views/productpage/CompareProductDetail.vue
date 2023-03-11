@@ -1,7 +1,7 @@
 <template>
   <dynamic-popup
     :width="widthForm"
-    :height="600"
+    :height="950"
     class="compare-product-detail"
     title="So sánh sản phẩm"
     @beforeOpen="beforeOpen($event, close)"
@@ -583,7 +583,7 @@ export default {
       () => model2.value.product_id,
       (value) => {
         if (value) {
-          widthForm.value = 1000;
+          widthForm.value = 1200;
         } else {
           widthForm.value = 800;
         }

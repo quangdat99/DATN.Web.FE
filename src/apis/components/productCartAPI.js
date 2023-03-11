@@ -5,7 +5,7 @@ class ProductCartAPI extends BaseAPI {
     
     async addToCart(payload){
         let res = await Http.axios().post(`${this.controllerName}/addToCart`, payload);
-        return this.response(res);
+        return res;
     }
     async getProductCard(){
         let res = await Http.axios().get(`${this.controllerName}/products`);

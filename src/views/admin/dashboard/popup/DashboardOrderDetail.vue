@@ -1,7 +1,7 @@
 <template>
   <dynamic-popup
     :width="900"
-    :height="500"
+    :height="600"
     class="dashboard-order-detail"
     title="Thông tin đơn hàng"
     @beforeOpen="beforeOpen($event, close)"

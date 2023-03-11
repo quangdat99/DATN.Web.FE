@@ -1,7 +1,7 @@
 <template>
   <dynamic-popup
     :width="900"
-    :height="500"
+    :height="600"
     class="color-detail"
     title="Đơn hàng"
     @beforeOpen="beforeOpen($event, close)"
