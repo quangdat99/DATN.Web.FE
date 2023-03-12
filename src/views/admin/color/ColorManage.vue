@@ -96,6 +96,7 @@ export default defineComponent({
     };
 
     const deleteRow = (item) => {
+      item.status = item.status ? true : false;
       proxy.$confirm.require({
         message: `Bạn có chắc chắn muốn xóa màu < ${item.color_name} > không?`,
         header: "Xóa",

@@ -351,18 +351,22 @@ export default defineComponent({
                 ? 0
                 : indexPointedOption.value + 1;
           }
-          // Chuyển pointed option sang option mới
-          setPointedOption(
-            listData.value[indexPointedOption.value][props.valueField]
-          );
+          if (listData.value?.length > 0) {
+            // Chuyển pointed option sang option mới
+            setPointedOption(
+              listData.value[indexPointedOption.value][props.valueField]
+            );
+          }
           // Scroll nội dung xuống option hiện tại
           let option =
             proxy.$refs[
               "option" +
                 (indexPointedOption.value >= 0 ? indexPointedOption.value : 0)
             ][0];
-          let topOps = option.offsetTop;
-          proxy.$refs.select.scrollTop = topOps;
+          if (option) {
+            let topOps = option.offsetTop;
+            proxy.$refs.select.scrollTop = topOps;
+          }
           // Chỉnh scroll cho vừa tầm nhìn
           // if (indexPointedOption.value != maxIndex) {
           //     proxy.$refs.select.scrollBy({

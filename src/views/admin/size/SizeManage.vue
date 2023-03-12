@@ -95,6 +95,7 @@ export default {
     };
 
     const deleteRow = (item) => {
+      item.status = item.status ? true : false;
       proxy.$confirm.require({
         message: `Bạn có chắc chắn muốn xóa kích cỡ < ${item.size_name} > không?`,
         header: "Xóa",

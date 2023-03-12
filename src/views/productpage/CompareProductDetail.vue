@@ -1,7 +1,7 @@
 <template>
   <dynamic-popup
     :width="widthForm"
-    :height="950"
+    :height="800"
     class="compare-product-detail"
     title="So sánh sản phẩm"
     @beforeOpen="beforeOpen($event, close)"

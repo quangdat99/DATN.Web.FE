@@ -107,6 +107,7 @@ export default {
       });
     };
     const deleteRow = (item) => {
+      item.status = item.status ? true : false;
       proxy.$confirm.require({
         message: `Bạn có chắc chắn muốn xóa đơn hàng < ${item.order_code} > không?`,
         header: "Xóa",
