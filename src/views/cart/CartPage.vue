@@ -33,7 +33,7 @@
               {{ product.product_name }}
             </div>
             <div class="classify">
-              <span class="fs-12">Phân loại hàng:</span>
+              <span class="fs-12">{{ product.color_name || product.size_name ? "Phân loại hàng:" : "" }}</span>
               <span class="detail">
                 {{
                   classifyProduct(product.color_name, product.size_name)
